@@ -1,0 +1,10 @@
+installation:
+  version: 6.0.0-alpha.0
+  installDate: '2025-10-20T04:53:39.542Z'
+  lastUpdated: '2025-10-20T04:53:39.542Z'
+modules:
+  - core
+  - bmm
+  - cis
+ides:
+  - gemini
