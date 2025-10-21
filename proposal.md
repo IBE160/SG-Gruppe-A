@@ -184,6 +184,7 @@ The user leaves the dashboard or starts a new application using improved materia
 
 ## Technical Constraints
 - Frontend will be built with React + Next.js and styled with Tailwind CSS for responsive, modern UI
+- Backend will be developed using Python with FastAPI to handle authentication, API endpoints, and AI model integration efficiently.
 - Must require secure user authentication (login system).
 - All uploaded files must be encrypted and stored safely.
 - Web app must be mobile-responsive and accessible on all devices.
