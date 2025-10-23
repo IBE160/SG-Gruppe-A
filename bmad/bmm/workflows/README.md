@@ -43,7 +43,7 @@ The BMM (BMAD Method Module) orchestrates software development through four dist
 │                   PHASE 3: SOLUTIONING                       │
 │              (Software Levels 3-4 / Complex Games)           │
 ├──────────────────────────────────────────────────────────────┤
-│  3-solutioning ──→ solution-architecture.md                  │
+│  3-solutioning ──→ architecture.md                  │
 │       ↓                                                      │
 │  tech-spec (per epic, JIT during implementation)             │
 └────────────────────────────────────────────────────────────┬─┘
@@ -174,7 +174,7 @@ workflow-status determines routing:
     └─→ Level 3-4 → bmad pm prd
         └─→ Validates status file + level
         └─→ Generates PRD.md + epics.md
-        └─→ Then: Phase 3 (solution-architecture)
+        └─→ Then: Phase 3 (architecture)
         └─→ Then: Phase 4 (implementation)
 
     GAME PROJECTS:
@@ -202,10 +202,10 @@ Architecture and technical design phase for complex projects.
 
 ### Workflows
 
-| Workflow          | Owner     | Purpose                        | Output                             | Timing            |
-| ----------------- | --------- | ------------------------------ | ---------------------------------- | ----------------- |
-| **3-solutioning** | Architect | Create overall architecture    | solution-architecture.md with ADRs | Once per project  |
-| **tech-spec**     | Architect | Create epic-specific tech spec | tech-spec-epic-N.md                | One per epic, JIT |
+| Workflow          | Owner     | Purpose                        | Output                    | Timing            |
+| ----------------- | --------- | ------------------------------ | ------------------------- | ----------------- |
+| **3-solutioning** | Architect | Create overall architecture    | architecture.md with ADRs | Once per project  |
+| **tech-spec**     | Architect | Create epic-specific tech spec | tech-spec-epic-N.md       | One per epic, JIT |
 
 ### Just-In-Time Tech Specs
 
@@ -250,7 +250,7 @@ BACKLOG → TODO → IN PROGRESS → DONE
   - Story status is "Ready" or "In Review"
 
 - **DONE**: Completed stories with dates and points
-  - Moved here by `story-approved` workflow after DoD complete
+  - Moved here by `story-done` workflow after DoD complete
   - Immutable record of completed work
 
 **Key Innovation**: Agents never search for "next story" - they always read the exact story from the status file.
@@ -294,7 +294,7 @@ Phase Transition (Phase 2 or 3 → Phase 4)
 ┌─────────────────────────────────────────────────┐
 │  User reviews implementation (DoD check)         │
 │  ↓                                               │
-│  DEV: story-approved (marks story done)          │
+│  DEV: story-done (marks story done)          │
 │  Actions: IN PROGRESS → DONE                     │
 │           TODO → IN PROGRESS (if exists)         │
 │           BACKLOG → TODO (if exists)             │
@@ -319,7 +319,7 @@ Phase Transition (Phase 2 or 3 → Phase 4)
 | **story-ready**    | SM     | Approve drafted story for development | TODO → IN PROGRESS    | Reads TODO section       |
 | **story-context**  | SM     | Generate expertise injection XML      | (No state change)     | Reads IN PROGRESS        |
 | **dev-story**      | DEV    | Implement story                       | (No state change)     | Reads IN PROGRESS        |
-| **story-approved** | DEV    | Mark story done after DoD complete    | IN PROGRESS → DONE    | Reads IN PROGRESS        |
+| **story-done**     | DEV    | Mark story done after DoD complete    | IN PROGRESS → DONE    | Reads IN PROGRESS        |
 | **review-story**   | SR/DEV | Quality validation (optional)         | (No state change)     | Manual story selection   |
 | **correct-course** | SM     | Handle issues/changes                 | (Adaptive)            | Manual story selection   |
 | **retrospective**  | SM     | Capture epic learnings                | (No state change)     | Manual or epic-triggered |
@@ -335,7 +335,7 @@ Status: Ready       (User approved via story-ready, ready for implementation)
   ↓
 Status: In Review   (Implementation complete, awaiting final approval)
   ↓
-Status: Done        (User approved via story-approved, DoD complete)
+Status: Done        (User approved via story-done, DoD complete)
 ```
 
 **Status File Position vs Story File Status:**
@@ -411,8 +411,8 @@ plan-project (Phase 2)
   - Level 0: tech-spec.md + story-{slug}.md
   - Level 1: tech-spec.md + epic-stories.md + story-{slug}-N.md files
   - Level 2: PRD.md + epics.md (then tech-spec.md in Phase 3)
-  - Level 3-4: PRD.md + epics.md (then solution-architecture.md in Phase 3)
-- **Phase 3**: solution-architecture.md, epic-specific tech specs
+  - Level 3-4: PRD.md + epics.md (then architecture.md in Phase 3)
+- **Phase 3**: architecture.md, epic-specific tech specs
 - **Phase 4**: Story files, context XMLs, implemented code
 
 ## Best Practices
@@ -475,7 +475,7 @@ bmad architect tech-spec # Level 0-1 software projects
 bmad pm gdd             # Game projects
 
 # Phase 3: Solutioning (L3-4)
-bmad architect solution-architecture
+bmad architect architecture
 bmad architect tech-spec  # Per epic, JIT
 
 # Phase 4: Implementation
@@ -483,7 +483,7 @@ bmad sm create-story      # Draft story from TODO section
 bmad sm story-ready       # Approve story for development (after user review)
 bmad sm story-context     # Generate context XML (optional but recommended)
 bmad dev dev-story        # Implement story from IN PROGRESS section
-bmad dev story-approved   # Mark story done (after user confirms DoD)
+bmad dev story-done   # Mark story done (after user confirms DoD)
 bmad dev review-story     # Quality validation (optional)
 bmad sm correct-course    # If issues arise
 bmad sm retrospective     # After epic complete

@@ -2,24 +2,23 @@
 
 ## Activating Agents
 
-BMAD agents are concatenated in `.gemini/bmad-method/GEMINI.md`.
+BMAD agents are installed as slash commands in `.gemini/commands/bmad/`.
 
 ### How to Use
 
-1. **Type Trigger**: Use `*{agent-name}` in your prompt
-2. **Activate**: Agent persona activates from the concatenated file
-3. **Continue**: Agent remains active for conversation
+1. **Type Slash Command**: Start with `/` to see available commands
+2. **Select Agent**: Type `/agents:{agent-name}` (e.g., `/agents:dev`)
+3. **Execute**: Press Enter to activate that agent persona
 
 ### Examples
 
 ```
-*dev - Activate development agent
-*architect - Activate architect agent
-*test - Activate test agent
+/agents:dev - Activate development agent
+/agents:architect - Activate architect agent
 ```
 
 ### Notes
 
-- All agents loaded from single GEMINI.md file
-- Triggers with asterisk: `*{agent-name}`
-- Context includes all agents (may be large)
+- Commands are autocompleted when you type `/`
+- Agent remains active for the conversation
+- Start a new conversation to switch agents

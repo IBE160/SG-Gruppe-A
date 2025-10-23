@@ -33,25 +33,42 @@ phases:
         required: true
         agent: "pm"
         command: "prd"
-        output: "Creates epics.md and story list"
+        output: "Creates PRD with epics.md and story list"
       - id: "ux-spec"
         conditional: "if_has_ui"
-        agent: "pm"
+        agent: "ux-expert"
         command: "ux-spec"
       - id: "tech-spec"
         optional: true
-        agent: "architect"
+        agent: "pm"
         command: "tech-spec"
-        note: "Lightweight technical planning"
+        note: "Lightweight Technical Specification planning"
 
   - phase: 3
     name: "Solutioning"
-    skip: true
+    required: true
+    workflows:
+      - id: "create-architecture"
+        required: true
+        agent: "architect"
+        command: "create-architecture"
+        output: "System-wide architecture document"
+      - id: "solutioning-gate-check"
+        required: true
+        agent: "architect"
+        command: "solutioning-gate-check"
+        note: "Validate PRD + UX + architecture cohesion before implementation"
 
   - phase: 4
     name: "Implementation"
     required: true
-    loop_type: "for_each_story"
+    phase_initialization:
+      - id: "sprint-planning"
+        required: true
+        agent: "sm"
+        command: "sprint-planning"
+        note: "Initialize sprint tracking - run once when entering Phase 4"
+    story_loop: "for_each_story"
     workflows:
       - id: "create-story"
         required: true
@@ -77,14 +94,14 @@ phases:
         optional: true
         agent: "dev"
         command: "review-story"
-      - id: "story-approved"
+      - id: "story-done"
         required: true
         agent: "dev"
-        command: "story-approved"
+        command: "story-done"
     epic_completion:
       - id: "retrospective"
         optional: true
-        agent: "pm"
+        agent: "sm"
         command: "retrospective"
         note: "After each epic completes"
 

@@ -382,7 +382,7 @@ Since this is a Level {{project_level}} game project, you need solutioning for p
 **The solutioning workflow will:**
 
 - Determine game engine/platform (Unity, Godot, Phaser, custom, etc.)
-- Generate solution-architecture.md with engine-specific decisions
+- Generate architecture.md with engine-specific decisions
 - Create per-epic tech specs
 - Handle platform-specific architecture (from registry.csv game-\* entries)
 
@@ -390,12 +390,12 @@ Since this is a Level {{project_level}} game project, you need solutioning for p
 
 <action>Generate comprehensive checklist based on project analysis</action>
 
-### Phase 1: Solution Architecture and Engine Selection
+### Phase 1: Architecture and Engine Selection
 
 - [ ] **Run solutioning workflow** (REQUIRED)
-  - Command: `workflow solution-architecture`
+  - Command: `workflow create-architecture`
   - Input: GDD.md, bmm-workflow-status.md
-  - Output: solution-architecture.md with engine/platform specifics
+  - Output: architecture.md with engine/platform specifics
   - Note: Registry.csv will provide engine-specific guidance
 
 ### Phase 2: Prototype and Playtesting
@@ -426,7 +426,7 @@ Since this is a Level {{project_level}} game project, you need solutioning for p
 
 - [ ] **Generate detailed user stories**
   - Command: `workflow generate-stories`
-  - Input: GDD.md + solution-architecture.md
+  - Input: GDD.md + architecture.md
 
 - [ ] **Sprint planning**
   - Vertical slices
