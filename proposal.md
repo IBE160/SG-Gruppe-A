@@ -195,6 +195,10 @@ The user leaves the dashboard or starts a new application using improved materia
 - Cover letter generation: GPT-4 with carefully crafted prompts
 - ATS scoring: Rule-based algorithm + keyword matching
 
+**implementation**:
+- **model**: gemini 2.5 pro/flash
+- **library**: Pydantic AI see @docs/research-technical-2025-10-29.md
+
 ### File Parsing Implementation
 - **Supported format:** DOC/DOCX only  
 - **Library Used:** python-docx for text extraction and structured data parsing  
