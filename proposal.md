@@ -41,12 +41,13 @@ Students, graduates, and professionals who want to improve their job application
 -   job_posts (id, user_id, job_text, keywords)
 -   results (id, user_id, ats_score, gap_summary, cover_letter_text)
   
-## User Flows
+## User Flows 
+- see @docs/brainstorming user flows - 2025-10-29.md
 
 ### Flow 1: Upload CV and Job Ad → Generate Custom Cover Letter
 
 **Entry point:**  
-A new or returning user lands on the homepage.
+A new or returning user lands on the homepage. see @docs/brainstorming- layout Thursday, October 30, 2025.md
 
 1. **Landing page**
    - The homepage presents a brief introduction to the service — “AI Cover Letter and CV Assistant” — and a clear CTA button: “Create my cover letter.”  
