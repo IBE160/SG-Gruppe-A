@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini API Request Viewer</title>
+    <style>
+        :root {
+            --primary-color: #1a73e8;
+            --secondary-color: #34a853;
+            --error-color: #ea4335;
+            --warning-color: #fbbc04;
+            --bg-main: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-hover: #e8f0fe;
+            --text-primary: #202124;
+            --text-secondary: #5f6368;
+            --border-color: #dadce0;
+            --shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+            --shadow-hover: 0 1px 3px 0 rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-main);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .sidebar.collapsed {
+            width: 60px;
+        }
+
+        /* Hide text content when sidebar is collapsed */
+        .sidebar.collapsed .sidebar-header h1,
+        .sidebar.collapsed .sidebar-header p {
+            display: none;
+        }
+
+        .sidebar.collapsed .file-list {
+            display: none;
+        }
+
+        .sidebar-header {
+            height: 72px;
+            padding: 16px 24px;
+            padding-right: 56px; /* Make room for burger menu */
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+            transition: padding 0.3s ease;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .sidebar.collapsed .sidebar-header {
+            padding: 16px 12px;
+        }
+
+        .sidebar-header h1 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .sidebar-header p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .file-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 4px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .file-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .file-item.active {
+            background: var(--bg-hover);
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .file-icon {
+            font-size: 20px;
+            margin-right: 12px;
+        }
+
+        .file-info {
+            flex: 1;
+        }
+
+        .file-date {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .file-time {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .content-header {
+            height: 72px;
+            background: var(--bg-main);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 24px;
+            display: none;
+            box-sizing: border-box;
+        }
+
+        .content-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .content-meta {
+            display: flex;
+            gap: 24px;
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .content-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        /* Request/Response Cards */
+        .entry-card {
+            background: var(--bg-main);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .entry-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .entry-id {
+            font-size: 11px;
+            font-family: monospace;
+            color: var(--text-secondary);
+            background: var(--bg-secondary);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        /* Continuous Chat Styles */
+        .chat-header {
+            background: var(--bg-main);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .chat-session-info {
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .chat-session-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 11px;
+        }
+
+        .chat-session-id {
+            font-family: monospace;
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+            padding: 4px 12px;
+            border-radius: 4px;
+            margin-left: 8px;
+        }
+
+        .chat-container {
+            background: var(--bg-main);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .chat-message {
+            margin-bottom: 20px;
+            padding: 16px;
+            border-radius: 12px;
+            border-left: 4px solid;
+            position: relative;
+        }
+
+        .chat-copy-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(0, 0, 0, 0.1);
+            border: none;
+            border-radius: 6px;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            opacity: 0.3;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .chat-copy-btn:hover {
+            opacity: 0.7;
+            background: rgba(0, 0, 0, 0.15);
+            transform: scale(1.05);
+        }
+
+        .chat-copy-btn:active {
+            transform: scale(0.95);
+        }
+
+        .chat-copy-btn.copied {
+            opacity: 1;
+            background: rgba(76, 175, 80, 0.2);
+        }
+
+        .chat-message.chat-user {
+            background: #e3f2fd;
+            border-color: #2196f3;
+        }
+
+        .chat-message.chat-model {
+            background: #e8f5e9;
+            border-color: #4caf50;
+        }
+
+        .chat-message-role {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .chat-message.chat-user .chat-message-role {
+            background: #1976d2;
+            color: white;
+        }
+
+        .chat-message.chat-model .chat-message-role {
+            background: #388e3c;
+            color: white;
+        }
+
+        .chat-message-content {
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .chat-message-text {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: var(--text-primary);
+        }
+
+        /* Legacy Messages (for backward compatibility) */
+        .message {
+            margin-bottom: 16px;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 3px solid;
+        }
+
+        .message.user {
+            background: #e3f2fd;
+            border-color: #2196f3;
+        }
+
+        .message.model {
+            background: #e8f5e9;
+            border-color: #4caf50;
+        }
+
+        .message.function {
+            background: #fff3e0;
+            border-color: #ff9800;
+        }
+
+        .message-role {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .message.user .message-role { color: #1976d2; }
+        .message.model .message-role { color: #388e3c; }
+        .message.function .message-role { color: #f57c00; }
+
+        .message-text {
+            font-size: 13px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* Truncatable text styles */
+        .truncatable-text {
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .truncatable-text.truncated .text-truncated {
+            display: block;
+        }
+
+        .truncatable-text.truncated .text-expanded {
+            display: none;
+        }
+
+        .truncatable-text.expanded .text-truncated {
+            display: none;
+        }
+
+        .truncatable-text.expanded .text-expanded {
+            display: block;
+        }
+
+        .text-line-11 {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .text-line-11::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+
+        /* Default gradient for white background */
+        .text-line-11::after {
+            background: linear-gradient(to bottom, transparent 0%, rgba(255, 255, 255, 0.95) 70%, white 100%);
+        }
+
+        /* Chat user message gradient (light blue) */
+        .chat-message.chat-user .text-line-11::after {
+            background: linear-gradient(to bottom, transparent 0%, rgba(227, 242, 253, 0.95) 70%, #e3f2fd 100%);
+            content: 'Double-click to open/close';
+            display: block;
+            color: #999;
+            font-size: 11px;
+            font-style: italic;
+            text-align: center;
+        }
+
+        /* Chat model message gradient (light green) */
+        .chat-message.chat-model .text-line-11::after {
+            background: linear-gradient(to bottom, transparent 0%, rgba(232, 245, 233, 0.95) 70%, #e8f5e9 100%);
+            content: 'Double-click to open/close';
+            display: block;
+            color: #999;
+            font-size: 11px;
+            font-style: italic;
+            text-align: center;
+        }
+
+        /* User message gradient (light blue) */
+        .message.user .text-line-11::after {
+            background: linear-gradient(to bottom, transparent 0%, rgba(227, 242, 253, 0.95) 70%, #e3f2fd 100%);
+            content: 'Double-click to open/close';
+            display: block;
+            color: #999;
+            font-size: 11px;
+            font-style: italic;
+            text-align: center;
+        }
+
+        /* Model message gradient (light green) */
+        .message.model .text-line-11::after {
+            background: linear-gradient(to bottom, transparent 0%, rgba(232, 245, 233, 0.95) 70%, #e8f5e9 100%);
+            content: 'Double-click to open/close';
+            display: block;
+            color: #999;
+            font-size: 11px;
+            font-style: italic;
+            text-align: center;
+        }
+
+        /* Function message gradient (light orange) */
+        .message.function .text-line-11::after {
+            background: linear-gradient(to bottom, transparent 0%, rgba(255, 243, 224, 0.95) 70%, #fff3e0 100%);
+            content: 'Double-click to open/close';
+            display: block;
+            color: #999;
+            font-size: 11px;
+            font-style: italic;
+            text-align: center;
+        }
+
+        
+
+        .truncatable-text.expanded::after {
+            content: 'Double-click to open/close';
+            display: block;
+           /* border-top: 4px solid #e0e0e0; */
+            color: #999;
+            font-size: 11px;
+            font-style: italic;
+            text-align: center;
+            padding: 8px;
+            margin-top: 4px;
+        }
+
+        /* Function Calls */
+        .function-call {
+            background: var(--bg-secondary);
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 8px;
+        }
+
+        .function-name {
+            font-size: 12px;
+            font-weight: 600;
+            font-family: monospace;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .function-args {
+            font-size: 11px;
+            font-family: monospace;
+            color: var(--text-secondary);
+            white-space: pre-wrap;
+            background: var(--bg-main);
+            padding: 8px;
+            border-radius: 4px;
+        }
+
+        /* Response Info */
+        .response-info {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .info-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .info-badge.success {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .info-badge.error {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        /* Model Badge */
+        .model-badge {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* Token Usage */
+        .token-usage {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .token-item {
+            background: var(--bg-secondary);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .token-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .token-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Loading/Empty States */
+        .loading, .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-state {
+            background: #ffebee;
+            border: 1px solid var(--error-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            color: var(--error-color);
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+        /* Menu Toggle Button - Always Visible */
+        .menu-toggle {
+            display: block;
+            position: absolute;
+            top: 16px;
+            right: 12px;
+            z-index: 100;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle:hover {
+            background: #1557b0;
+            box-shadow: var(--shadow-hover);
+            transform: scale(1.05);
+        }
+
+        .menu-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .menu-toggle span {
+            display: block;
+            width: 18px;
+            height: 2px;
+            background: white;
+            margin: 4px auto;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        /* Animate burger icon when sidebar is collapsed */
+        .sidebar.collapsed .menu-toggle span:nth-child(1) {
+            transform: translateY(6px) rotate(45deg);
+        }
+
+        .sidebar.collapsed .menu-toggle span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .sidebar.collapsed .menu-toggle span:nth-child(3) {
+            transform: translateY(-6px) rotate(-45deg);
+        }
+
+        .menu-backdrop {
+            display: none;
+        }
+
+        /* Collapsible Cards */
+        .entry-card {
+            transition: all 0.3s ease;
+        }
+
+        .entry-card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .entry-card.collapsed .entry-content {
+            display: none;
+        }
+
+        .entry-card .entry-header {
+            cursor: pointer;
+        }
+
+        .collapse-toggle {
+            display: inline-block;
+            margin-right: 12px;
+            font-size: 14px;
+            transition: transform 0.3s ease;
+            user-select: none;
+        }
+
+        .entry-card.collapsed .collapse-toggle {
+            transform: rotate(-90deg);
+        }
+
+        .entry-card.collapsed .entry-header {
+            margin-bottom: 0;
+        }
+
+        .entry-header-left {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .entry-header-center {
+            display: flex;
+            align-items: center;
+            margin: 0 12px;
+        }
+
+        .entry-header-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
+        .entry-title-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .entry-session-id-badge {
+            font-size: 10px;
+            font-family: monospace;
+            color: var(--text-secondary);
+            background: var(--bg-secondary);
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-right: 8px;
+        }
+
+        .entry-token-info {
+            font-size: 9px;
+            font-family: monospace;
+            color: var(--text-secondary);
+            background: #e8f5e9;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        /* Subsections (Request/Response) */
+        .subsection {
+            margin-bottom: 16px;
+        }
+
+        .subsection-header {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s;
+        }
+
+        .subsection-header:hover {
+            background: #e1e3e6;
+        }
+
+        .subsection-toggle {
+            display: inline-block;
+            margin-right: 8px;
+            font-size: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .subsection-header.collapsed .subsection-toggle {
+            transform: rotate(-90deg);
+        }
+
+        .subsection-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        .subsection-badges {
+            display: flex;
+            gap: 8px;
+            margin-left: 12px;
+        }
+
+        .subsection-badges .info-badge {
+            font-size: 10px;
+        }
+
+        .subsection-content {
+            display: none;
+            padding: 16px 12px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                z-index: 1000;
+            }
+
+            .sidebar.collapsed {
+                transform: translateX(-60px);
+            }
+
+            .content-body {
+                padding: 16px;
+            }
+
+            .entry-card {
+                padding: 16px;
+            }
+
+            .entry-header-center {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <button class="menu-toggle" onclick="toggleMenu()" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <h1>📊 API Requests</h1>
+            <p>Gemini CLI Telemetry</p>
+        </div>
+        <div class="file-list" id="fileList">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Loading files...</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="content-header" id="contentHeader" style="display: none;">
+            <h2 id="selectedFileName">Select a file</h2>
+            <div class="content-meta">
+                <span id="entryCount">0 entries</span>
+                <span id="fileSize">0 KB</span>
+            </div>
+        </div>
+        <div class="content-body" id="contentBody">
+            <div class="empty-state">
+                <p>Select a file from the sidebar to view API requests and responses</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let files = [];
+        let currentFile = null;
+        let messageIdCounter = 0;
+
+        // Toggle sidebar visibility
+        function toggleMenu() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+
+        // Copy message text to clipboard
+        function copyMessageText(messageId) {
+            const messageElement = document.getElementById(messageId);
+            if (!messageElement) return;
+
+            // Get all text content from the message
+            const textElements = messageElement.querySelectorAll('.chat-message-text');
+            let textToCopy = '';
+            textElements.forEach(el => {
+                // Get the actual text content, handling truncated text
+                const truncatable = el.querySelector('.truncatable-text');
+                if (truncatable) {
+                    const expanded = truncatable.querySelector('.text-expanded');
+                    const truncated = truncatable.querySelector('.text-truncated');
+                    textToCopy += (expanded && expanded.textContent) || (truncated && truncated.textContent) || '';
+                } else {
+                    textToCopy += el.textContent;
+                }
+                textToCopy += '\n\n';
+            });
+
+            // Copy to clipboard
+            navigator.clipboard.writeText(textToCopy.trim()).then(() => {
+                // Show feedback
+                const button = document.querySelector(`[onclick="copyMessageText('${messageId}')"]`);
+                if (button) {
+                    button.classList.add('copied');
+                    button.textContent = '✓';
+                    setTimeout(() => {
+                        button.classList.remove('copied');
+                        button.textContent = '📋';
+                    }, 2000);
+                }
+            }).catch(err => {
+                console.error('Failed to copy text:', err);
+            });
+        }
+
+        // Toggle card collapse
+        function toggleCard(event, cardElement) {
+            // Prevent toggle if clicking on interactive elements
+            if (event.target.closest('.function-args, .message-text')) {
+                return;
+            }
+            cardElement.classList.toggle('collapsed');
+        }
+
+        // Toggle subsection collapse (Request/Response)
+        function toggleSubsection(event, subsectionId) {
+            event.stopPropagation(); // Prevent card toggle
+            const subsection = document.getElementById(subsectionId);
+            const header = event.currentTarget;
+
+            header.classList.toggle('collapsed');
+
+            if (header.classList.contains('collapsed')) {
+                subsection.style.display = 'none';
+            } else {
+                subsection.style.display = 'block';
+            }
+        }
+
+        // Initialize
+        async function init() {
+            await loadFileList();
+            if (files.length > 0) {
+                await loadFile(files[0].filename);
+            }
+        }
+
+        // Load list of JSON files
+        async function loadFileList() {
+            try {
+                // Fetch file list from server API
+                const response = await fetch('/api/files');
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+                const indexData = await response.json();
+                files = indexData.map(item => {
+                    const date = new Date(item.timestamp);
+                    return {
+                        filename: `requests/${item.filename}`,
+                        date: date,
+                        displayDate: formatDisplayDate(date),
+                        displayTime: formatDisplayTime(date),
+                        size: item.size
+                    };
+                });
+
+                renderFileList();
+            } catch (error) {
+                console.error('Error loading file list:', error);
+                document.getElementById('fileList').innerHTML = `
+                    <div class="error-state">
+                        <strong>Error loading files</strong><br>
+                        ${error.message}<br><br>
+                        <small>Make sure the server is running and request files exist.</small>
+                    </div>
+                `;
+            }
+        }
+
+        // Format date for display
+        function formatDisplayDate(date) {
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+        }
+
+        function formatDisplayTime(date) {
+            const hours = date.getHours();
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const displayHours = hours % 12 || 12;
+            return `${displayHours}:${minutes} ${ampm}`;
+        }
+
+        // Render file list
+        function renderFileList() {
+            const fileListEl = document.getElementById('fileList');
+
+            if (files.length === 0) {
+                fileListEl.innerHTML = `
+                    <div class="empty-state">
+                        <p>No API request files found</p>
+                    </div>
+                `;
+                return;
+            }
+
+            fileListEl.innerHTML = files.map(file => `
+                <div class="file-item" onclick="loadFile('${file.filename}')" data-filename="${file.filename}">
+                    <span class="file-icon">📄</span>
+                    <div class="file-info">
+                        <div class="file-date">${file.displayDate}</div>
+                        <div class="file-time">${file.displayTime}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Load and display file
+        async function loadFile(filename) {
+            try {
+                currentFile = filename;
+
+                // Update active state
+                document.querySelectorAll('.file-item').forEach(item => {
+                    item.classList.toggle('active', item.dataset.filename === filename);
+                });
+
+                // Show loading
+                const contentBody = document.getElementById('contentBody');
+                contentBody.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading data...</p></div>';
+
+                // Fetch file
+                const response = await fetch(filename);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+
+                // Update header
+                const fileInfo = files.find(f => f.filename === filename);
+                document.getElementById('selectedFileName').textContent =
+                    fileInfo ? `${fileInfo.displayDate} at ${fileInfo.displayTime}` : filename;
+                document.getElementById('entryCount').textContent = `${data.length} ${data.length === 1 ? 'entry' : 'entries'}`;
+                document.getElementById('fileSize').textContent = `${Math.round(JSON.stringify(data).length / 1024)} KB`;
+                document.getElementById('contentHeader').style.display = 'block';
+
+                // Render data
+                renderData(data);
+
+            } catch (error) {
+                console.error('Error loading file:', error);
+                document.getElementById('contentBody').innerHTML = `
+                    <div class="error-state">
+                        <strong>Error loading file</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Render data as continuous chat
+        function renderData(data) {
+            // Reset message ID counter for each file
+            messageIdCounter = 0;
+            const contentBody = document.getElementById('contentBody');
+            contentBody.innerHTML = renderContinuousChat(data);
+        }
+
+        // Render continuous chat with differential algorithm
+        function renderContinuousChat(entries) {
+            let html = '';
+            let renderedPartsCount = 0;
+
+            // Add session info header
+            if (entries.length > 0) {
+                const firstEntry = entries[0];
+                const sessionId = firstEntry.request && firstEntry.request["session.id"]
+                    ? firstEntry.request["session.id"]
+                    : extractPromptId(firstEntry);
+
+                html += `<div class="chat-header">`;
+                html += `<div class="chat-session-info">`;
+                html += `<span class="chat-session-label">Session ID:</span> `;
+                html += `<span class="chat-session-id">${sessionId}</span>`;
+                html += `</div>`;
+                html += `</div>`;
+            }
+
+            // Create continuous chat container
+            html += `<div class="chat-container">`;
+
+            entries.forEach((entry, index) => {
+                const requestParts = entry.request?.request_text || [];
+
+                // Only render new parts from this request (differential rendering)
+                const newParts = requestParts.slice(renderedPartsCount);
+
+                // Group consecutive messages by role and render as single cards
+                let currentGroup = [];
+                let currentRole = null;
+
+                newParts.forEach(part => {
+                    const role = part.role || 'user';
+
+                    // Skip model messages (they're rendered from response_text)
+                    if (role === 'model') {
+                        return;
+                    }
+
+                    // If role changed, render the current group and start a new one
+                    if (currentRole !== null && currentRole !== role) {
+                        html += renderGroupedChatMessage(currentGroup, currentRole);
+                        currentGroup = [];
+                    }
+
+                    currentRole = role;
+                    currentGroup.push(part);
+                });
+
+                // Render the last group
+                if (currentGroup.length > 0) {
+                    html += renderGroupedChatMessage(currentGroup, currentRole);
+                }
+
+                // Render model response
+                if (entry.response?.response_text) {
+                    html += renderChatResponse(entry.response);
+                }
+
+                // Update counter for next iteration
+                renderedPartsCount = requestParts.length;
+            });
+
+            html += `</div>`; // Close chat-container
+
+            return html;
+        }
+
+        // Render grouped chat messages (multiple messages with same role in one card)
+        function renderGroupedChatMessage(messages, role) {
+            if (!messages || messages.length === 0) {
+                return '';
+            }
+
+            const styleType = (role === 'model') ? 'model' : 'user';
+            const messageId = `msg-${messageIdCounter++}`;
+
+            let html = `<div class="chat-message chat-${styleType}" id="${messageId}">`;
+            html += `<button class="chat-copy-btn" onclick="copyMessageText('${messageId}')" title="Copy message">📋</button>`;
+            html += `<div class="chat-message-role">${role}</div>`;
+            html += `<div class="chat-message-content">`;
+
+            // Render all parts from all messages
+            let textBuffer = '';
+
+            messages.forEach(msg => {
+                if (msg.parts && Array.isArray(msg.parts)) {
+                    msg.parts.forEach(part => {
+                        if (part.text) {
+                            // Accumulate text parts
+                            textBuffer += part.text;
+                        }
+
+                        // Handle non-text parts
+                        if (part.functionCall || part.functionResponse) {
+                            // Flush text buffer first if there's any
+                            if (textBuffer) {
+                                html += `<div class="chat-message-text">${wrapTextWithTruncation(textBuffer)}</div>`;
+                                textBuffer = '';
+                            }
+
+                            // Render the function part
+                            if (part.functionCall) {
+                                html += renderFunctionCall(part.functionCall);
+                            }
+                            if (part.functionResponse) {
+                                html += renderFunctionResponse(part.functionResponse);
+                            }
+                        }
+                    });
+                }
+            });
+
+            // Flush any remaining text
+            if (textBuffer) {
+                html += `<div class="chat-message-text">${wrapTextWithTruncation(textBuffer)}</div>`;
+            }
+
+            html += `</div>`; // Close chat-message-content
+            html += `</div>`; // Close chat-message
+            return html;
+        }
+
+        // Render a chat message (user or model)
+        function renderChatMessage(msg, type = 'user') {
+            const role = msg.role || type;
+
+            // Skip model messages - they should only be rendered from response_text, not from request history
+            if (role === 'model') {
+                return '';
+            }
+
+            // Always use model styling if role is 'model', regardless of type
+            const styleType = (role === 'model') ? 'model' : type;
+            const messageId = `msg-${messageIdCounter++}`;
+
+            let html = `<div class="chat-message chat-${styleType}" id="${messageId}">`;
+            html += `<button class="chat-copy-btn" onclick="copyMessageText('${messageId}')" title="Copy message">📋</button>`;
+            html += `<div class="chat-message-role">${role}</div>`;
+            html += `<div class="chat-message-content">`;
+
+            if (msg.parts && Array.isArray(msg.parts)) {
+                msg.parts.forEach(part => {
+                    if (part.text) {
+                        html += `<div class="chat-message-text">${wrapTextWithTruncation(part.text)}</div>`;
+                    }
+                    if (part.functionCall) {
+                        html += renderFunctionCall(part.functionCall);
+                    }
+                    if (part.functionResponse) {
+                        html += renderFunctionResponse(part.functionResponse);
+                    }
+                });
+            }
+
+            html += `</div>`; // Close chat-message-content
+            html += `</div>`; // Close chat-message
+            return html;
+        }
+
+        // Render model response
+        function renderChatResponse(response) {
+            let html = '';
+
+            if (response.response_text && Array.isArray(response.response_text)) {
+                // Collect all parts from all candidates into a single array
+                let allParts = [];
+
+                response.response_text.forEach(resp => {
+                    if (resp.candidates && Array.isArray(resp.candidates)) {
+                        resp.candidates.forEach(candidate => {
+                            if (candidate.content && candidate.content.parts) {
+                                candidate.content.parts.forEach(part => {
+                                    allParts.push(part);
+                                });
+                            }
+                        });
+                    }
+                });
+
+                // Render all collected parts in a single model card
+                if (allParts.length > 0) {
+                    const messageId = `msg-${messageIdCounter++}`;
+
+                    html += `<div class="chat-message chat-model" id="${messageId}">`;
+                    html += `<button class="chat-copy-btn" onclick="copyMessageText('${messageId}')" title="Copy message">📋</button>`;
+                    html += `<div class="chat-message-role">model</div>`;
+                    html += `<div class="chat-message-content">`;
+
+                    // Concatenate all text parts into a single string
+                    let textBuffer = '';
+                    allParts.forEach(part => {
+                        if (part.text) {
+                            textBuffer += part.text;
+                        }
+                    });
+
+                    // Render the concatenated text as a single block
+                    if (textBuffer) {
+                        html += `<div class="chat-message-text">${wrapTextWithTruncation(textBuffer)}</div>`;
+                    }
+
+                    html += `</div>`; // Close chat-message-content
+                    html += `</div>`; // Close chat-message
+                }
+            }
+
+            return html;
+        }
+
+        // Extract title from request text (2nd part if exists, else 1st part)
+        function extractTitle(entry) {
+            if (!entry.request || !entry.request.request_text) {
+                return 'Untitled Request';
+            }
+
+            const requestText = entry.request.request_text;
+
+            // Handle array format
+            if (Array.isArray(requestText)) {
+                // Try to get second part, fallback to first
+                const targetIndex = requestText.length > 1 ? 1 : 0;
+                const part = requestText[targetIndex];
+
+                if (part && part.parts && Array.isArray(part.parts)) {
+                    // Get text from first text part
+                    const textPart = part.parts.find(p => p.text);
+                    if (textPart && textPart.text) {
+                        const text = textPart.text.trim();
+                        return text.length > 50 ? text.substring(0, 50) + '...' : text;
+                    }
+                }
+            }
+
+            // Handle string format
+            if (typeof requestText === 'string') {
+                const text = requestText.trim();
+                return text.length > 50 ? text.substring(0, 50) + '...' : text;
+            }
+
+            return 'Untitled Request';
+        }
+
+        // Extract prompt_id from nested attributes
+        function extractPromptId(entry) {
+            // Try to get prompt_id from request, response, or error
+            if (entry.request && entry.request.prompt_id) {
+                return entry.request.prompt_id;
+            }
+            if (entry.response && entry.response.prompt_id) {
+                return entry.response.prompt_id;
+            }
+            if (entry.error && entry.error.prompt_id) {
+                return entry.error.prompt_id;
+            }
+            return 'unknown';
+        }
+
+        // Render single entry
+        function renderEntry(entry) {
+            const promptId = extractPromptId(entry);
+            const cardId = `card-${promptId}`;
+            const requestId = `${cardId}-request`;
+            const responseId = `${cardId}-response`;
+
+            let html = `<div class="entry-card collapsed" id="${cardId}">`;
+
+            // Entry header (always visible)
+            html += `<div class="entry-header" onclick="toggleCard(event, document.getElementById('${cardId}'))">`;
+            html += `<div class="entry-header-left">`;
+            html += `<span class="collapse-toggle">▼</span>`;
+            html += `<span class="entry-title-text">${escapeHtml(extractTitle(entry))}</span>`;
+            html += `</div>`;
+            html += `<div class="entry-header-center">`;
+            // Extract session ID from request["session.id"], fallback to prompt_id
+            const sessionId = entry.request && entry.request["session.id"] ? entry.request["session.id"] : promptId;
+            html += `<span class="entry-session-id-badge">${sessionId}</span>`;
+            // Add token info if available
+            if (entry.response) {
+                const tokens = [];
+                if (entry.response.input_token_count) tokens.push(`In: ${entry.response.input_token_count.toLocaleString()}`);
+                if (entry.response.output_token_count) tokens.push(`Out: ${entry.response.output_token_count.toLocaleString()}`);
+                if (entry.response.total_token_count) tokens.push(`Total: ${entry.response.total_token_count.toLocaleString()}`);
+                if (tokens.length > 0) {
+                    html += `<span class="entry-token-info">${tokens.join(' | ')}</span>`;
+                }
+            }
+            html += `</div>`;
+            html += `<div class="entry-header-right">`;
+            if (entry.request && entry.request.model) {
+                html += `<span class="model-badge">${entry.request.model}</span>`;
+            }
+            html += `</div>`;
+            html += `</div>`;
+
+            // Collapsible content
+            html += `<div class="entry-content">`;
+
+            // Request section (collapsible)
+            if (entry.request) {
+                html += `<div class="subsection">`;
+                html += `<div class="subsection-header collapsed" onclick="toggleSubsection(event, '${requestId}')">`;
+                html += `<span class="subsection-toggle">▼</span>`;
+                html += `<span class="subsection-title">Request</span>`;
+                html += `</div>`;
+                html += `<div class="subsection-content" id="${requestId}">`;
+                html += renderRequest(entry.request);
+                html += `</div>`;
+                html += `</div>`;
+            }
+
+            // Response section (collapsible)
+            if (entry.response) {
+                html += `<div class="subsection">`;
+                html += `<div class="subsection-header collapsed" onclick="toggleSubsection(event, '${responseId}')">`;
+                html += `<span class="subsection-toggle">▼</span>`;
+                html += `<span class="subsection-title">Response</span>`;
+                // Add status and duration to header
+                const badges = [];
+                if (entry.response.status_code) {
+                    const badgeClass = entry.response.status_code === 200 ? 'success' : 'error';
+                    badges.push(`<span class="info-badge ${badgeClass}">Status: ${entry.response.status_code}</span>`);
+                }
+                if (entry.response.duration_ms) {
+                    badges.push(`<span class="info-badge">Duration: ${entry.response.duration_ms}ms</span>`);
+                }
+                if (badges.length > 0) {
+                    html += `<div class="subsection-badges">${badges.join('')}</div>`;
+                }
+                html += `</div>`;
+                html += `<div class="subsection-content" id="${responseId}">`;
+                html += renderResponse(entry.response);
+                html += `</div>`;
+                html += `</div>`;
+            }
+
+            // Error section
+            if (entry.error) {
+                html += `<div class="section-title" style="margin-top: 24px;">Error</div>`;
+                html += renderError(entry.error);
+            }
+
+            html += `</div>`; // Close entry-content
+            html += `</div>`; // Close entry-card
+            return html;
+        }
+
+        // Render request
+        function renderRequest(request) {
+            let html = '';
+
+            if (request.request_text) {
+                const messages = Array.isArray(request.request_text) ? request.request_text : [];
+                messages.forEach(msg => {
+                    html += renderMessage(msg);
+                });
+            }
+
+            return html;
+        }
+
+        // Render message
+        function renderMessage(msg) {
+            const role = msg.role || 'unknown';
+            let html = `<div class="message ${role}">`;
+            html += `<div class="message-role">${role}</div>`;
+
+            if (msg.parts && Array.isArray(msg.parts)) {
+                msg.parts.forEach(part => {
+                    if (part.text) {
+                        html += `<div class="message-text">${wrapTextWithTruncation(part.text)}</div>`;
+                    }
+                    if (part.functionCall) {
+                        html += renderFunctionCall(part.functionCall);
+                    }
+                    if (part.functionResponse) {
+                        html += renderFunctionResponse(part.functionResponse);
+                    }
+                });
+            }
+
+            html += `</div>`;
+            return html;
+        }
+
+        // Render function call
+        function renderFunctionCall(funcCall) {
+            let html = `<div class="function-call">`;
+            html += `<div class="function-name">🔧 ${funcCall.name}</div>`;
+            if (funcCall.args) {
+                const argsJson = JSON.stringify(funcCall.args, null, 2);
+                html += `<div class="function-args">${wrapTextWithTruncation(argsJson)}</div>`;
+            }
+            html += `</div>`;
+            return html;
+        }
+
+        // Render function response
+        function renderFunctionResponse(funcResponse) {
+            let html = `<div class="function-call">`;
+            html += `<div class="function-name">✅ ${funcResponse.name}</div>`;
+            if (funcResponse.response) {
+                const responseJson = JSON.stringify(funcResponse.response, null, 2);
+                html += `<div class="function-args">${wrapTextWithTruncation(responseJson)}</div>`;
+            }
+            html += `</div>`;
+            return html;
+        }
+
+        // Render response
+        function renderResponse(response) {
+            let html = '';
+
+            // Response text
+            if (response.response_text && Array.isArray(response.response_text)) {
+                response.response_text.forEach(resp => {
+                    if (resp.candidates && Array.isArray(resp.candidates)) {
+                        resp.candidates.forEach(candidate => {
+                            if (candidate.content && candidate.content.parts) {
+                                candidate.content.parts.forEach(part => {
+                                    if (part.text) {
+                                        html += `<div class="message model">`;
+                                        html += `<div class="message-role">model</div>`;
+                                        html += `<div class="message-text">${wrapTextWithTruncation(part.text)}</div>`;
+                                        html += `</div>`;
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+
+            return html;
+        }
+
+        // Render error
+        function renderError(error) {
+            let html = `<div class="error-state">`;
+            html += `<strong>Error</strong><br>`;
+            if (error.error) {
+                html += `${escapeHtml(error.error)}<br>`;
+            }
+            if (error.error_type) {
+                html += `<small>Type: ${error.error_type}</small><br>`;
+            }
+            if (error.status_code) {
+                html += `<small>Status: ${error.status_code}</small>`;
+            }
+            html += `</div>`;
+            return html;
+        }
+
+        // Escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Counter for unique IDs
+        let truncatableIdCounter = 0;
+
+        // Wrap text with truncation if it has more than 10 lines
+        function wrapTextWithTruncation(text) {
+            if (!text) return '';
+
+            // Count lines
+            const lines = text.split('\n');
+            if (lines.length <= 10) {
+                // No truncation needed
+                return escapeHtml(text);
+            }
+
+            // Generate unique ID
+            const id = `truncatable-${truncatableIdCounter++}`;
+
+            // Split into truncated and full views
+            const first10Lines = lines.slice(0, 10).join('\n');
+            const line11 = lines[10] || '';
+            const allLines = lines.join('\n');
+
+            // Build HTML
+            let html = `<div class="truncatable-text truncated" id="${id}" ondblclick="toggleTextExpansion('${id}')">`;
+
+            // Truncated view (first 10 lines + faded line 11)
+            html += `<div class="text-truncated">`;
+            html += `<div>${escapeHtml(first10Lines)}</div>`;
+            html += `<div class="text-line-11">${escapeHtml(line11)}</div>`;
+            html += `</div>`;
+
+            // Expanded view (all lines)
+            html += `<div class="text-expanded">`;
+            html += escapeHtml(allLines);
+            html += `</div>`;
+
+            html += `</div>`;
+            return html;
+        }
+
+        // Toggle text expansion
+        function toggleTextExpansion(textId) {
+            const element = document.getElementById(textId);
+            if (element) {
+                element.classList.toggle('expanded');
+                element.classList.toggle('truncated');
+            }
+        }
+
+        // Start the app
+        init();
+    </script>
+</body>
+</html>

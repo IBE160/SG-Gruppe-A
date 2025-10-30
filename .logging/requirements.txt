@@ -1,0 +1,6 @@
+# Python dependencies for .logging scripts
+# Install with: pip install -r requirements.txt
+
+ijson>=3.2.3        # Streaming JSON parser for large log files
+filelock>=3.12.0    # Cross-platform file locking
+watchfiles>=0.21    # File watcher for watcher.py (if needed)
