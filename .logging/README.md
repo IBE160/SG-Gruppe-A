@@ -38,7 +38,7 @@ The logging directory is organized as follows:
 
 ## Quick Start
 
-### Running with `uv` (Recommended)
+### 1. Process Telemetry Logs
 
 No setup required! Just run:
 
@@ -46,7 +46,17 @@ No setup required! Just run:
 uv run .logging/process-api-requests.py
 ```
 
-The `uv` tool automatically handles dependencies defined in the script header. Output files are saved to `.logging/requests/` and can be viewed via the API Request Viewer.
+The `uv` tool automatically handles dependencies defined in the script header. Output files are saved to `.logging/requests/`.
+
+### 2. View Results in Browser
+
+Start the viewer server:
+
+```bash
+uv run .logging/server.py
+```
+
+The server will automatically open the API Request Viewer in your browser at `http://localhost:8000/api-viewer.html`. See the [API Request Viewer](#api-request-viewer) section below for details on all features.
 
 ### Options
 
