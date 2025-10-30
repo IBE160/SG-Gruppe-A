@@ -12,8 +12,8 @@ WORKFLOW_PATH: {{workflow_path_file}}
 ## Current State
 
 CURRENT_PHASE: {{current_phase}}
-CURRENT_WORKFLOW: brainstorm-project - Complete
-CURRENT_AGENT: {{current_agent}}
+CURRENT_WORKFLOW: research - Complete
+CURRENT_AGENT: analyst
 PHASE_1_COMPLETE: {{phase_1_complete}}
 PHASE_2_COMPLETE: {{phase_2_complete}}
 PHASE_3_COMPLETE: {{phase_3_complete}}
@@ -21,9 +21,9 @@ PHASE_4_COMPLETE: {{phase_4_complete}}
 
 ## Next Action
 
-NEXT_ACTION: {{next_action}}
-NEXT_COMMAND: {{next_command}}
-NEXT_AGENT: {{next_agent}}
+NEXT_ACTION: Review research findings
+NEXT_COMMAND: Run `workflow-status` for guided next steps
+NEXT_AGENT: analyst
 
 ---
 
