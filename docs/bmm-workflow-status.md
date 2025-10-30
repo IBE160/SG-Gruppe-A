@@ -3,41 +3,28 @@
 ## Project Configuration
 
 PROJECT_NAME: ibe160
-PROJECT_TYPE: software
-PROJECT_LEVEL: 3
-FIELD_TYPE: greenfield
-START_DATE: 2025-10-24
-WORKFLOW_PATH: greenfield-level-3.yaml
+PROJECT_TYPE: {{project_type}}
+PROJECT_LEVEL: {{project_level}}
+FIELD_TYPE: {{field_type}}
+START_DATE: {{start_date}}
+WORKFLOW_PATH: {{workflow_path_file}}
 
 ## Current State
 
-CURRENT_PHASE: 1
-CURRENT_WORKFLOW: research - Complete
-CURRENT_AGENT: analyst
-PHASE_1_COMPLETE: true
-PHASE_2_COMPLETE: false
-PHASE_3_COMPLETE: false
-PHASE_4_COMPLETE: false
+CURRENT_PHASE: {{current_phase}}
+CURRENT_WORKFLOW: {{current_workflow}}
+CURRENT_AGENT: {{current_agent}}
+PHASE_1_COMPLETE: {{phase_1_complete}}
+PHASE_2_COMPLETE: {{phase_2_complete}}
+PHASE_3_COMPLETE: {{phase_3_complete}}
+PHASE_4_COMPLETE: {{phase_4_complete}}
 
 ## Next Action
 
-NEXT_ACTION: Produce Project Brief
-NEXT_COMMAND: product-brief
-NEXT_AGENT: analyst
-
-## Story Backlog
-
-
-
-- 
-
-## Completed Stories
-
-
-
-- 
+NEXT_ACTION: {{next_action}}
+NEXT_COMMAND: {{next_command}}
+NEXT_AGENT: {{next_agent}}
 
 ---
 
-_Last Updated: 2025-10-24_
-_Status Version: 2.0_
+_Last Updated: Thursday, October 30, 2025_
