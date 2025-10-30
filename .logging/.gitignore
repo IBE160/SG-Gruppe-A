@@ -1,0 +1,22 @@
+# Python virtual environment
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Output files
+*.tmp
+
+# State and lock files
+.state.json
+.process.lock
+*.lock
+
+# Log files
+log.jsonl
+*.log
+
+# IDE
+.vscode/
+.idea/
