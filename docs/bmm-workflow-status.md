@@ -12,7 +12,7 @@ WORKFLOW_PATH: {{workflow_path_file}}
 ## Current State
 
 CURRENT_PHASE: {{current_phase}}
-CURRENT_WORKFLOW: {{current_workflow}}
+CURRENT_WORKFLOW: brainstorm-project - Complete
 CURRENT_AGENT: {{current_agent}}
 PHASE_1_COMPLETE: {{phase_1_complete}}
 PHASE_2_COMPLETE: {{phase_2_complete}}
