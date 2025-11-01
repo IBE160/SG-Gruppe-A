@@ -2,13 +2,13 @@
 AI CV & Job Application Assistant
 
 ## Background
-Many job seekers spend hours tailoring their CVs and cover letters without knowing how to make them stand out or pass automated screening systems. Recruiters increasingly rely on AI-based Applicant Tracking Systems (ATS) that filter applications by keywords and relevance, causing qualified candidates to be rejected before human review.
+Many job seekers spend hours tailoring their CVs and cover letters without knowing how to make them stand out or pass automated screening systems. Recruiters increasingly rely on AI-based Applicant Tracking Systems (ATS) that filter applications by keywords and relevance, causing qualified candidates to be rejected before human review. We can also see that there is a trend, where people make job CVs better and cover letters with AI, and we want to be a part of this trend. see @docs/research-AI-CV-cover-letter-trend-2025-11-01.md
 
 ## Purpose
-To create an AI-powered web application that analyzes CVs and job postings to generate optimized, personalized cover letters. The system identifies missing qualifications, suggests improvements, and helps users understand how AI evaluates applications in modern recruitment.
+To create an AI-powered web application that analyzes CVs and job postings to generate optimized, personalized cover letters. The system identifies missing qualifications, suggests improvements, and helps users understand how AI evaluates applications in modern recruitment. there are some competetors doing some of the same, but we want to do it better, and get more users and others. see @docs/research-competitive-2025-10-30.md
 
 ## Target Users
-Students, graduates, and professionals who want to improve their job applications, increase their chances of passing ATS filters, and gain insight into AI-driven hiring processes.
+Students, graduates, and professionals who want to improve their job applications, increase their chances of passing ATS filters, and gain insight into AI-driven hiring processes. 
 
 ## Core Functionality
 
@@ -77,6 +77,7 @@ A new or returning user lands on the homepage. see @docs/brainstorming- layout T
    - After confirming inputs, the user clicks “Generate Cover Letter.”  
    - The AI model processes both the CV data and the job ad to create a tailored cover letter draft.  
    - The letter appears in a dual-view editor, showing both the generated text and key insights (e.g., how well the content matches the job ad).
+   - generating the cover letter should not take more than 2 minutes see @docs/brainstorming- time for the LLM to give a feedback-Thursday, October 30, 2025.md
 
 6. **Review and Edit:**  
    - The user can manually edit the text directly in the editor.  
