@@ -19,7 +19,7 @@
 #   - drafted: Story file created in stories folder by *create-story
 #   - ready-for-dev: Draft approved and story context created by *story-ready
 #   - in-progress: Developer actively working on implementation by *dev-story
-#   - review: Implementation complete, ready for review by *review-story
+#   - review: Implementation complete, ready for review by *code-review
 #   - done: Story completed by *story-done
 #
 # Retrospective Status:

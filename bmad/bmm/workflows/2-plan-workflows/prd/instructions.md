@@ -12,33 +12,27 @@
 
 <workflow>
 
-<step n="0" goal="Validate workflow and extract project configuration">
+<step n="0" goal="Validate workflow readiness" tag="workflow-status">
+<action>Check if {output_folder}/bmm-workflow-status.yaml exists</action>
 
-<invoke-workflow path="{project-root}/bmad/bmm/workflows/workflow-status">
-  <param>mode: data</param>
-  <param>data_request: project_config</param>
-</invoke-workflow>
-
-<check if="status_exists == false">
-  <output>**⚠️ No Workflow Status File Found**
-
-The PRD workflow requires a status file to understand your project context.
-
-Please run `workflow-init` first to:
-
-- Define your project type and level
-- Map out your workflow journey
-- Create the status file
-
-Run: `workflow-init`
-
-After setup, return here to create your PRD.
-</output>
-<action>Exit workflow - cannot proceed without status file</action>
+<check if="status file not found">
+  <output>No workflow status file found. PRD workflow can run standalone or as part of BMM workflow path.</output>
+  <output>**Recommended:** Run `workflow-init` first for project context tracking and workflow sequencing.</output>
+  <ask>Continue in standalone mode or exit to run workflow-init? (continue/exit)</ask>
+  <check if="continue">
+    <action>Set standalone_mode = true</action>
+  </check>
+  <check if="exit">
+    <action>Exit workflow</action>
+  </check>
 </check>
 
-<check if="status_exists == true">
-  <action>Store {{status_file_path}} for later updates</action>
+<check if="status file found">
+  <action>Load the FULL file: {output_folder}/bmm-workflow-status.yaml</action>
+  <action>Parse workflow_status section</action>
+  <action>Check status of "prd" workflow</action>
+  <action>Get project_level from YAML metadata</action>
+  <action>Find first non-completed workflow (next expected workflow)</action>
 
   <check if="project_level < 2">
     <output>**Incorrect Workflow for Level {{project_level}}**
@@ -50,32 +44,25 @@ PRD is for Level 2-4 projects. Level 0-1 should use tech-spec directly.
 <action>Exit and redirect to tech-spec</action>
 </check>
 
-  <check if="project_type == game">
-    <output>**Incorrect Workflow for Game Projects**
-
-Game projects should use GDD workflow instead of PRD.
-
-**Correct workflow:** `gdd` (PM agent)
-</output>
-<action>Exit and redirect to gdd</action>
-</check>
-</check>
-</step>
-
-<step n="0.5" goal="Validate workflow sequencing">
-
-<invoke-workflow path="{project-root}/bmad/bmm/workflows/workflow-status">
-  <param>mode: validate</param>
-  <param>calling_workflow: prd</param>
-</invoke-workflow>
-
-<check if="warning != ''">
-  <output>{{warning}}</output>
-  <ask>Continue with PRD anyway? (y/n)</ask>
-  <check if="n">
-    <output>{{suggestion}}</output>
-    <action>Exit workflow</action>
+  <check if="prd status is file path (already completed)">
+    <output>⚠️ PRD already completed: {{prd status}}</output>
+    <ask>Re-running will overwrite the existing PRD. Continue? (y/n)</ask>
+    <check if="n">
+      <output>Exiting. Use workflow-status to see your next step.</output>
+      <action>Exit workflow</action>
+    </check>
   </check>
+
+  <check if="prd is not the next expected workflow">
+    <output>⚠️ Next expected workflow: {{next_workflow}}. PRD is out of sequence.</output>
+    <ask>Continue with PRD anyway? (y/n)</ask>
+    <check if="n">
+      <output>Exiting. Run {{next_workflow}} instead.</output>
+      <action>Exit workflow</action>
+    </check>
+  </check>
+
+<action>Set standalone_mode = false</action>
 </check>
 </step>
 
@@ -405,18 +392,17 @@ For each epic from the epic list, expand with full story details:
 
 </step>
 
-<step n="10" goal="Update status and complete">
+<step n="10" goal="Update status and complete" tag="workflow-status">
 
-<invoke-workflow path="{project-root}/bmad/bmm/workflows/workflow-status">
-  <param>mode: update</param>
-  <param>action: complete_workflow</param>
-  <param>workflow_name: prd</param>
-  <param>populate_stories_from: {epics_output_file}</param>
-</invoke-workflow>
+<check if="standalone_mode != true">
+  <action>Load the FULL file: {output_folder}/bmm-workflow-status.yaml</action>
+  <action>Find workflow_status key "prd"</action>
+  <critical>ONLY write the file path as the status value - no other text, notes, or metadata</critical>
+  <action>Update workflow_status["prd"] = "{default_output_file}"</action>
+  <action>Save file, preserving ALL comments and structure including STATUS DEFINITIONS</action>
 
-<check if="success == true">
-  <output>Status updated! Next: {{next_workflow}} ({{next_agent}} agent)</output>
-  <output>Loaded {{total_stories}} stories from epics.</output>
+<action>Find first non-completed workflow in workflow_status (next workflow to do)</action>
+<action>Determine next agent from path file based on next workflow</action>
 </check>
 
 <output>**✅ PRD Workflow Complete, {user_name}!**

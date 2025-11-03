@@ -1,67 +1,139 @@
----
-last-redoc-date: 2025-09-28
----
-
 # CIS Workflows
 
-The Creative Intelligence System includes five interactive workflows that facilitate different creative and strategic processes. Each workflow uses curated technique libraries and structured facilitation to guide users through proven methodologies.
+Five interactive workflows facilitating creative and strategic processes through curated technique libraries and structured facilitation.
 
-## Available Workflows
+## Table of Contents
+
+- [Workflow Overview](#workflow-overview)
+- [Common Features](#common-features)
+- [Usage](#usage)
+- [Configuration](#configuration)
+
+## Workflow Overview
 
 ### [Brainstorming](./brainstorming)
 
-Facilitates interactive ideation sessions using 36 creative techniques across 7 categories. AI acts as master facilitator using "Yes, and..." methodology. Supports user-selected, AI-recommended, random, or progressive technique flows.
+**Purpose:** Interactive ideation using 36 techniques across 7 categories
 
-**Key Feature:** Comprehensive technique library spanning collaborative, structured, creative, deep, theatrical, wild, and introspective approaches.
+**Approach:** Master facilitation with "Yes, and..." methodology
+
+**Techniques:** Collaborative, structured, creative, deep, theatrical, wild, introspective
+
+**Selection Modes:** User-selected, AI-recommended, random, or progressive
 
 ### [Design Thinking](./design-thinking)
 
-Guides human-centered design through the complete five-phase methodology: Empathize, Define, Ideate, Prototype, and Test. Emphasizes divergent thinking before convergent action with rapid prototyping focus.
+**Purpose:** Human-centered design through five phases
 
-**Key Feature:** Phase-specific method library and systematic user empathy development.
+**Process:** Empathize → Define → Ideate → Prototype → Test
+
+**Focus:** Divergent thinking before convergent action
+
+**Output:** User empathy insights and rapid prototypes
 
 ### [Innovation Strategy](./innovation-strategy)
 
-Identifies disruption opportunities and architects business model innovation. Analyzes markets, competitive dynamics, and value chains using frameworks like Jobs-to-be-Done and Blue Ocean Strategy.
+**Purpose:** Identify disruption opportunities and business model innovation
 
-**Key Feature:** Strategic focus on sustainable competitive advantage over feature innovation.
+**Frameworks:** Jobs-to-be-Done, Blue Ocean Strategy, Value Chain Analysis
+
+**Focus:** Sustainable competitive advantage over features
+
+**Output:** Strategic innovation roadmap
 
 ### [Problem Solving](./problem-solving)
 
-Applies systematic problem-solving methodologies combining TRIZ, Theory of Constraints, Systems Thinking, and Root Cause Analysis. Detective approach treats challenges as elegant puzzles.
+**Purpose:** Systematic challenge resolution
 
-**Key Feature:** Relentless root cause focus using framework-driven analysis.
+**Methods:** TRIZ, Theory of Constraints, Systems Thinking, Root Cause Analysis
+
+**Approach:** Detective-style puzzle solving
+
+**Output:** Root cause identification and solution strategies
 
 ### [Storytelling](./storytelling)
 
-Crafts compelling narratives using proven story frameworks (Hero's Journey, Three-Act Structure, Story Brand). Tailors emotional psychology and structure to platform and audience.
+**Purpose:** Craft compelling narratives
 
-**Key Feature:** Whimsical facilitation style that embodies master storytelling craft.
+**Frameworks:** Hero's Journey, Three-Act Structure, Story Brand (25 total)
 
-## Common Patterns
+**Customization:** Platform and audience-specific adaptation
 
-All CIS workflows share these characteristics:
+**Style:** Whimsical master storyteller facilitation
 
-- **Interactive Facilitation**: AI guides rather than generates, asking questions to draw out user insights
-- **Technique Libraries**: CSV databases of methods, frameworks, and approaches
-- **Context Awareness**: Accept optional context documents via data attribute
-- **Structured Output**: Comprehensive reports capturing insights, decisions, and action plans
-- **Energy Monitoring**: Check-ins throughout to adapt pace and approach
+## Common Features
+
+All workflows share:
+
+- **Interactive Facilitation** - AI guides through questions, not generation
+- **Technique Libraries** - CSV databases of proven methods
+- **Context Integration** - Optional document input for domain relevance
+- **Structured Output** - Comprehensive reports with insights and actions
+- **Energy Monitoring** - Adaptive pacing based on engagement
 
 ## Usage
 
-```bash
-# Basic invocation
-workflow [workflow-name]
+### Basic Invocation
 
-# With context document
+```bash
+workflow brainstorming
+workflow design-thinking
+workflow innovation-strategy
+workflow problem-solving
+workflow storytelling
+```
+
+### With Context
+
+```bash
 workflow [workflow-name] --data /path/to/context.md
+```
+
+### Via Agent
+
+```bash
+agent cis/brainstorming-coach
+> *brainstorm
 ```
 
 ## Configuration
 
-All workflows reference `/bmad/cis/config.yaml` for:
+Edit `/bmad/cis/config.yaml`:
 
-- `output_folder` - Where workflow results are saved
-- `user_name` - Session participant identification
-- `communication_language` - Facilitation language preference
+| Setting                | Purpose                 | Default            |
+| ---------------------- | ----------------------- | ------------------ |
+| output_folder          | Result storage location | ./creative-outputs |
+| user_name              | Session participant     | User               |
+| communication_language | Facilitation language   | english            |
+
+## Workflow Structure
+
+Each workflow contains:
+
+```
+workflow-name/
+├── workflow.yaml      # Configuration
+├── instructions.md    # Facilitation guide
+├── techniques.csv     # Method library
+└── README.md         # Documentation
+```
+
+## Best Practices
+
+1. **Prepare context** - Provide background documents for better results
+2. **Set clear objectives** - Define goals before starting
+3. **Trust the process** - Let facilitation guide discovery
+4. **Capture everything** - Document insights as they emerge
+5. **Take breaks** - Pause when energy drops
+
+## Integration
+
+CIS workflows integrate with:
+
+- **BMM** - Project brainstorming and ideation
+- **BMB** - Creative module design
+- **Custom Modules** - Shared creative resource
+
+---
+
+For detailed workflow instructions, see individual workflow directories.

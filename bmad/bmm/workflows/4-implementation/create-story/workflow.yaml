@@ -33,7 +33,6 @@ variables:
   story_title: "" # Will be elicited if not derivable
   epic_num: 1
   story_num: 1
-  auto_run_context: true # Optionally run story-context after creation
   non_interactive: true # Generate without elicitation; avoid interactive prompts
 
 # Output configuration
@@ -44,4 +43,5 @@ recommended_inputs:
   - epics: "Epic breakdown (epics.md)"
   - prd: "PRD document"
   - architecture: "Architecture (optional)"
-
+
+standalone: true

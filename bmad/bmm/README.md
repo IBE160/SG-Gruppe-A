@@ -1,136 +1,144 @@
 # BMM - BMad Method Module
 
-The BMM (BMad Method Module) is the core orchestration system for the BMad Method v6a, providing comprehensive software development lifecycle management through specialized agents, workflows, teams, and tasks.
+Core orchestration system for AI-driven agile development, providing comprehensive lifecycle management through specialized agents and workflows.
 
-## 📚 Essential Reading
+## Table of Contents
 
-**Before using BMM, you MUST read the [BMM v6 Workflows Guide](./workflows/README.md).** This document explains the revolutionary v6a workflow system and how all components work together.
+- [Essential Reading](#essential-reading)
+- [Module Structure](#module-structure)
+- [Quick Start](#quick-start)
+- [Key Concepts](#key-concepts)
+- [Scale Levels](#scale-levels)
+- [Story Lifecycle](#story-lifecycle)
+- [Best Practices](#best-practices)
+
+## Essential Reading
+
+**[📖 BMM v6 Workflows Guide](./workflows/README.md)** - Required reading before using BMM. Explains the revolutionary workflow system and component integration.
 
 ## Module Structure
 
-### 🤖 `/agents`
+### 🤖 Agents
 
-Specialized AI agents for different development roles:
+**Core Development Roles:**
 
-- **PM** (Product Manager) - Product planning and requirements
+- **PM** - Product Manager for planning and requirements
 - **Analyst** - Business analysis and research
 - **Architect** - Technical architecture and design
-- **SM** (Scrum Master) - Sprint and story management
-- **DEV** (Developer) - Code implementation
-- **TEA** (Test Architect) - Test Architect
+- **SM** - Scrum Master for sprint and story management
+- **DEV** - Developer for implementation
+- **TEA** - Test Architect for quality assurance
 - **UX** - User experience design
-- And more specialized roles
 
-### 📋 `/workflows`
+**Game Development** (Optional):
 
-The heart of BMM - structured workflows for the four development phases:
+- **Game Designer** - Creative vision and GDD creation
+- **Game Developer** - Game-specific implementation
+- **Game Architect** - Game systems and infrastructure
 
-1. **Analysis Phase** (Optional)
-   - `brainstorm-project` - Project ideation
-   - `research` - Market/technical research
-   - `product-brief` - Product strategy
+### 📋 Workflows
 
-2. **Planning Phase** (Required)
-   - `prd` - Scale-adaptive project planning
-   - Routes to appropriate documentation based on project complexity
+Four-phase methodology adapting to project complexity:
 
-3. **Solutioning Phase** (Level 3-4 projects)
-   - `3-solutioning` - Architecture design
-   - `tech-spec` - Epic-specific technical specifications
+**1. Analysis** (Optional)
 
-4. **Implementation Phase** (Iterative)
-   - `create-story` - Story drafting (SM agent)
-   - `story-ready` - Approve story for development (SM agent)
-   - `story-context` - Expertise injection (SM agent)
-   - `dev-story` - Implementation (DEV agent)
-   - `story-done` - Mark story done (DEV agent)
-   - `review-story` - Quality validation (DEV/SR agent)
-   - `correct-course` - Issue resolution
-   - `retrospective` - Continuous improvement
+- `brainstorm-project` - Project ideation
+- `research` - Market/technical research
+- `product-brief` - Product strategy
 
-### 👥 `/teams`
+**2. Planning** (Required)
 
-Pre-configured agent teams for different project types and phases. Teams coordinate multiple agents working together on complex tasks.
+- `prd` - Scale-adaptive planning
+- Routes to appropriate documentation level
 
-### 📝 `/tasks`
+**3. Solutioning** (Level 3-4)
 
-Reusable task definitions that agents execute within workflows. These are the atomic units of work that compose into larger workflows.
+- `architecture` - System design
+- `tech-spec` - Epic technical specifications
 
-### 🔧 `/sub-modules`
+**4. Implementation** (Iterative)
 
-Extension modules that add specialized capabilities to BMM.
+- `create-story` - Draft stories
+- `story-context` - Inject expertise
+- `dev-story` - Implement
+- `code-review` - Validate quality
 
-### 🏗️ `/testarch`
+### 👥 Teams
 
-Test architecture and quality assurance components. The **[Test Architect (TEA) Guide](./testarch/README.md)** provides comprehensive testing strategy across 9 workflows: framework setup, CI/CD, test design, ATDD, automation, traceability, NFR assessment, quality gates, and test review.
+Pre-configured agent groups for coordinated complex tasks.
+
+### 📝 Tasks
+
+Atomic work units composing into larger workflows.
+
+### 🏗️ Test Architecture
+
+**[TEA Guide](./testarch/README.md)** - Comprehensive testing strategy across 9 specialized workflows.
 
 ## Quick Start
 
-```bash
-# Load the PM agent - either via slash command or drag and drop or @ the agent file.
-# Once loaded, the agent should greet you and offer a menu of options. You can enter:
-`*prd`
-```
+1. **Load PM agent** in your IDE
+2. **Wait for menu** to appear
+3. **Run workflow:**
+   ```
+   *prd
+   ```
+
+**IDE Instructions:**
+
+- [Claude Code](../../docs/ide-info/claude-code.md)
+- [Cursor](../../docs/ide-info/cursor.md)
+- [VS Code](../../docs/ide-info/windsurf.md)
+- [Others](../../docs/ide-info/)
 
 ## Key Concepts
 
 ### Scale Levels
 
-BMM automatically adapts to project complexity:
+BMM automatically adapts complexity:
 
-- **Level 0**: Single atomic change
-- **Level 1**: 1-10 stories, minimal documentation
-- **Level 2**: 5-15 stories, focused PRD
-- **Level 3**: 12-40 stories, full architecture
-- **Level 4**: 40+ stories, enterprise scale
+| Level | Stories       | Documentation     |
+| ----- | ------------- | ----------------- |
+| 0     | Single change | Minimal           |
+| 1     | 1-10          | Light PRD         |
+| 2     | 5-15          | Focused PRD       |
+| 3     | 12-40         | Full architecture |
+| 4     | 40+           | Enterprise scale  |
 
-### Just-In-Time Design
+### Story Lifecycle
 
-Technical specifications are created one epic at a time during implementation, not all upfront, allowing for learning and adaptation.
-
-### Story State Machine
-
-Stories flow through a 4-state lifecycle tracked in the status file:
+Four-state machine tracked in status file:
 
 ```
 BACKLOG → TODO → IN PROGRESS → DONE
 ```
 
-- **BACKLOG**: Ordered list of stories to be drafted (populated at phase transition)
-- **TODO**: Single story ready for SM to draft (or drafted, awaiting approval)
-- **IN PROGRESS**: Single story approved for DEV to implement
-- **DONE**: Completed stories with dates and points
+- **BACKLOG** - Ordered stories to draft
+- **TODO** - Ready for SM drafting
+- **IN PROGRESS** - Approved for DEV
+- **DONE** - Completed with metrics
 
-Agents never search for "next story" - they always read the exact story from the status file. Simple workflows (`story-ready`, `story-done`) advance the queue automatically.
+### Just-In-Time Design
+
+Technical specifications created per epic during implementation, enabling learning and adaptation.
 
 ### Context Injection
 
-Story-specific technical guidance is generated dynamically, providing developers with exactly the expertise needed for each task.
-
-## Integration with BMad Core
-
-BMM integrates seamlessly with the BMad Core framework, leveraging:
-
-- The agent execution engine
-- Workflow orchestration
-- Task management
-- Team coordination
-
-## Related Documentation
-
-- [BMM Workflows Guide](./workflows/README.md) - **Start here!**
-- [Test Architect (TEA) Guide](./testarch/README.md) - Quality assurance and testing strategy
-- [Agent Documentation](./agents/README.md) - Individual agent capabilities
-- [Team Configurations](./teams/README.md) - Pre-built team setups
-- [Task Library](./tasks/README.md) - Reusable task components
+Dynamic technical guidance generated for each story, providing exact expertise when needed.
 
 ## Best Practices
 
-1. **Always start with the workflows** - Let workflows guide your process
-2. **Respect the scale** - Don't over-document small projects
-3. **Embrace iteration** - Use retrospectives to continuously improve
-4. **Trust the process** - The v6a methodology has been carefully designed
+1. **Start with workflows** - Let process guide you
+2. **Respect scale** - Don't over-document small projects
+3. **Trust the process** - Methodology carefully designed
+4. **Use status file** - Single source of truth for stories
+
+## Related Documentation
+
+- **[Workflows Guide](./workflows/README.md)** - Complete workflow reference
+- **[Test Architect Guide](./testarch/README.md)** - Testing strategy
+- **[IDE Setup](../../docs/ide-info/)** - Environment configuration
 
 ---
 
-For detailed information about the complete BMad Method v6a workflow system, see the [BMM Workflows README](./workflows/README.md).
+For complete BMad Method workflow system details, see the [BMM Workflows README](./workflows/README.md).

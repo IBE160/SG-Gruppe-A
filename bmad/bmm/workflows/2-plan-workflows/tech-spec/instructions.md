@@ -13,33 +13,27 @@
 
 <critical>DOCUMENT OUTPUT: Technical, precise, definitive. Specific versions only. User skill level ({user_skill_level}) affects conversation style ONLY, not document content.</critical>
 
-<step n="0" goal="Validate workflow and extract project configuration">
+<step n="0" goal="Validate workflow readiness" tag="workflow-status">
+<action>Check if {output_folder}/bmm-workflow-status.yaml exists</action>
 
-<invoke-workflow path="{project-root}/bmad/bmm/workflows/workflow-status">
-  <param>mode: data</param>
-  <param>data_request: project_config</param>
-</invoke-workflow>
-
-<check if="status_exists == false">
-  <output>**⚠️ No Workflow Status File Found**
-
-The tech-spec workflow requires a status file to understand your project context.
-
-Please run `workflow-init` first to:
-
-- Define your project type and level
-- Map out your workflow journey
-- Create the status file
-
-Run: `workflow-init`
-
-After setup, return here to create your tech spec.
-</output>
-<action>Exit workflow - cannot proceed without status file</action>
+<check if="status file not found">
+  <output>No workflow status file found. Tech-spec workflow can run standalone or as part of BMM workflow path.</output>
+  <output>**Recommended:** Run `workflow-init` first for project context tracking and workflow sequencing.</output>
+  <ask>Continue in standalone mode or exit to run workflow-init? (continue/exit)</ask>
+  <check if="continue">
+    <action>Set standalone_mode = true</action>
+  </check>
+  <check if="exit">
+    <action>Exit workflow</action>
+  </check>
 </check>
 
-<check if="status_exists == true">
-  <action>Store {{status_file_path}} for later updates</action>
+<check if="status file found">
+  <action>Load the FULL file: {output_folder}/bmm-workflow-status.yaml</action>
+  <action>Parse workflow_status section</action>
+  <action>Check status of "tech-spec" workflow</action>
+  <action>Get project_level from YAML metadata</action>
+  <action>Find first non-completed workflow (next expected workflow)</action>
 
   <check if="project_level >= 2">
     <output>**Incorrect Workflow for Level {{project_level}}**
@@ -51,32 +45,25 @@ Tech-spec is for Level 0-1 projects. Level 2-4 should use PRD workflow.
 <action>Exit and redirect to prd</action>
 </check>
 
-  <check if="project_type == game">
-    <output>**Incorrect Workflow for Game Projects**
-
-Game projects should use GDD workflow instead of tech-spec.
-
-**Correct workflow:** `gdd` (PM agent)
-</output>
-<action>Exit and redirect to gdd</action>
-</check>
-</check>
-</step>
-
-<step n="0.5" goal="Validate workflow sequencing">
-
-<invoke-workflow path="{project-root}/bmad/bmm/workflows/workflow-status">
-  <param>mode: validate</param>
-  <param>calling_workflow: tech-spec</param>
-</invoke-workflow>
-
-<check if="warning != ''">
-  <output>{{warning}}</output>
-  <ask>Continue with tech-spec anyway? (y/n)</ask>
-  <check if="n">
-    <output>{{suggestion}}</output>
-    <action>Exit workflow</action>
+  <check if="tech-spec status is file path (already completed)">
+    <output>⚠️ Tech-spec already completed: {{tech-spec status}}</output>
+    <ask>Re-running will overwrite the existing tech-spec. Continue? (y/n)</ask>
+    <check if="n">
+      <output>Exiting. Use workflow-status to see your next step.</output>
+      <action>Exit workflow</action>
+    </check>
   </check>
+
+  <check if="tech-spec is not the next expected workflow">
+    <output>⚠️ Next expected workflow: {{next_workflow}}. Tech-spec is out of sequence.</output>
+    <ask>Continue with tech-spec anyway? (y/n)</ask>
+    <check if="n">
+      <output>Exiting. Run {{next_workflow}} instead.</output>
+      <action>Exit workflow</action>
+    </check>
+  </check>
+
+<action>Set standalone_mode = false</action>
 </check>
 </step>
 
@@ -228,24 +215,25 @@ Run cohesion validation? (y/n)</ask>
 
 ## Next Steps
 
-<invoke-workflow path="{project-root}/bmad/bmm/workflows/workflow-status">
-  <param>mode: update</param>
-  <param>action: complete_workflow</param>
-  <param>workflow_name: tech-spec</param>
-</invoke-workflow>
+<check if="standalone_mode != true">
+  <action>Load the FULL file: {output_folder}/bmm-workflow-status.yaml</action>
+  <action>Find workflow_status key "tech-spec"</action>
+  <critical>ONLY write the file path as the status value - no other text, notes, or metadata</critical>
+  <action>Update workflow_status["tech-spec"] = "{output_folder}/bmm-tech-spec-{{date}}.md"</action>
+  <action>Save file, preserving ALL comments and structure including STATUS DEFINITIONS</action>
 
-<check if="success == true">
-  <output>Status updated!</output>
+<action>Find first non-completed workflow in workflow_status (next workflow to do)</action>
+<action>Determine next agent from path file based on next workflow</action>
 </check>
 
 <output>**✅ Tech-Spec Complete, {user_name}!**
 
 **Deliverables Created:**
-<check if="project_level == 0">
 
+<check if="project_level == 0">
 - ✅ tech-spec.md - Technical specification
 - ✅ user-story.md - Single user story
-  </check>
+</check>
 
 <check if="project_level == 1">
 - ✅ tech-spec.md - Technical specification

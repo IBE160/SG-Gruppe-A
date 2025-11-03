@@ -1,6 +1,6 @@
-# Review Story (Senior Developer Review)
+# Review Story (Senior Developer Code Review)
 
-Perform an AI-driven Senior Developer Review on a story flagged "Ready for Review". The workflow ingests the story, its Story Context, and the epic’s Tech Spec, consults local docs, uses enabled MCP servers for up-to-date best practices (with web search fallback), and appends structured review notes to the story.
+Perform an AI-driven Senior Developer Code Review on a story flagged "Ready for Review". The workflow ingests the story, its Story Context, and the epic’s Tech Spec, consults local docs, uses enabled MCP servers for up-to-date best practices (with web search fallback), and appends structured review notes to the story.
 
 ## What It Does
 
@@ -16,10 +16,7 @@ Perform an AI-driven Senior Developer Review on a story flagged "Ready for Revie
 
 ## How to Invoke
 
-- By workflow name (if supported):
-  - `workflow review-story`
-- By path:
-  - `workflow {project-root}/bmad/bmm/workflows/4-implementation/review-story/workflow.yaml`
+- Tell the Dev Agent to perform a \*code-review after loading the dev agent. This is a context intensive operation so this should not be done in the same context as a just completed dev session - clear the context, reload the dev, then run code-review!
 
 ## Inputs and Variables
 

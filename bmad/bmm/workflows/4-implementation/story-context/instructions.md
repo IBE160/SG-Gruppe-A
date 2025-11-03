@@ -9,7 +9,7 @@
 <critical>If story_path is provided, use it. Otherwise, find the first story with status "drafted" in sprint-status.yaml. If none found, HALT.</critical>
 <critical>Check if context file already exists. If it does, ask user if they want to replace it, verify it, or cancel.</critical>
 
-<critical>DOCUMENT OUTPUT: Technical context file (.context.md). Concise, structured, project-relative paths only.</critical>
+<critical>DOCUMENT OUTPUT: Technical context file (.context.xml). Concise, structured, project-relative paths only.</critical>
 
 <workflow>
   <step n="1" goal="Find drafted story and check for existing context" tag="sprint-status">
@@ -178,12 +178,14 @@ You may need to run sprint-planning to refresh tracking.
     <output>✅ Story context generated successfully, {user_name}!
 
 **Story Details:**
+
 - Story: {{epic_id}}.{{story_id}} - {{story_title}}
 - Story Key: {{story_key}}
 - Context File: {default_output_file}
 - Status: drafted → ready-for-dev
 
 **Context Includes:**
+
 - Documentation artifacts and references
 - Existing code and interfaces
 - Dependencies and frameworks
@@ -191,6 +193,7 @@ You may need to run sprint-planning to refresh tracking.
 - Development constraints
 
 **Next Steps:**
+
 1. Review the context file: {default_output_file}
 2. Run `dev-story` to implement the story
 3. Generate context for more drafted stories if needed

@@ -162,19 +162,18 @@ Your choice [1/2/3]:
 
 ## Data Files
 
-The workflow uses three CSV files:
+The workflow uses a single comprehensive CSV file:
 
-1. **project-types.csv** - Project type detection and classification
-   - Location: `/bmad/bmm/workflows/3-solutioning/architecture/project-types/project-types.csv`
-   - 12 project types with detection keywords
+**documentation-requirements.csv** - Complete project analysis guide
 
-2. **registry.csv** - Architecture template matching
-   - Location: `/bmad/bmm/workflows/3-solutioning/templates/registry.csv`
-   - 170+ architecture patterns
-
-3. **documentation-requirements.csv** - Scanning requirements per project type
-   - Location: `/bmad/bmm/workflows/document-project/documentation-requirements.csv`
-   - 24 columns of analysis patterns and requirements
+- Location: `/bmad/bmm/workflows/document-project/documentation-requirements.csv`
+- 12 project types (web, mobile, backend, cli, library, desktop, game, data, extension, infra, embedded)
+- 24 columns combining:
+  - **Detection columns**: `project_type_id`, `key_file_patterns` (identifies project type from codebase)
+  - **Requirement columns**: `requires_api_scan`, `requires_data_models`, `requires_ui_components`, etc.
+  - **Pattern columns**: `critical_directories`, `test_file_patterns`, `config_patterns`, etc.
+- Self-contained: All project detection AND scanning requirements in one file
+- Architecture patterns inferred from tech stack (no external registry needed)
 
 ## Use Cases
 

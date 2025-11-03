@@ -10,20 +10,40 @@
 <critical>If users mention gameplay mechanics, note them but keep focus on narrative</critical>
 <critical>Facilitate good brainstorming techniques throughout with the user, pushing them to come up with much of the narrative you will help weave together. The goal is for the user to feel that they crafted the narrative and story arc unless they push you to do it all or indicate YOLO</critical>
 
-<step n="0" goal="Check for workflow status">
+<step n="0" goal="Check for workflow status" tag="workflow-status">
+<action>Check if {output_folder}/bmm-workflow-status.yaml exists</action>
 
-<invoke-workflow path="{project-root}/bmad/bmm/workflows/workflow-status">
-  <param>mode: init-check</param>
-</invoke-workflow>
-
-<check if="status_exists == true">
-  <action>Store {{status_file_path}} for later updates</action>
-  <action>Set tracking_mode = true</action>
+<check if="status file not found">
+  <output>No workflow status file found. Narrative workflow is optional - you can continue without status tracking.</output>
+  <action>Set standalone_mode = true</action>
 </check>
 
-<check if="status_exists == false">
-  <action>Set tracking_mode = false</action>
-  <output>Note: Running without workflow tracking. Run `workflow-init` to enable progress tracking.</output>
+<check if="status file found">
+  <action>Load the FULL file: {output_folder}/bmm-workflow-status.yaml</action>
+  <action>Parse workflow_status section</action>
+  <action>Check status of "narrative" workflow</action>
+  <action>Get project_level from YAML metadata</action>
+  <action>Find first non-completed workflow (next expected workflow)</action>
+
+  <check if="narrative status is file path (already completed)">
+    <output>⚠️ Narrative Design Document already completed: {{narrative status}}</output>
+    <ask>Re-running will overwrite the existing narrative document. Continue? (y/n)</ask>
+    <check if="n">
+      <output>Exiting. Use workflow-status to see your next step.</output>
+      <action>Exit workflow</action>
+    </check>
+  </check>
+
+  <check if="narrative is not the next expected workflow (latter items are completed already in the list)">
+    <output>⚠️ Next expected workflow: {{next_workflow}}. Narrative is out of sequence.</output>
+    <ask>Continue with Narrative Design anyway? (y/n)</ask>
+    <check if="n">
+      <output>Exiting. Run {{next_workflow}} instead.</output>
+      <action>Exit workflow</action>
+    </check>
+  </check>
+
+<action>Set standalone_mode = false</action>
 </check>
 </step>
 
@@ -539,19 +559,50 @@ Which would you like?</ask>
 
 </step>
 
-<step n="17" goal="Update status if tracking enabled">
+<step n="17" goal="Update status if tracking enabled" tag="workflow-status">
 
-<check if="tracking_mode == true">
-  <invoke-workflow path="{project-root}/bmad/bmm/workflows/workflow-status">
-    <param>mode: update</param>
-    <param>action: complete_workflow</param>
-    <param>workflow_name: narrative</param>
-  </invoke-workflow>
+<check if="standalone_mode != true">
+  <action>Load the FULL file: {output_folder}/bmm-workflow-status.yaml</action>
+  <action>Find workflow_status key "narrative"</action>
+  <critical>ONLY write the file path as the status value - no other text, notes, or metadata</critical>
+  <action>Update workflow_status["narrative"] = "{output_folder}/bmm-narrative-{{game_name}}-{{date}}.md"</action>
+  <action>Save file, preserving ALL comments and structure including STATUS DEFINITIONS</action>
 
-  <check if="success == true">
-    <output>✅ Status updated! Next: {{next_workflow}}</output>
-  </check>
+<action>Find first non-completed workflow in workflow_status (next workflow to do)</action>
+<action>Determine next agent from path file based on next workflow</action>
 </check>
-</step>
+
+<output>**✅ Narrative Design Complete, {user_name}!**
+
+**Narrative Document:**
+
+- Narrative design saved to {output_folder}/bmm-narrative-{{game_name}}-{{date}}.md
+
+{{#if standalone_mode != true}}
+**Status Updated:**
+
+- Progress tracking updated: narrative marked complete
+- Next workflow: {{next_workflow}}
+  {{else}}
+  **Note:** Running in standalone mode (no progress tracking)
+  {{/if}}
+
+**Next Steps:**
+
+{{#if standalone_mode != true}}
+
+- **Next workflow:** {{next_workflow}} ({{next_agent}} agent)
+- **Optional:** Review narrative with writing team or stakeholders
+
+Check status anytime with: `workflow-status`
+{{else}}
+Since no workflow is in progress:
+
+- Review narrative design with team
+- Refer to the BMM workflow guide if unsure what to do next
+- Or run `workflow-init` to create a workflow path and get guided next steps
+  {{/if}}
+  </output>
+  </step>
 
 </workflow>

@@ -10,26 +10,42 @@
 
 <critical>This is a ROUTER that directs to specialized research instruction sets</critical>
 
-<step n="1" goal="Validate workflow readiness">
-<invoke-workflow path="{project-root}/bmad/bmm/workflows/workflow-status">
-  <param>mode: validate</param>
-  <param>calling_workflow: research</param>
-</invoke-workflow>
+<step n="1" goal="Validate workflow readiness" tag="workflow-status">
+<action>Check if {output_folder}/bmm-workflow-status.yaml exists</action>
 
-<check if="status_exists == false">
-  <output>{{suggestion}}</output>
-  <output>Note: Research is optional. Continuing without progress tracking.</output>
+<check if="status file not found">
+  <output>No workflow status file found. Research is optional - you can continue without status tracking.</output>
   <action>Set standalone_mode = true</action>
 </check>
 
-<check if="status_exists == true">
-  <action>Store {{status_file_path}} for status updates in sub-workflows</action>
-  <action>Pass status_file_path to loaded instruction set</action>
+<check if="status file found">
+  <action>Load the FULL file: {output_folder}/bmm-workflow-status.yaml</action>
+  <action>Parse workflow_status section</action>
+  <action>Check status of "research" workflow</action>
+  <action>Get project_level from YAML metadata</action>
+  <action>Find first non-completed workflow (next expected workflow)</action>
+  <action>Pass status context to loaded instruction set for final update</action>
 
-  <check if="warning != ''">
-    <output>{{warning}}</output>
-    <output>Note: Research can provide valuable insights at any project stage.</output>
+  <check if="research status is file path (already completed)">
+    <output>⚠️ Research already completed: {{research status}}</output>
+    <ask>Re-running will create a new research report. Continue? (y/n)</ask>
+    <check if="n">
+      <output>Exiting. Use workflow-status to see your next step.</output>
+      <action>Exit workflow</action>
+    </check>
   </check>
+
+  <check if="research is not the next expected workflow (latter items are completed already in the list)">
+    <output>⚠️ Next expected workflow: {{next_workflow}}. Research is out of sequence.</output>
+    <output>Note: Research can provide valuable insights at any project stage.</output>
+    <ask>Continue with Research anyway? (y/n)</ask>
+    <check if="n">
+      <output>Exiting. Run {{next_workflow}} instead.</output>
+      <action>Exit workflow</action>
+    </check>
+  </check>
+
+<action>Set standalone_mode = false</action>
 </check>
 </step>
 

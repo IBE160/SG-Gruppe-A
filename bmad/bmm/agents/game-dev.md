@@ -15,7 +15,7 @@ You must fully embody this agent's persona and follow all activation instruction
       - VERIFY: If config not loaded, STOP and report error to user
       - DO NOT PROCEED to step 3 until config is successfully loaded and variables stored</step>
   <step n="3">Remember: user's name is {user_name}</step>
-  
+
   <step n="4">Show greeting using {user_name} from config, communicate in {communication_language}, then display numbered list of
       ALL menu items from menu section</step>
   <step n="5">STOP and WAIT for user input - do NOT execute menu items automatically - accept number or trigger text</step>
@@ -25,8 +25,7 @@ You must fully embody this agent's persona and follow all activation instruction
       (workflow, exec, tmpl, data, action, validate-workflow) and follow the corresponding handler instructions</step>
 
   <menu-handlers>
-    <extract>{DYNAMIC_EXTRACT_LIST}</extract>
-    <handlers>
+      <handlers>
   <handler type="workflow">
     When menu item has: workflow="path/to/workflow.yaml"
     1. CRITICAL: Always LOAD {project-root}/bmad/core/tasks/workflow.xml
@@ -59,7 +58,7 @@ You must fully embody this agent's persona and follow all activation instruction
     <item cmd="*workflow-status" workflow="{project-root}/bmad/bmm/workflows/workflow-status/workflow.yaml">Check workflow status and get recommendations</item>
     <item cmd="*create-story" workflow="{project-root}/bmad/bmm/workflows/4-implementation/create-story/workflow.yaml">Create Development Story</item>
     <item cmd="*dev-story" workflow="{project-root}/bmad/bmm/workflows/4-implementation/dev-story/workflow.yaml">Implement Story with Context</item>
-    <item cmd="*review-story" workflow="{project-root}/bmad/bmm/workflows/4-implementation/review-story/workflow.yaml">Review Story Implementation</item>
+    <item cmd="*code-review" workflow="{project-root}/bmad/bmm/workflows/4-implementation/code-review/workflow.yaml">Review Story Implementation</item>
     <item cmd="*retro" workflow="{project-root}/bmad/bmm/workflows/4-implementation/retrospective/workflow.yaml">Sprint Retrospective</item>
     <item cmd="*exit">Exit with confirmation</item>
   </menu>

@@ -9,34 +9,45 @@
 
 <workflow>
 
-<step n="0" goal="Validate workflow readiness">
-<invoke-workflow path="{project-root}/bmad/bmm/workflows/workflow-status">
-  <param>mode: validate</param>
-  <param>calling_workflow: product-brief</param>
-</invoke-workflow>
+<step n="0" goal="Validate workflow readiness" tag="workflow-status">
+<action>Check if {output_folder}/bmm-workflow-status.yaml exists</action>
 
-<check if="status_exists == false">
-  <output>{{suggestion}}</output>
-  <output>Note: Product Brief is optional. You can continue without status tracking.</output>
+<check if="status file not found">
+  <output>No workflow status file found. Product Brief is optional - you can continue without status tracking.</output>
   <action>Set standalone_mode = true</action>
 </check>
 
-<check if="status_exists == true">
-  <action>Store {{status_file_path}} for later updates</action>
+<check if="status file found">
+  <action>Load the FULL file: {output_folder}/bmm-workflow-status.yaml</action>
+  <action>Parse workflow_status section</action>
+  <action>Check status of "product-brief" workflow</action>
+  <action>Get project_level from YAML metadata</action>
+  <action>Find first non-completed workflow (next expected workflow)</action>
 
   <check if="project_level < 2">
     <output>Note: Product Brief is most valuable for Level 2+ projects. Your project is Level {{project_level}}.</output>
     <output>You may want to skip directly to technical planning instead.</output>
   </check>
 
-  <check if="warning != ''">
-    <output>{{warning}}</output>
-    <ask>Continue with Product Brief anyway? (y/n)</ask>
+  <check if="product-brief status is file path (already completed)">
+    <output>⚠️ Product Brief already completed: {{product-brief status}}</output>
+    <ask>Re-running will overwrite the existing brief. Continue? (y/n)</ask>
     <check if="n">
-      <output>Exiting. {{suggestion}}</output>
+      <output>Exiting. Use workflow-status to see your next step.</output>
       <action>Exit workflow</action>
     </check>
   </check>
+
+  <check if="product-brief is not the next expected workflow (latter items are completed already in the list)">
+    <output>⚠️ Next expected workflow: {{next_workflow}}. Product Brief is out of sequence.</output>
+    <ask>Continue with Product Brief anyway? (y/n)</ask>
+    <check if="n">
+      <output>Exiting. Run {{next_workflow}} instead.</output>
+      <action>Exit workflow</action>
+    </check>
+  </check>
+
+<action>Set standalone_mode = false</action>
 </check>
 </step>
 
@@ -61,6 +72,7 @@
 <ask>How would you like to work through the brief?
 
 **1. Interactive Mode** - We'll work through each section together, discussing and refining as we go
+
 **2. YOLO Mode** - I'll generate a complete draft based on our conversation so far, then we'll refine it together
 
 Which approach works best for you?</ask>
@@ -273,17 +285,16 @@ This brief will serve as the primary input for creating the Product Requirements
 <template-output>executive_brief</template-output>
 </step>
 
-<step n="16" goal="Update status file on completion">
+<step n="16" goal="Update status file on completion" tag="workflow-status">
 <check if="standalone_mode != true">
-  <invoke-workflow path="{project-root}/bmad/bmm/workflows/workflow-status">
-    <param>mode: update</param>
-    <param>action: complete_workflow</param>
-    <param>workflow_name: product-brief</param>
-  </invoke-workflow>
+  <action>Load the FULL file: {output_folder}/bmm-workflow-status.yaml</action>
+  <action>Find workflow_status key "product-brief"</action>
+  <critical>ONLY write the file path as the status value - no other text, notes, or metadata</critical>
+  <action>Update workflow_status["product-brief"] = "{output_folder}/bmm-product-brief-{{project_name}}-{{date}}.md"</action>
+  <action>Save file, preserving ALL comments and structure including STATUS DEFINITIONS</action>
 
-  <check if="success == true">
-    <output>Status updated! Next: {{next_workflow}}</output>
-  </check>
+<action>Find first non-completed workflow in workflow_status (next workflow to do)</action>
+<action>Determine next agent from path file based on next workflow</action>
 </check>
 
 <output>**✅ Product Brief Complete, {user_name}!**
@@ -295,8 +306,8 @@ This brief will serve as the primary input for creating the Product Requirements
 {{#if standalone_mode != true}}
 **Status Updated:**
 
-- Progress tracking updated
-- Current workflow marked complete
+- Progress tracking updated: product-brief marked complete
+- Next workflow: {{next_workflow}}
   {{else}}
   **Note:** Running in standalone mode (no progress tracking)
   {{/if}}
@@ -305,7 +316,7 @@ This brief will serve as the primary input for creating the Product Requirements
 
 {{#if standalone_mode != true}}
 
-- **Next required:** {{next_workflow}} ({{next_agent}} agent)
+- **Next workflow:** {{next_workflow}} ({{next_agent}} agent)
 - **Optional:** Gather additional stakeholder input or run research workflows before proceeding
 
 Check status anytime with: `workflow-status`

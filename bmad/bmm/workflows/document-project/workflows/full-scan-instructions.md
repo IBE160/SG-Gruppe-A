@@ -6,54 +6,40 @@
 <critical>Called by: document-project/instructions.md router</critical>
 <critical>Handles: initial_scan and full_rescan modes</critical>
 
-<step n="0.5" goal="Load CSV data files for fresh starts (not needed for resume)" if="resume_mode == false">
-<critical>CSV LOADING STRATEGY - Understanding the Documentation Requirements System:</critical>
+<step n="0.5" goal="Load documentation requirements data for fresh starts (not needed for resume)" if="resume_mode == false">
+<critical>DATA LOADING STRATEGY - Understanding the Documentation Requirements System:</critical>
 
 <action>Display explanation to user:
 
 **How Project Type Detection Works:**
 
-This workflow uses 3 CSV files to intelligently document your project:
+This workflow uses a single comprehensive CSV file to intelligently document your project:
 
-1. **project-types.csv** ({project_types_csv})
-   - Contains 12 project types (web, mobile, backend, cli, library, desktop, game, data, extension, infra, embedded)
-   - Each type has detection_keywords used to identify project type from codebase
-   - Used ONLY during initial project classification (Step 1)
+**documentation-requirements.csv** ({documentation_requirements_csv})
 
-2. **documentation-requirements.csv** ({documentation_requirements_csv})
-   - 24-column schema that defines what to look for in each project type
-   - Columns include: requires_api_scan, requires_data_models, requires_ui_components, etc.
-   - Contains file patterns (key_file_patterns, critical_directories, test_file_patterns, etc.)
-   - Acts as a "scan guide" - tells the workflow WHERE to look and WHAT to document
-   - Example: For project_type_id="web", requires_api_scan=true, so workflow scans api/ folder
+- Contains 12 project types (web, mobile, backend, cli, library, desktop, game, data, extension, infra, embedded)
+- 24-column schema combining project type detection AND documentation requirements
+- **Detection columns**: project_type_id, key_file_patterns (used to identify project type from codebase)
+- **Requirement columns**: requires_api_scan, requires_data_models, requires_ui_components, etc.
+- **Pattern columns**: critical_directories, test_file_patterns, config_patterns, etc.
+- Acts as a "scan guide" - tells the workflow WHERE to look and WHAT to document
+- Example: For project_type_id="web", key_file_patterns includes "package.json;tsconfig.json;\*.config.js" and requires_api_scan=true
 
-3. **architecture-registry.csv** ({architecture_registry_csv})
-   - Maps detected tech stacks to architecture templates
-   - Used to select appropriate architecture document template
-   - Only loaded when generating architecture documentation (Step 8)
+**When Documentation Requirements are Loaded:**
 
-**When Each CSV is Loaded:**
-
-- **Fresh Start (initial_scan)**: Load project-types.csv → detect type → load corresponding doc requirements row
+- **Fresh Start (initial_scan)**: Load all 12 rows → detect type using key_file_patterns → use that row's requirements
 - **Resume**: Load ONLY the doc requirements row(s) for cached project_type_id(s)
 - **Full Rescan**: Same as fresh start (may re-detect project type)
 - **Deep Dive**: Load ONLY doc requirements for the part being deep-dived
   </action>
 
-<action>Now loading CSV files for fresh start...</action>
-<action>Load project-types.csv from: {project_types_csv}</action>
-<action>Store all 12 project types with their detection_keywords for use in Step 1</action>
-<action>Display: "Loaded 12 project type definitions"</action>
+<action>Now loading documentation requirements data for fresh start...</action>
 
 <action>Load documentation-requirements.csv from: {documentation_requirements_csv}</action>
-<action>Store all rows indexed by project_type_id for later lookup</action>
-<action>Display: "Loaded documentation requirements for 12 project types"</action>
+<action>Store all 12 rows indexed by project_type_id for project detection and requirements lookup</action>
+<action>Display: "Loaded documentation requirements for 12 project types (web, mobile, backend, cli, library, desktop, game, data, extension, infra, embedded)"</action>
 
-<action>Load architecture-registry.csv from: {architecture_registry_csv}</action>
-<action>Store architecture templates for later matching in Step 3</action>
-<action>Display: "Loaded architecture template registry"</action>
-
-<action>Display: "✓ CSV data files loaded successfully. Ready to begin project analysis."</action>
+<action>Display: "✓ Documentation requirements loaded successfully. Ready to begin project analysis."</action>
 </step>
 
 <step n="0.6" goal="Check for existing documentation and determine workflow mode">
@@ -189,7 +175,7 @@ Is this correct? Should I document each part separately? [y/n]
 </ask>
 
 <action if="user confirms">Set repository_type = "monorepo" or "multi-part"</action>
-<action if="user confirms">For each detected part: - Identify root path - Run project type detection against project-types.csv - Store as part in project_parts array
+<action if="user confirms">For each detected part: - Identify root path - Run project type detection using key_file_patterns from documentation-requirements.csv - Store as part in project_parts array
 </action>
 
 <action if="user denies or corrects">Ask user to specify correct parts and their paths</action>
@@ -198,10 +184,10 @@ Is this correct? Should I document each part separately? [y/n]
 <check if="single cohesive project detected">
   <action>Set repository_type = "monolith"</action>
   <action>Create single part in project_parts array with root_path = {{project_root_path}}</action>
-  <action>Run project type detection against project-types.csv</action>
+  <action>Run project type detection using key_file_patterns from documentation-requirements.csv</action>
 </check>
 
-<action>For each part, match detected technologies and keywords against project-types.csv</action>
+<action>For each part, match detected technologies and file patterns against key_file_patterns column in documentation-requirements.csv</action>
 <action>Assign project_type_id to each part</action>
 <action>Load corresponding documentation_requirements row for each part</action>
 
@@ -275,15 +261,16 @@ Are there any other important documents or key areas I should focus on while ana
   - Build technology_table with columns: Category, Technology, Version, Justification
 </action>
 
-<action>Match detected tech stack against architecture_registry_csv:
+<action>Determine architecture pattern based on detected tech stack:
 
-- Use project_type_id + languages + architecture_style tags
-- Find closest matching architecture template
-- Store as {{architecture_match}} for each part
+- Use project_type_id as primary indicator (e.g., "web" → layered/component-based, "backend" → service/API-centric)
+- Consider framework patterns (e.g., React → component hierarchy, Express → middleware pipeline)
+- Note architectural style in technology table
+- Store as {{architecture_pattern}} for each part
   </action>
 
 <template-output>technology_stack</template-output>
-<template-output>architecture_template_matches</template-output>
+<template-output>architecture_patterns</template-output>
 
 <action>Update state file:
 

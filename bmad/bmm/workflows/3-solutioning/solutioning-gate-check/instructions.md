@@ -6,37 +6,53 @@
 
 <workflow>
 
-<step n="0" goal="Initialize and understand project context">
-<invoke-workflow path="{workflow_status_workflow}">
-  <param>mode: data</param>
-  <param>data_request: project_config</param>
-</invoke-workflow>
+<step n="0" goal="Validate workflow readiness" tag="workflow-status">
+<action>Check if {output_folder}/bmm-workflow-status.yaml exists</action>
 
-<check if="status_exists == false">
-  <output>**⚠️ No Workflow Status File Found**
-
-The Implementation Ready Check requires a status file to understand your project context.
-
-Please run `workflow-init` first to establish your project configuration.
-
-After setup, return here to validate implementation readiness.
-</output>
-<action>Exit workflow - cannot proceed without status file</action>
+<check if="status file not found">
+  <output>No workflow status file found. Implementation Ready Check can run standalone or as part of BMM workflow path.</output>
+  <output>**Recommended:** Run `workflow-init` first for project context tracking and workflow sequencing.</output>
+  <ask>Continue in standalone mode or exit to run workflow-init? (continue/exit)</ask>
+  <check if="continue">
+    <action>Set standalone_mode = true</action>
+  </check>
+  <check if="exit">
+    <action>Exit workflow</action>
+  </check>
 </check>
 
-<check if="status_exists == true">
-  <action>Store {{status_file_path}} for later updates</action>
-  <action>Store {{project_level}}, {{active_path}}, and {{workflow_phase}} for validation context</action>
+<check if="status file found">
+  <action>Load the FULL file: {output_folder}/bmm-workflow-status.yaml</action>
+  <action>Parse workflow_status section</action>
+  <action>Check status of "solutioning-gate-check" workflow</action>
+  <action>Get project_level from YAML metadata</action>
+  <action>Find first non-completed workflow (next expected workflow)</action>
 
-<action>Based on the project_level, understand what artifacts should exist:
+<action>Based on the project_level, understand what artifacts should exist: - Level 0-1: Tech spec and simple stories only (no PRD, minimal solutioning) - Level 2: PRD, tech spec, epics/stories (no separate architecture doc) - Level 3-4: Full suite - PRD, architecture document, epics/stories, possible UX artifacts
+</action>
 
-- Level 0-1: Tech spec and simple stories only (no PRD, minimal solutioning)
-- Level 2: PRD, tech spec, epics/stories (no separate architecture doc)
-- Level 3-4: Full suite - PRD, architecture document, epics/stories, possible UX artifacts
-  </action>
+  <check if="solutioning-gate-check status is file path (already completed)">
+    <output>⚠️ Gate check already completed: {{solutioning-gate-check status}}</output>
+    <ask>Re-running will create a new validation report. Continue? (y/n)</ask>
+    <check if="n">
+      <output>Exiting. Use workflow-status to see your next step.</output>
+      <action>Exit workflow</action>
+    </check>
+  </check>
+
+  <check if="solutioning-gate-check is not the next expected workflow">
+    <output>⚠️ Next expected workflow: {{next_workflow}}. Gate check is out of sequence.</output>
+    <ask>Continue with gate check anyway? (y/n)</ask>
+    <check if="n">
+      <output>Exiting. Run {{next_workflow}} instead.</output>
+      <action>Exit workflow</action>
+    </check>
+  </check>
+
+<action>Set standalone_mode = false</action>
+</check>
 
 <critical>The validation approach must adapt to the project level - don't look for documents that shouldn't exist at lower levels</critical>
-</check>
 
 <template-output>project_context</template-output>
 </step>
@@ -239,23 +255,48 @@ After setup, return here to validate implementation readiness.
 <template-output>readiness_assessment</template-output>
 </step>
 
-<step n="7" goal="Workflow status update offer" optional="true">
-<ask>The readiness assessment is complete. Would you like to update the workflow status to proceed to the next phase? [yes/no]
+<step n="7" goal="Update status and complete" tag="workflow-status">
+<check if="standalone_mode != true">
+  <action>Load the FULL file: {output_folder}/bmm-workflow-status.yaml</action>
+  <action>Find workflow_status key "solutioning-gate-check"</action>
+  <critical>ONLY write the file path as the status value - no other text, notes, or metadata</critical>
+  <action>Update workflow_status["solutioning-gate-check"] = "{output_folder}/bmm-readiness-assessment-{{date}}.md"</action>
+  <action>Save file, preserving ALL comments and structure including STATUS DEFINITIONS</action>
 
-Note: This will advance the project workflow to the next phase in your current path.</ask>
+<action>Find first non-completed workflow in workflow_status (next workflow to do)</action>
+<action>Determine next agent from path file based on next workflow</action>
+</check>
 
-<action if="user_response == 'yes'">
-Determine the next workflow phase based on current status:
-- If Level 0-1: Advance to implementation phase
-- If Level 2-4 in solutioning: Advance to Phase 4 (Implementation)
-- Update the workflow status configuration accordingly
-- Confirm the update with the user
-</action>
+<output>**✅ Implementation Ready Check Complete!**
 
-<action if="user_response == 'no'">
-Acknowledge that the workflow status remains unchanged.
-Remind user they can manually update when ready.
-</action>
+**Assessment Report:**
+
+- Readiness assessment saved to: {output_folder}/bmm-readiness-assessment-{{date}}.md
+
+{{#if standalone_mode != true}}
+**Status Updated:**
+
+- Progress tracking updated: solutioning-gate-check marked complete
+- Next workflow: {{next_workflow}}
+  {{else}}
+  **Note:** Running in standalone mode (no progress tracking)
+  {{/if}}
+
+**Next Steps:**
+
+{{#if standalone_mode != true}}
+
+- **Next workflow:** {{next_workflow}} ({{next_agent}} agent)
+- Review the assessment report and address any critical issues before proceeding
+
+Check status anytime with: `workflow-status`
+{{else}}
+Since no workflow is in progress:
+
+- Refer to the BMM workflow guide if unsure what to do next
+- Or run `workflow-init` to create a workflow path and get guided next steps
+  {{/if}}
+  </output>
 
 <template-output>status_update_result</template-output>
 </step>

@@ -1,129 +1,146 @@
----
-last-redoc-date: 2025-10-01
----
-
 # Create Story Workflow
 
-The create-story workflow is the entry point for v6's just-in-time story generation approach, run exclusively by the Scrum Master (SM) agent. Unlike batch processing methodologies, this workflow generates exactly ONE story at a time based on the current epic backlog state, ensuring stories are created only when needed and with the most current context. The SM analyzes the epic's progress, identifies what needs to be built next based on epics.md enumeration, and generates a complete story specification including acceptance criteria, technical approach, and implementation guidance pulled directly from tech specs, PRD, and architecture documentation.
+Just-in-time story generation creating one story at a time based on epic backlog state. Run by Scrum Master (SM) agent to ensure planned stories align with approved epics.
 
-This workflow represents a fundamental shift from traditional upfront planning to adaptive story generation. By creating stories one at a time and enforcing strict verification against epics.md, the SM ensures that only planned and approved stories are created. The workflow operates in non-interactive "#yolo" mode by default, minimizing prompts while maintaining quality through rigorous source document grounding. It will HALT if epics.md doesn't explicitly enumerate the next story, forcing proper planning through the correct-course workflow rather than allowing ad-hoc story creation.
+## Table of Contents
 
-The workflow's intelligent document discovery system automatically finds the relevant tech spec for the current epic (using pattern `tech-spec-epic-{epic_num}-*.md`), loads all architecture documents from both docs/ and output folders, and synthesizes requirements from multiple sources in priority order. After story creation, it can optionally trigger the story-context workflow to generate just-in-time technical expertise for the developer.
+- [Usage](#usage)
+- [Key Features](#key-features)
+- [Inputs & Outputs](#inputs--outputs)
+- [Workflow Behavior](#workflow-behavior)
+- [Integration](#integration)
 
 ## Usage
 
 ```bash
-# SM initiates story creation for the next piece of work
+# SM initiates next story creation
 bmad sm *create-story
 ```
 
-The SM runs this workflow when:
+**When to run:**
 
-- The current sprint has capacity for new work
-- The previous story status is "Done" or "Approved"
-- The team is ready for the next planned story in the epic
-- Story preparation is needed before development
-
-## Inputs
-
-**Required Context Files:**
-
-- **epics.md**: MANDATORY - Must explicitly enumerate the next story or workflow halts
-- **tech-spec-epic-{N}-\*.md**: Epic-specific technical specification (auto-discovered)
-- **PRD.md**: Product requirements document (fallback for requirements)
-- **Architecture Documents**: Automatically discovered from docs/ and output folders:
-  - tech-stack.md, unified-project-structure.md, coding-standards.md
-  - testing-strategy.md, backend-architecture.md, frontend-architecture.md
-  - data-models.md, database-schema.md, rest-api-spec.md, external-apis.md
-
-**Workflow Variables:**
-
-- `story_dir`: From config `dev_story_location` - where stories are saved
-- `epic_num`: Current epic number (auto-detected from existing stories)
-- `story_num`: Next story number (incremented from last completed story)
-- `auto_run_context`: Default true - runs story-context workflow after creation
-- `non_interactive`: Default true - operates in "#yolo" mode with minimal prompts
-
-## Outputs
-
-**Primary Deliverable:**
-
-- **Story Document** (`{story_dir}/story-{epic_num}.{story_num}.md`): Complete story specification including:
-  - User story statement (role, action, benefit)
-  - Acceptance criteria extracted from tech spec or epics.md
-  - Tasks and subtasks mapped to ACs
-  - Testing requirements per testing strategy
-  - Dev notes with source citations
-  - Status: "Draft" (requires approval before development)
-
-**Validation Safeguards:**
-
-- **Epic Enumeration Check**: If epics.md doesn't list the next story, workflow HALTS with:
-  ```
-  "No planned next story found in epics.md for epic {epic_num}.
-  Please load either PM or SM agent and run *correct-course to add/modify epic stories."
-  ```
-- **Status Check**: Won't create new story if current story isn't Done/Approved
-- **Document Grounding**: All requirements traced to source documents (no invention)
+- Sprint has capacity for new work
+- Previous story is Done/Approved
+- Team ready for next planned story
 
 ## Key Features
 
-**Strict Planning Enforcement**: The workflow will NOT create stories that aren't explicitly planned in epics.md. This prevents scope creep and ensures all work is properly approved through the planning process.
+### Strict Planning Enforcement
 
-**Intelligent Document Discovery**: Automatically finds the latest tech spec for the epic using glob patterns, discovers all architecture documents across multiple directories, and builds a prioritized document set for requirement extraction.
+- **Only creates stories enumerated in epics.md**
+- Halts if story not found in epic plan
+- Prevents scope creep through validation
 
-**Source Document Grounding**: Every requirement, acceptance criterion, and technical constraint is traced to a specific source document. The workflow explicitly forbids inventing domain facts not present in source materials.
+### Intelligent Document Discovery
 
-**Non-Interactive by Default**: Operates in "#yolo" mode to minimize interruptions, only prompting when absolutely necessary (like missing critical configuration). This enables smooth automated story preparation.
+- Auto-finds tech spec: `tech-spec-epic-{N}-*.md`
+- Discovers architecture docs across directories
+- Builds prioritized requirement sources
 
-**Automatic Context Generation**: When `auto_run_context` is true (default), automatically triggers the story-context workflow to generate developer expertise injection for the newly created story.
+### Source Document Grounding
 
-## Integration with v6 Flow
+- Every requirement traced to source
+- No invention of domain facts
+- Citations included in output
 
-The create-story workflow is step 1 in the v6 implementation cycle:
+### Non-Interactive Mode
 
-1. **SM: create-story** ← You are here
-2. SM: story-context (adds JIT technical expertise)
-3. DEV: dev-story (implements with generated context)
-4. DEV/SR: review-story (validates completion)
-5. If needed: correct-course (adjusts direction)
-6. After epic: retrospective (captures learnings)
+- Default "#yolo" mode minimizes prompts
+- Smooth automated story preparation
+- Only prompts when critical
 
-This workflow establishes the "what" that needs to be built, strictly based on planned epics. The story-context workflow will later add the "how" through just-in-time technical expertise injection.
+## Inputs & Outputs
 
-## Document Priority Order
+### Required Files
 
-The workflow uses this priority for extracting requirements:
+| File                     | Purpose                       | Priority |
+| ------------------------ | ----------------------------- | -------- |
+| epics.md                 | Story enumeration (MANDATORY) | Critical |
+| tech-spec-epic-{N}-\*.md | Epic technical spec           | High     |
+| PRD.md                   | Product requirements          | Medium   |
+| Architecture docs        | Technical constraints         | Low      |
 
-1. **tech_spec_file**: Epic-scoped technical specification (highest priority)
-2. **epics_file**: Acceptance criteria and story breakdown
-3. **prd_file**: Business requirements and constraints
-4. **Architecture docs**: Constraints, patterns, and technical guidance
+### Auto-Discovered Docs
+
+- `tech-stack.md`, `unified-project-structure.md`
+- `testing-strategy.md`, `backend/frontend-architecture.md`
+- `data-models.md`, `database-schema.md`, `api-specs.md`
+
+### Output
+
+**Story Document:** `{story_dir}/story-{epic}.{story}.md`
+
+- User story statement (role, action, benefit)
+- Acceptance criteria from tech spec/epics
+- Tasks mapped to ACs
+- Testing requirements
+- Dev notes with sources
+- Status: "Draft"
 
 ## Workflow Behavior
 
-**Story Number Management:**
+### Story Number Management
 
-- Automatically detects next story number from existing files
-- Won't skip numbers or create duplicates
-- Maintains epic.story numbering convention
+- Auto-detects next story number
+- No duplicates or skipped numbers
+- Maintains epic.story convention
 
-**Update vs Create:**
+### Update vs Create
 
-- If latest story status != Done/Approved: Updates existing story
-- If latest story status == Done/Approved: Creates next story (if enumerated in epics.md)
+- **If current story not Done:** Updates existing
+- **If current story Done:** Creates next (if planned)
 
-**Epic Advancement:**
+### Validation Safeguards
 
-- In non-interactive mode: Stays within current epic
-- Interactive mode: Can prompt for new epic number
+**No Story Found:**
+
+```
+"No planned next story found in epics.md for epic {N}.
+Run *correct-course to add/modify epic stories."
+```
+
+**Missing Config:**
+Ensure `dev_story_location` set in config.yaml
+
+## Integration
+
+### v6 Implementation Cycle
+
+1. **create-story** ← Current step (defines "what")
+2. story-context (adds technical "how")
+3. dev-story (implementation)
+4. code-review (validation)
+5. correct-course (if needed)
+6. retrospective (after epic)
+
+### Document Priority
+
+1. **tech_spec_file** - Epic-specific spec
+2. **epics_file** - Story breakdown
+3. **prd_file** - Business requirements
+4. **architecture_docs** - Technical guidance
+
+## Configuration
+
+```yaml
+# bmad/bmm/config.yaml
+dev_story_location: ./stories
+output_folder: ./output
+
+# workflow.yaml defaults
+non_interactive: true
+auto_run_context: true
+```
 
 ## Troubleshooting
 
-**"No planned next story found in epics.md"**: The next story isn't enumerated in epics.md. Run SM or PM agent's `*correct-course` to properly plan and add the story to the epic.
+| Issue                   | Solution                                   |
+| ----------------------- | ------------------------------------------ |
+| "No planned next story" | Run `*correct-course` to add story to epic |
+| Missing story_dir       | Set `dev_story_location` in config         |
+| Tech spec not found     | Use naming: `tech-spec-epic-{N}-*.md`      |
+| No architecture docs    | Add docs to docs/ or output/ folder        |
 
-**Missing story_dir Configuration**: Ensure `dev_story_location` is set in bmad/bmm/config.yaml
+---
 
-**Tech Spec Not Found**: The workflow looks for `tech-spec-epic-{N}-*.md` pattern. Ensure tech specs follow this naming convention.
-
-**Architecture Documents Missing**: While not fatal, missing architecture docs reduce story context quality. Ensure key docs exist in docs/ or output folder.
+For workflow details, see [instructions.md](./instructions.md) and [checklist.md](./checklist.md).

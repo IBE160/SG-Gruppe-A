@@ -1,86 +1,153 @@
----
-last-redoc-date: 2025-09-28
----
+# CIS - Creative Intelligence Suite
 
-<!-- Powered by BMAD-CORE™ -->
+AI-powered creative facilitation transforming strategic thinking through expert coaching across five specialized domains.
 
-# Creative Intelligence System (CIS)
+## Table of Contents
 
-**Purpose:** Transform creative and strategic thinking through AI-powered facilitation across five specialized domains. The CIS module provides expert coaching for brainstorming, design thinking, problem-solving, innovation strategy, and storytelling.
+- [Core Capabilities](#core-capabilities)
+- [Specialized Agents](#specialized-agents)
+- [Interactive Workflows](#interactive-workflows)
+- [Quick Start](#quick-start)
+- [Key Differentiators](#key-differentiators)
+- [Configuration](#configuration)
 
-**Overview:** The Creative Intelligence System equips teams and individuals with structured creative methodologies delivered through distinctive agent personas. Each agent facilitates interactive workflows that guide users through proven techniques while adapting to context, energy levels, and goals. Unlike traditional creative tools, CIS agents act as master facilitators who ask questions to draw out insights rather than generating solutions directly.
+## Core Capabilities
 
-## Workflows
+CIS provides structured creative methodologies through distinctive agent personas who act as master facilitators, drawing out insights through strategic questioning rather than generating solutions directly.
+
+## Specialized Agents
+
+[View detailed agent descriptions →](./agents/README.md)
+
+- **Carson** - Brainstorming Specialist (energetic facilitator)
+- **Maya** - Design Thinking Maestro (jazz-like improviser)
+- **Dr. Quinn** - Problem Solver (detective-scientist hybrid)
+- **Victor** - Innovation Oracle (bold strategic precision)
+- **Sophia** - Master Storyteller (whimsical narrator)
+
+## Interactive Workflows
 
 [View all workflows →](./workflows/README.md)
 
-The module includes **5 interactive workflows** with over 150 creative techniques and frameworks:
+**5 Workflows** with **150+ Creative Techniques:**
 
-- **Brainstorming** - 36 creative techniques across 7 categories for ideation
-- **Design Thinking** - Complete 5-phase human-centered design process
-- **Problem Solving** - Systematic root cause analysis and solution generation
-- **Innovation Strategy** - Business model innovation and disruption analysis
-- **Storytelling** - 25 story frameworks for compelling narratives
+### Brainstorming
 
-## Agents
+36 techniques across 7 categories for ideation
 
-[View all agents →](./agents/README.md)
+- Divergent/convergent thinking
+- Lateral connections
+- Forced associations
 
-Five specialized agents with unique personas and communication styles:
+### Design Thinking
 
-- **Carson** - Elite Brainstorming Specialist (energetic facilitator)
-- **Maya** - Design Thinking Maestro (jazz-like improviser)
-- **Dr. Quinn** - Master Problem Solver (detective-scientist hybrid)
-- **Victor** - Disruptive Innovation Oracle (bold strategic precision)
-- **Sophia** - Master Storyteller (flowery, whimsical narrator)
+Complete 5-phase human-centered process
 
-## Configuration
+- Empathize → Define → Ideate → Prototype → Test
+- User journey mapping
+- Rapid iteration
 
-The module uses `/bmad/cis/config.yaml` for:
+### Problem Solving
 
-- `output_folder` - Where workflow results are saved
-- `user_name` - Session participant identification
-- `communication_language` - Facilitation language preference
+Systematic root cause analysis
 
-## Usage
+- 5 Whys, Fishbone diagrams
+- Solution generation
+- Impact assessment
+
+### Innovation Strategy
+
+Business model disruption
+
+- Blue Ocean Strategy
+- Jobs-to-be-Done
+- Disruptive innovation patterns
+
+### Storytelling
+
+25 narrative frameworks
+
+- Hero's Journey
+- Story circles
+- Compelling pitch structures
+
+## Quick Start
+
+### Direct Workflow
 
 ```bash
-# Direct workflow invocation
+# Start interactive session
 workflow brainstorming
-workflow design-thinking --data /path/to/context.md
 
-# Agent-facilitated sessions
+# With context document
+workflow design-thinking --data /path/to/context.md
+```
+
+### Agent-Facilitated
+
+```bash
+# Load agent
 agent cis/brainstorming-coach
+
+# Start workflow
 > *brainstorm
 ```
 
 ## Key Differentiators
 
-- **Facilitation Over Generation:** Agents guide users to discover their own insights through strategic questioning
-- **Energy-Aware Sessions:** Built-in checkpoints monitor and adapt to user engagement levels
-- **Context Integration:** All workflows accept optional context documents for domain-specific guidance
-- **Persona-Driven Experience:** Each agent embodies a unique communication style matching their expertise
-- **Rich Method Libraries:** 150+ proven techniques and frameworks across creative disciplines
+- **Facilitation Over Generation** - Guides discovery through questions
+- **Energy-Aware Sessions** - Adapts to engagement levels
+- **Context Integration** - Domain-specific guidance support
+- **Persona-Driven** - Unique communication styles
+- **Rich Method Libraries** - 150+ proven techniques
 
-## Installation
+## Configuration
 
-The CIS module installer (`_module-installer/`) configures the complete creative intelligence suite including all agents, workflows, and technique libraries.
+Edit `/bmad/cis/config.yaml`:
 
-## Module Architecture
+```yaml
+output_folder: ./creative-outputs
+user_name: Your Name
+communication_language: english
+```
+
+## Module Structure
 
 ```
 cis/
-├── agents/          # 5 specialized creative agents
-├── workflows/       # 5 interactive workflows
+├── agents/              # 5 specialized facilitators
+├── workflows/           # 5 interactive processes
 │   ├── brainstorming/
 │   ├── design-thinking/
 │   ├── innovation-strategy/
 │   ├── problem-solving/
 │   └── storytelling/
-├── tasks/           # Supporting task operations
-└── teams/           # Agent team configurations
+├── tasks/              # Supporting operations
+└── teams/              # Agent collaborations
 ```
+
+## Integration Points
+
+CIS workflows integrate with:
+
+- **BMM** - Powers project brainstorming
+- **BMB** - Creative module design
+- **Custom Modules** - Shared creative resource
+
+## Best Practices
+
+1. **Set clear objectives** before starting sessions
+2. **Provide context documents** for domain relevance
+3. **Trust the process** - Let facilitation guide you
+4. **Take breaks** when energy flags
+5. **Document insights** as they emerge
+
+## Related Documentation
+
+- **[Workflow Guide](./workflows/README.md)** - Detailed workflow instructions
+- **[Agent Personas](./agents/README.md)** - Full agent descriptions
+- **[BMM Integration](../bmm/README.md)** - Development workflow connection
 
 ---
 
-_Part of the BMAD Method v6.0 - Transform your creative potential with expert AI facilitation_
+Part of BMad Method v6.0 - Transform creative potential through expert AI facilitation.

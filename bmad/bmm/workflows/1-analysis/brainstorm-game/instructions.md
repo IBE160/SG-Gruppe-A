@@ -5,20 +5,20 @@
 
 <workflow>
 
-  <step n="1" goal="Validate workflow readiness">
-    <invoke-workflow path="{project-root}/bmad/bmm/workflows/workflow-status">
-      <param>mode: validate</param>
-      <param>calling_workflow: brainstorm-game</param>
-    </invoke-workflow>
+  <step n="1" goal="Validate workflow readiness" tag="workflow-status">
+    <action>Check if {output_folder}/bmm-workflow-status.yaml exists</action>
 
-    <check if="status_exists == false">
-      <output>{{suggestion}}</output>
-      <output>Note: Game brainstorming is optional. Continuing without progress tracking.</output>
+    <check if="status file not found">
+      <output>No workflow status file found. Game brainstorming is optional - you can continue without status tracking.</output>
       <action>Set standalone_mode = true</action>
     </check>
 
-    <check if="status_exists == true">
-      <action>Store {{status_file_path}} for later updates</action>
+    <check if="status file found">
+      <action>Load the FULL file: {output_folder}/bmm-workflow-status.yaml</action>
+      <action>Parse workflow_status section</action>
+      <action>Check status of "brainstorm-game" workflow</action>
+      <action>Get project_level from YAML metadata</action>
+      <action>Find first non-completed workflow (next expected workflow)</action>
 
       <check if="project_type != 'game'">
         <output>Note: This is a {{project_type}} project. Game brainstorming is designed for game projects.</output>
@@ -28,10 +28,25 @@
         </check>
       </check>
 
-      <check if="warning != ''">
-        <output>{{warning}}</output>
-        <output>Note: Game brainstorming can be valuable at any project stage.</output>
+      <check if="brainstorm-game status is file path (already completed)">
+        <output>⚠️ Game brainstorming session already completed: {{brainstorm-game status}}</output>
+        <ask>Re-running will create a new session. Continue? (y/n)</ask>
+        <check if="n">
+          <output>Exiting. Use workflow-status to see your next step.</output>
+          <action>Exit workflow</action>
+        </check>
       </check>
+
+      <check if="brainstorm-game is not the next expected workflow (latter items are completed already in the list)">
+        <output>⚠️ Next expected workflow: {{next_workflow}}. Game brainstorming is out of sequence.</output>
+        <ask>Continue with game brainstorming anyway? (y/n)</ask>
+        <check if="n">
+          <output>Exiting. Run {{next_workflow}} instead.</output>
+          <action>Exit workflow</action>
+        </check>
+      </check>
+
+      <action>Set standalone_mode = false</action>
     </check>
 
   </step>
@@ -66,17 +81,16 @@
     </invoke-workflow>
   </step>
 
-  <step n="4" goal="Update status and complete">
+  <step n="4" goal="Update status and complete" tag="workflow-status">
     <check if="standalone_mode != true">
-      <invoke-workflow path="{project-root}/bmad/bmm/workflows/workflow-status">
-        <param>mode: update</param>
-        <param>action: complete_workflow</param>
-        <param>workflow_name: brainstorm-game</param>
-      </invoke-workflow>
+      <action>Load the FULL file: {output_folder}/bmm-workflow-status.yaml</action>
+      <action>Find workflow_status key "brainstorm-game"</action>
+      <critical>ONLY write the file path as the status value - no other text, notes, or metadata</critical>
+      <action>Update workflow_status["brainstorm-game"] = "{output_folder}/bmm-brainstorming-session-{{date}}.md"</action>
+      <action>Save file, preserving ALL comments and structure including STATUS DEFINITIONS</action>
 
-      <check if="success == true">
-        <output>Status updated! Next: {{next_workflow}}</output>
-      </check>
+      <action>Find first non-completed workflow in workflow_status (next workflow to do)</action>
+      <action>Determine next agent from path file based on next workflow</action>
     </check>
 
     <output>**✅ Game Brainstorming Session Complete, {user_name}!**
@@ -88,16 +102,21 @@
 {{#if standalone_mode != true}}
 **Status Updated:**
 
-- Progress tracking updated
+- Progress tracking updated: brainstorm-game marked complete
+- Next workflow: {{next_workflow}}
+  {{else}}
+  **Note:** Running in standalone mode (no progress tracking)
+  {{/if}}
 
 **Next Steps:**
 
-- **Next required:** {{next_workflow}} ({{next_agent}} agent)
+{{#if standalone_mode != true}}
+
+- **Next workflow:** {{next_workflow}} ({{next_agent}} agent)
 - **Optional:** You can run other analysis workflows (research, game-brief) before proceeding
 
 Check status anytime with: `workflow-status`
 {{else}}
-**Next Steps:**
 Since no workflow is in progress:
 
 - Refer to the BMM workflow guide if unsure what to do next

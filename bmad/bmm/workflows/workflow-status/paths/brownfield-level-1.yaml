@@ -7,15 +7,17 @@ field_type: "brownfield"
 description: "Small feature addition to existing codebase"
 
 phases:
-  - phase: 0
+  - prerequisite: true
     name: "Documentation"
     conditional: "if_undocumented"
+    note: "NOT a phase - prerequisite for brownfield without docs OR post-completion cleanup"
     workflows:
       - id: "document-project"
         required: true
         agent: "analyst"
         command: "document-project"
-        output: "Codebase documentation"
+        output: "Comprehensive project documentation"
+        purpose: "Understand existing codebase before planning OR create superior final docs after Phase 4"
 
   - phase: 1
     name: "Analysis"

@@ -9,20 +9,20 @@
 
 <workflow>
 
-<step n="0" goal="Validate workflow readiness">
-<invoke-workflow path="{project-root}/bmad/bmm/workflows/workflow-status">
-  <param>mode: validate</param>
-  <param>calling_workflow: game-brief</param>
-</invoke-workflow>
+<step n="0" goal="Validate workflow readiness" tag="workflow-status">
+<action>Check if {output_folder}/bmm-workflow-status.yaml exists</action>
 
-<check if="status_exists == false">
-  <output>{{suggestion}}</output>
-  <output>Note: Game brief is optional. Continuing without progress tracking.</output>
+<check if="status file not found">
+  <output>No workflow status file found. Game brief is optional - you can continue without status tracking.</output>
   <action>Set standalone_mode = true</action>
 </check>
 
-<check if="status_exists == true">
-  <action>Store {{status_file_path}} for later updates</action>
+<check if="status file found">
+  <action>Load the FULL file: {output_folder}/bmm-workflow-status.yaml</action>
+  <action>Parse workflow_status section</action>
+  <action>Check status of "game-brief" workflow</action>
+  <action>Get project_level from YAML metadata</action>
+  <action>Find first non-completed workflow (next expected workflow)</action>
 
   <check if="project_type != 'game'">
     <output>Note: This is a {{project_type}} project. Game brief is designed for game projects.</output>
@@ -32,10 +32,25 @@
     </check>
   </check>
 
-  <check if="warning != ''">
-    <output>{{warning}}</output>
-    <output>Note: Game brief can provide valuable vision clarity at any stage.</output>
+  <check if="game-brief status is file path (already completed)">
+    <output>⚠️ Game Brief already completed: {{game-brief status}}</output>
+    <ask>Re-running will overwrite the existing brief. Continue? (y/n)</ask>
+    <check if="n">
+      <output>Exiting. Use workflow-status to see your next step.</output>
+      <action>Exit workflow</action>
+    </check>
   </check>
+
+  <check if="game-brief is not the next expected workflow (latter items are completed already in the list)">
+    <output>⚠️ Next expected workflow: {{next_workflow}}. Game Brief is out of sequence.</output>
+    <ask>Continue with Game Brief anyway? (y/n)</ask>
+    <check if="n">
+      <output>Exiting. Run {{next_workflow}} instead.</output>
+      <action>Exit workflow</action>
+    </check>
+  </check>
+
+<action>Set standalone_mode = false</action>
 </check>
 </step>
 
@@ -309,17 +324,16 @@ This brief will serve as the primary input for creating the Game Design Document
 <template-output>executive_brief</template-output>
 </step>
 
-<step n="16" goal="Update status and complete">
+<step n="16" goal="Update status and complete" tag="workflow-status">
 <check if="standalone_mode != true">
-  <invoke-workflow path="{project-root}/bmad/bmm/workflows/workflow-status">
-    <param>mode: update</param>
-    <param>action: complete_workflow</param>
-    <param>workflow_name: game-brief</param>
-  </invoke-workflow>
+  <action>Load the FULL file: {output_folder}/bmm-workflow-status.yaml</action>
+  <action>Find workflow_status key "game-brief"</action>
+  <critical>ONLY write the file path as the status value - no other text, notes, or metadata</critical>
+  <action>Update workflow_status["game-brief"] = "{output_folder}/bmm-game-brief-{{game_name}}-{{date}}.md"</action>
+  <action>Save file, preserving ALL comments and structure including STATUS DEFINITIONS</action>
 
-  <check if="success == true">
-    <output>Status updated! Next: {{next_workflow}}</output>
-  </check>
+<action>Find first non-completed workflow in workflow_status (next workflow to do)</action>
+<action>Determine next agent from path file based on next workflow</action>
 </check>
 
 <output>**✅ Game Brief Complete, {user_name}!**
@@ -331,17 +345,17 @@ This brief will serve as the primary input for creating the Game Design Document
 {{#if standalone_mode != true}}
 **Status Updated:**
 
-- Progress tracking updated
+- Progress tracking updated: game-brief marked complete
+- Next workflow: {{next_workflow}}
   {{else}}
-  Note: Running in standalone mode (no status file).
-  To track progress across workflows, run `workflow-init` first.
+  **Note:** Running in standalone mode (no progress tracking)
   {{/if}}
 
 **Next Steps:**
 
 {{#if standalone_mode != true}}
 
-- **Next required:** {{next_workflow}} ({{next_agent}} agent)
+- **Next workflow:** {{next_workflow}} ({{next_agent}} agent)
 - **Optional:** Consider creating a prototype of core mechanic or validating assumptions with target players before proceeding
 
 Check status anytime with: `workflow-status`

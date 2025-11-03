@@ -10,33 +10,27 @@
 <critical>Generate all documents in {document_output_language}</critical>
 <critical>This workflow replaces architecture with a conversation-driven approach</critical>
 
-<step n="0" goal="Validate workflow and extract project configuration">
+<step n="0" goal="Validate workflow readiness" tag="workflow-status">
+<action>Check if {output_folder}/bmm-workflow-status.yaml exists</action>
 
-<invoke-workflow path="{project-root}/bmad/bmm/workflows/workflow-status">
-  <param>mode: data</param>
-  <param>data_request: project_config</param>
-</invoke-workflow>
-
-<check if="status_exists == false">
-  <output>**⚠️ No Workflow Status File Found**
-
-The Decision Architecture workflow requires a status file to understand your project context.
-
-Please run `workflow-init` first to:
-
-- Define your project type and level
-- Map out your workflow journey
-- Create the status file
-
-Run: `workflow-init`
-
-After setup, return here to create your decision architecture.
-</output>
-<action>Exit workflow - cannot proceed without status file</action>
+<check if="status file not found">
+  <output>No workflow status file found. Decision Architecture can run standalone or as part of BMM workflow path.</output>
+  <output>**Recommended:** Run `workflow-init` first for project context tracking and workflow sequencing.</output>
+  <ask>Continue in standalone mode or exit to run workflow-init? (continue/exit)</ask>
+  <check if="continue">
+    <action>Set standalone_mode = true</action>
+  </check>
+  <check if="exit">
+    <action>Exit workflow</action>
+  </check>
 </check>
 
-<check if="status_exists == true">
-  <action>Store {{status_file_path}} for later updates</action>
+<check if="status file found">
+  <action>Load the FULL file: {output_folder}/bmm-workflow-status.yaml</action>
+  <action>Parse workflow_status section</action>
+  <action>Check status of "create-architecture" workflow</action>
+  <action>Get project_level from YAML metadata</action>
+  <action>Find first non-completed workflow (next expected workflow)</action>
 
   <check if="project_level < 3">
     <output>**Note: Level {{project_level}} Project**
@@ -46,23 +40,26 @@ Decision Architecture is typically for Level 3-4 projects, but can be used for a
 For Level {{project_level}}, we'll keep the architecture appropriately scoped.
 </output>
 </check>
-</check>
-</step>
 
-<step n="0.5" goal="Validate workflow sequencing">
-
-<invoke-workflow path="{project-root}/bmad/bmm/workflows/workflow-status">
-  <param>mode: validate</param>
-  <param>calling_workflow: architecture</param>
-</invoke-workflow>
-
-<check if="warning != ''">
-  <output>{{warning}}</output>
-  <ask>Continue with Decision Architecture anyway? (y/n)</ask>
-  <check if="n">
-    <output>{{suggestion}}</output>
-    <action>Exit workflow</action>
+  <check if="create-architecture status is file path (already completed)">
+    <output>⚠️ Architecture already completed: {{create-architecture status}}</output>
+    <ask>Re-running will overwrite the existing architecture. Continue? (y/n)</ask>
+    <check if="n">
+      <output>Exiting. Use workflow-status to see your next step.</output>
+      <action>Exit workflow</action>
+    </check>
   </check>
+
+  <check if="create-architecture is not the next expected workflow">
+    <output>⚠️ Next expected workflow: {{next_workflow}}. Architecture is out of sequence.</output>
+    <ask>Continue with Architecture anyway? (y/n)</ask>
+    <check if="n">
+      <output>Exiting. Run {{next_workflow}} instead.</output>
+      <action>Exit workflow</action>
+    </check>
+  </check>
+
+<action>Set standalone_mode = false</action>
 </check>
 
 <action>Check for existing PRD and epics files using fuzzy matching</action>
@@ -659,19 +656,19 @@ Enforcement: "All agents MUST follow this pattern"
 
 <action>Save document to {output_folder}/architecture.md</action>
 
-  <invoke-workflow path="{project-root}/bmad/bmm/workflows/workflow-status">
-    <param>mode: update</param>
-    <param>action: complete_workflow</param>
-    <param>workflow_name: architecture</param>
-  </invoke-workflow>
+  <check if="standalone_mode != true">
+    <action>Load the FULL file: {output_folder}/bmm-workflow-status.yaml</action>
+    <action>Find workflow_status key "create-architecture"</action>
+    <critical>ONLY write the file path as the status value - no other text, notes, or metadata</critical>
+    <action>Update workflow_status["create-architecture"] = "{output_folder}/bmm-architecture-{{date}}.md"</action>
+    <action>Save file, preserving ALL comments and structure including STATUS DEFINITIONS</action>
 
-  <check if="success == true">
-    <output>✅ Decision Architecture workflow complete!
-
-Status updated.
-</output>
+    <action>Find first non-completed workflow in workflow_status (next workflow to do)</action>
+    <action>Determine next agent from path file based on next workflow</action>
 
   </check>
+
+<output>✅ Decision Architecture workflow complete!</output>
 
 <output>**Deliverables Created:**
 

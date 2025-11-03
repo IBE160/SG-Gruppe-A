@@ -22,21 +22,25 @@
 </invoke-workflow>
 
 <check if="status_exists == false">
-  <output>**⚠️ No Workflow Status File Found**
+  <output>**Note: No Workflow Status File Found**
 
-The GDD workflow requires a status file to understand your project context.
+The GDD workflow can run standalone or as part of the BMM workflow path.
 
-Please run `workflow-init` first to:
+**Recommended:** Run `workflow-init` first for:
 
-- Define your project type and level
-- Map out your workflow journey
-- Create the status file
+- Project context tracking
+- Workflow sequencing guidance
+- Progress monitoring across workflows
 
-Run: `workflow-init`
-
-After setup, return here to create your GDD.
+**Or continue standalone** without progress tracking.
 </output>
-<action>Exit workflow - cannot proceed without status file</action>
+<ask>Continue in standalone mode or exit to run workflow-init? (continue/exit)</ask>
+<check if="continue">
+<action>Set standalone_mode = true</action>
+</check>
+<check if="exit">
+<action>Exit workflow</action>
+</check>
 </check>
 
 <check if="status_exists == true">
@@ -63,19 +67,27 @@ Use: `prd`
 </check>
 </step>
 
-<step n="0.5" goal="Validate workflow sequencing">
+<step n="0.5" goal="Validate workflow sequencing" tag="workflow-status">
 
-<invoke-workflow path="{project-root}/bmad/bmm/workflows/workflow-status">
-  <param>mode: validate</param>
-  <param>calling_workflow: gdd</param>
-</invoke-workflow>
+<check if="standalone_mode != true">
+  <action>Check status of "gdd" workflow in loaded status file</action>
 
-<check if="warning != ''">
-  <output>{{warning}}</output>
-  <ask>Continue with GDD anyway? (y/n)</ask>
-  <check if="n">
-    <output>{{suggestion}}</output>
-    <action>Exit workflow</action>
+  <check if="gdd status is file path (already completed)">
+    <output>⚠️ GDD already completed: {{gdd status}}</output>
+    <ask>Re-running will overwrite the existing GDD. Continue? (y/n)</ask>
+    <check if="n">
+      <output>Exiting. Use workflow-status to see your next step.</output>
+      <action>Exit workflow</action>
+    </check>
+  </check>
+
+  <check if="gdd is not the next expected workflow (latter items are completed already in the list)">
+    <output>⚠️ Next expected workflow: {{next_workflow}}. GDD is out of sequence.</output>
+    <ask>Continue with GDD anyway? (y/n)</ask>
+    <check if="n">
+      <output>Exiting. Run {{next_workflow}} instead.</output>
+      <action>Exit workflow</action>
+    </check>
   </check>
 </check>
 </step>
@@ -324,18 +336,23 @@ For each {{placeholder}} in the fragment, elicit and capture that information.
 
 </step>
 
-<step n="15" goal="Update status and populate story sequence">
+<step n="15" goal="Update status and populate story sequence" tag="workflow-status">
 
-<invoke-workflow path="{project-root}/bmad/bmm/workflows/workflow-status">
-  <param>mode: update</param>
-  <param>action: complete_workflow</param>
-  <param>workflow_name: gdd</param>
-  <param>populate_stories_from: {epics_output_file}</param>
-</invoke-workflow>
+<check if="standalone_mode != true">
+  <action>Load the FULL file: {output_folder}/bmm-workflow-status.yaml</action>
+  <action>Find workflow_status key "gdd"</action>
+  <critical>ONLY write the file path as the status value - no other text, notes, or metadata</critical>
+  <action>Update workflow_status["gdd"] = "{output_folder}/bmm-gdd-{{game_name}}-{{date}}.md"</action>
+  <action>Save file, preserving ALL comments and structure including STATUS DEFINITIONS</action>
 
-<check if="success == true">
-  <output>Status updated! Next: {{next_workflow}} ({{next_agent}} agent)</output>
-  <output>Loaded {{total_stories}} stories from epics.</output>
+<action>Parse {epics_output_file} to extract all stories</action>
+<action>Populate story_sequence section in status file with story IDs</action>
+<action>Set each story status to "not-started"</action>
+<output>Loaded {{total_stories}} stories from epics into story sequence.</output>
+
+<action>Find first non-completed workflow in workflow_status (next workflow to do)</action>
+<action>Determine next agent from path file based on next workflow</action>
+<output>Next workflow: {{next_workflow}} ({{next_agent}} agent)</output>
 </check>
 
 </step>

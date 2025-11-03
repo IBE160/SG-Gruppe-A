@@ -7,16 +7,17 @@ field_type: "brownfield"
 description: "Enterprise scale expansion of existing system"
 
 phases:
-  - phase: 0
+  - prerequisite: true
     name: "Documentation"
     conditional: "if_undocumented"
+    note: "NOT a phase - prerequisite for brownfield without docs OR post-completion cleanup. Critical for enterprise-scale changes"
     workflows:
       - id: "document-project"
         required: true
         agent: "analyst"
         command: "document-project"
-        output: "Comprehensive codebase documentation"
-        note: "Critical for enterprise-scale changes"
+        output: "Comprehensive project documentation"
+        purpose: "Understand existing codebase before planning OR create superior final docs after Phase 4"
 
   - phase: 1
     name: "Analysis"
