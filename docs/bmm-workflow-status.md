@@ -7,7 +7,7 @@ PROJECT_TYPE: web aplication
 PROJECT_LEVEL: 3
 FIELD_TYPE: greenfield
 START_DATE: 2025-10-26
-WORKFLOW_PATH: greenfield-level-3.yanl
+WORKFLOW_PATH: greenfield-level-3.yaml
 
 ## Current State
 
