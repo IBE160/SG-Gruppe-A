@@ -11,19 +11,19 @@ WORKFLOW_PATH: greenfield-level-3.yaml
 
 ## Current State
 
-CURRENT_PHASE: Planning
-CURRENT_WORKFLOW: prd
-CURRENT_AGENT: pm
+CURRENT_PHASE: Solutioning
+CURRENT_WORKFLOW: create-architecture
+CURRENT_AGENT: architect
 PHASE_1_COMPLETE: true
-PHASE_2_COMPLETE: false
+PHASE_2_COMPLETE: true
 PHASE_3_COMPLETE: false
 PHASE_4_COMPLETE: false
 
 ## Next Action
 
-NEXT_ACTION: High-level requirements and epic definitions
-NEXT_COMMAND: prd
-NEXT_AGENT: pm
+NEXT_ACTION: System-wide architecture document
+NEXT_COMMAND: create-architecture
+NEXT_AGENT: architect
 
 ---
 
