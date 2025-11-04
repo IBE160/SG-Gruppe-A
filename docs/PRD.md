@@ -51,26 +51,26 @@ The AI CV & Job Application Assistant directly addresses this problem by acting 
 *   **Persona:** A recent university graduate in Norway, applying for their first full-time job.
 *   **Goal:** To create a compelling, ATS-optimized application for a specific job posting.
 
-1.  **Onboarding:** The user lands on the homepage and is prompted to create an account. They register using their email and a password.
-2.  **CV Upload:** After logging in, the user is guided to upload their current CV (`.doc` or `.docx`). The system parses the document and confirms the extraction of their education, skills, and work history.
-3.  **Job Description Input:** The user pastes the full text of a job description from any source (e.g., Finn.no, LinkedIn, company website) into a provided text field.
-4.  **Generation:** The user clicks "Generate Cover Letter." The AI analyzes both the CV and the job ad.
+1.  **Onboarding:** The user lands on the homepage and is prompted to create an account. They register using their email and a password. (FR001, FR002)
+2.  **CV Upload:** After logging in, the user is guided to upload their current CV (`.doc` or `.docx`). The system parses the document and confirms the extraction of their education, skills, and work history. (FR003, FR004)
+3.  **Job Description Input:** The user pastes the full text of a job description from any source (e.g., Finn.no, LinkedIn, company website) into a provided text field. (FR005)
+4.  **Generation:** The user clicks "Generate Cover Letter." The AI analyzes both the CV and the job ad. (FR006, FR007)
 5.  **Review & Insight:** The system presents a generated cover letter draft. Alongside it, a "Gap Analysis" panel appears, highlighting:
-    *   **Missing Skills:** Key qualifications from the job ad that are not in the user's CV (e.g., "Project Management Software").
-    *   **ATS Score:** A percentage score indicating how well the CV matches the job description's keywords.
-6.  **Iteration:** The user edits their CV details directly within the application to address the identified gaps. They regenerate the cover letter, and the ATS score updates in real-time, showing clear improvement.
-7.  **Finalize:** Satisfied with the result, the user copies the cover letter text and downloads their newly optimized CV.
+    *   **Missing Skills:** Key qualifications from the job ad that are not in the user's CV (e.g., "Project Management Software"). (FR009)
+    *   **ATS Score:** A percentage score indicating how well the CV matches the job description's keywords. (FR010)
+6.  **Iteration:** The user edits their CV details directly within the application to address the identified gaps. They regenerate the cover letter, and the ATS score updates in real-time, showing clear improvement. (FR011)
+7.  **Finalize:** Satisfied with the result, the user copies the cover letter text and downloads their newly optimized CV. (FR012, FR013)
 
 #### Journey 2: Career Changer - Optimizing an Existing CV
 
 *   **Persona:** A professional with 10 years of experience looking to pivot into a new industry.
 *   **Goal:** To understand how their existing skills translate to a new role and optimize their CV accordingly.
 
-1.  **Dashboard:** The user, who has an existing account, logs in and navigates to their dashboard.
-2.  **Start New Analysis:** They choose to start a new application analysis, uploading their existing, generic CV.
-3.  **Target Job:** They paste the description of a job in their target industry.
-4.  **Analyze & Discover:** Instead of generating a cover letter immediately, the user focuses on the "Gap Analysis" feature. The system highlights that while they have strong "Team Leadership" skills, the job requires "Agile Methodology," which is missing from their CV.
-5.  **Actionable Suggestions:** The system provides suggestions, such as "Consider rephrasing your project management experience to highlight agile practices you may have used."
+1.  **Dashboard:** The user, who has an existing account, logs in and navigates to their dashboard. (FR002)
+2.  **Start New Analysis:** They choose to start a new application analysis, uploading their existing, generic CV. (FR003)
+3.  **Target Job:** They paste the description of a job in their target industry. (FR005)
+4.  **Analyze & Discover:** Instead of generating a cover letter immediately, the user focuses on the "Gap Analysis" feature. The system highlights that while they have strong "Team Leadership" skills, the job requires "Agile Methodology," which is missing from their CV. (FR009)
+5.  **Actionable Suggestions:** The system provides suggestions, such as "Consider rephrasing your project management experience to highlight agile practices you may have used." (FR011)
 6.  **Refine and Re-run:** The user edits their CV content within the tool, adding details about their experience with agile-like processes. They re-run the analysis and see their ATS score improve significantly.
 7.  **Save for Later:** The user saves the optimized version of their CV to their dashboard, ready to be used for future applications in their new target industry.
 
