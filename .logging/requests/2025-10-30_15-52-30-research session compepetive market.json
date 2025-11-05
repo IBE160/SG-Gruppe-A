@@ -1,0 +1,38 @@
+
+[
+  {
+    "request": {
+      "user_query": "i want to see if we have any websites doing the same, that we need to compete with",
+      "agent_name": "Business Analyst (Mary)",
+      "workflow": "Research (Competitive Intelligence)",
+      "inputs": {
+        "product_description": "A web application where users can give their CV and a job description and the web aplication will give sugestions on how to better the CV or make a cover letter for the job post. this wil mainly be for norwegians",
+        "research_depth": "quick scan",
+        "market_category": "Job Search Platforms, CV/Cover Letter Optimization, Adjacent Markets (general writing assistants, professional development platforms)",
+        "geographic_scope": "Global and Norway",
+        "customer_segment": "B2C (individual job seekers) and B2B (companies/recruiters)",
+        "porter_five_forces_assessment": {
+          "threat_of_new_entrants": "Medium",
+          "bargaining_power_of_buyers": "High",
+          "bargaining_power_of_suppliers": "Medium–High",
+          "threat_of_substitute_products": "High",
+          "intensity_of_rivalry": "High"
+        }
+      }
+    },
+    "response": {
+      "overview": "Research session completed, report generated.",
+      "output_file": "/Users/astridgrepstad/Desktop/logistikk studie/År 3/1. semester/IBE160/oppgave nettside/SG-Gruppe-A/docs/research-competitive-2025-10-30.md",
+      "strategic_opportunities": [
+        "Hyper-localized AI for Norwegian Job Market",
+        "B2B Offering for Norwegian Recruiters/HR",
+        "Educational & Transparent AI Guidance",
+        "Seamless Integration with Norwegian Job Platforms"
+      ],
+      "go_to_market_recommendations": "Developed positioning, target segments, channels, and pricing strategies.",
+      "risk_analysis_summary": "Assessed market, competitive, and execution risks with mitigation strategies."
+    },
+    "session_date": "2025-10-30",
+    "session_time": "15:52:30"
+  }
+]
