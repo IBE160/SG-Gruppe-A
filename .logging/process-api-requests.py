@@ -92,16 +92,12 @@ def get_session_id(attrs: dict) -> Optional[str]:
 
 def get_event_timestamp(record: dict) -> Optional[str]:
     """Extract timestamp from record."""
-<<<<<<< HEAD
     # Try attributes first (where event.timestamp actually is)
     attrs = extract_attributes(record)
     timestamp = attrs.get("event.timestamp")
     if timestamp:
         return timestamp
     # Fallbacks for other formats
-=======
-    # Try different timestamp fields
->>>>>>> fase-1-analysis
     return (record.get("timestamp") or
             record.get("event_timestamp") or
             record.get("time"))

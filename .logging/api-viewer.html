@@ -151,7 +151,6 @@
             padding: 16px 24px;
             display: none;
             box-sizing: border-box;
-<<<<<<< HEAD
             position: relative;
         }
 
@@ -159,15 +158,12 @@
             display: flex;
             align-items: center;
             gap: 12px;
-=======
->>>>>>> fase-1-analysis
         }
 
         .content-header h2 {
             font-size: 16px;
             font-weight: 600;
             color: var(--text-primary);
-<<<<<<< HEAD
             flex: 1;
         }
 
@@ -204,8 +200,6 @@
             background: white;
             margin: 4px auto;
             border-radius: 2px;
-=======
->>>>>>> fase-1-analysis
         }
 
         .content-meta {
@@ -214,7 +208,6 @@
             margin-top: 8px;
             font-size: 12px;
             color: var(--text-secondary);
-<<<<<<< HEAD
             align-items: center;
         }
 
@@ -226,8 +219,6 @@
             padding: 4px 12px;
             border-radius: 4px;
             margin-left: auto;
-=======
->>>>>>> fase-1-analysis
         }
 
         .content-body {
@@ -532,7 +523,6 @@
             text-align: center;
         }
 
-<<<<<<< HEAD
         /* Tool output truncation gradient (white background) - must be more specific to override chat message gradients */
         .chat-message.chat-user .function-args .text-line-11::after,
         .chat-message.chat-model .function-args .text-line-11::after,
@@ -546,8 +536,6 @@
             text-align: center;
         }
 
-=======
->>>>>>> fase-1-analysis
         
 
         .truncatable-text.expanded::after {
@@ -742,22 +730,7 @@
             border-radius: 2px;
         }
 
-<<<<<<< HEAD
         /* Keep burger icon consistent - no animation */
-=======
-        /* Animate burger icon when sidebar is collapsed */
-        .sidebar.collapsed .menu-toggle span:nth-child(1) {
-            transform: translateY(6px) rotate(45deg);
-        }
-
-        .sidebar.collapsed .menu-toggle span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .sidebar.collapsed .menu-toggle span:nth-child(3) {
-            transform: translateY(-6px) rotate(-45deg);
-        }
->>>>>>> fase-1-analysis
 
         .menu-backdrop {
             display: none;
@@ -894,12 +867,8 @@
         }
 
         /* Responsive Design */
-<<<<<<< HEAD
         @media (max-width: 1024px) {
             /* Tablet and mobile: start with collapsed sidebar */
-=======
-        @media (max-width: 768px) {
->>>>>>> fase-1-analysis
             .sidebar {
                 position: fixed;
                 top: 0;
@@ -909,7 +878,6 @@
             }
 
             .sidebar.collapsed {
-<<<<<<< HEAD
                 transform: translateX(-280px);
             }
 
@@ -963,11 +931,6 @@
         }
 
         @media (max-width: 768px) {
-=======
-                transform: translateX(-60px);
-            }
-
->>>>>>> fase-1-analysis
             .content-body {
                 padding: 16px;
             }
@@ -979,7 +942,6 @@
             .entry-header-center {
                 display: none;
             }
-<<<<<<< HEAD
 
             .session-id-badge {
                 display: none;
@@ -1011,8 +973,6 @@
             border: 2px solid var(--primary-color);
             border-radius: 4px;
             min-width: 300px;
-=======
->>>>>>> fase-1-analysis
         }
     </style>
 </head>
@@ -1037,7 +997,6 @@
 
     <div class="main-content">
         <div class="content-header" id="contentHeader" style="display: none;">
-<<<<<<< HEAD
             <div class="content-header-top">
                 <button class="content-menu-toggle" onclick="toggleMenu()" aria-label="Toggle menu">
                     <span></span>
@@ -1050,12 +1009,6 @@
                 <span id="entryCount">0 entries</span>
                 <span id="fileSize">0 KB</span>
                 <span id="sessionIdDisplay" class="session-id-badge"></span>
-=======
-            <h2 id="selectedFileName">Select a file</h2>
-            <div class="content-meta">
-                <span id="entryCount">0 entries</span>
-                <span id="fileSize">0 KB</span>
->>>>>>> fase-1-analysis
             </div>
         </div>
         <div class="content-body" id="contentBody">
@@ -1140,15 +1093,12 @@
 
         // Initialize
         async function init() {
-<<<<<<< HEAD
             // Auto-collapse sidebar on mobile/tablet
             if (window.innerWidth <= 1024) {
                 const sidebar = document.querySelector('.sidebar');
                 sidebar.classList.add('collapsed');
             }
 
-=======
->>>>>>> fase-1-analysis
             await loadFileList();
             if (files.length > 0) {
                 await loadFile(files[0].filename);
@@ -1170,13 +1120,9 @@
                         date: date,
                         displayDate: formatDisplayDate(date),
                         displayTime: formatDisplayTime(date),
-<<<<<<< HEAD
                         size: item.size,
                         sessionId: item.sessionId,
                         title: item.title
-=======
-                        size: item.size
->>>>>>> fase-1-analysis
                     };
                 });
 
@@ -1220,7 +1166,6 @@
                 return;
             }
 
-<<<<<<< HEAD
             fileListEl.innerHTML = files.map(file => {
                 const displayTitle = file.title || file.sessionId || 'Untitled Session';
                 return `
@@ -1233,17 +1178,6 @@
                 </div>
                 `;
             }).join('');
-=======
-            fileListEl.innerHTML = files.map(file => `
-                <div class="file-item" onclick="loadFile('${file.filename}')" data-filename="${file.filename}">
-                    <span class="file-icon">📄</span>
-                    <div class="file-info">
-                        <div class="file-date">${file.displayDate}</div>
-                        <div class="file-time">${file.displayTime}</div>
-                    </div>
-                </div>
-            `).join('');
->>>>>>> fase-1-analysis
         }
 
         // Load and display file
@@ -1267,7 +1201,6 @@
 
                 // Update header
                 const fileInfo = files.find(f => f.filename === filename);
-<<<<<<< HEAD
                 const sessionTitle = fileInfo ? (fileInfo.title || fileInfo.sessionId || 'Untitled Session') : 'Session';
                 const sessionId = fileInfo ? fileInfo.sessionId : '';
                 document.getElementById('selectedFileName').innerHTML = `
@@ -1279,12 +1212,6 @@
                 document.getElementById('entryCount').textContent = `${data.length} ${data.length === 1 ? 'entry' : 'entries'}`;
                 document.getElementById('fileSize').textContent = `${Math.round(JSON.stringify(data).length / 1024)} KB`;
                 document.getElementById('sessionIdDisplay').textContent = sessionId ? `ID: ${sessionId}` : '';
-=======
-                document.getElementById('selectedFileName').textContent =
-                    fileInfo ? `${fileInfo.displayDate} at ${fileInfo.displayTime}` : filename;
-                document.getElementById('entryCount').textContent = `${data.length} ${data.length === 1 ? 'entry' : 'entries'}`;
-                document.getElementById('fileSize').textContent = `${Math.round(JSON.stringify(data).length / 1024)} KB`;
->>>>>>> fase-1-analysis
                 document.getElementById('contentHeader').style.display = 'block';
 
                 // Render data
@@ -1314,24 +1241,6 @@
             let html = '';
             let renderedPartsCount = 0;
 
-<<<<<<< HEAD
-=======
-            // Add session info header
-            if (entries.length > 0) {
-                const firstEntry = entries[0];
-                const sessionId = firstEntry.request && firstEntry.request["session.id"]
-                    ? firstEntry.request["session.id"]
-                    : extractPromptId(firstEntry);
-
-                html += `<div class="chat-header">`;
-                html += `<div class="chat-session-info">`;
-                html += `<span class="chat-session-label">Session ID:</span> `;
-                html += `<span class="chat-session-id">${sessionId}</span>`;
-                html += `</div>`;
-                html += `</div>`;
-            }
-
->>>>>>> fase-1-analysis
             // Create continuous chat container
             html += `<div class="chat-container">`;
 
@@ -1712,7 +1621,6 @@
         }
 
         // Render function response
-<<<<<<< HEAD
         // Format text by unescaping JSON string content
         function formatOutputText(text) {
             if (typeof text !== 'string') return text;
@@ -1762,16 +1670,6 @@
             }
             
             html += '</div>';
-=======
-        function renderFunctionResponse(funcResponse) {
-            let html = `<div class="function-call">`;
-            html += `<div class="function-name">✅ ${funcResponse.name}</div>`;
-            if (funcResponse.response) {
-                const responseJson = JSON.stringify(funcResponse.response, null, 2);
-                html += `<div class="function-args">${wrapTextWithTruncation(responseJson)}</div>`;
-            }
-            html += `</div>`;
->>>>>>> fase-1-analysis
             return html;
         }
 
@@ -1875,7 +1773,6 @@
             }
         }
 
-<<<<<<< HEAD
 
         // Session title editing
         async function editSessionTitle() {
@@ -1966,9 +1863,6 @@
         }
 
                 // Start the app
-=======
-        // Start the app
->>>>>>> fase-1-analysis
         init();
     </script>
 </body>
