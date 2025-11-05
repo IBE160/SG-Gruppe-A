@@ -22,7 +22,6 @@ import re
 import webbrowser
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
-<<<<<<< HEAD
 from urllib.parse import unquote, quote
 
 
@@ -121,8 +120,6 @@ def build_session_filename(timestamp, session_id, title=None):
     
     # Use session_id as default title (already in kebab-case format)
     return f"{timestamp}-{session_id}.json"
-=======
->>>>>>> fase-1-analysis
 
 
 class CORSRequestHandler(SimpleHTTPRequestHandler):
@@ -131,11 +128,7 @@ class CORSRequestHandler(SimpleHTTPRequestHandler):
     def end_headers(self):
         """Add CORS headers to all responses."""
         self.send_header('Access-Control-Allow-Origin', '*')
-<<<<<<< HEAD
         self.send_header('Access-Control-Allow-Methods', 'GET, PUT, DELETE, OPTIONS')
-=======
-        self.send_header('Access-Control-Allow-Methods', 'GET, OPTIONS')
->>>>>>> fase-1-analysis
         self.send_header('Access-Control-Allow-Headers', 'Content-Type')
         self.send_header('Cache-Control', 'no-store, no-cache, must-revalidate')
         super().end_headers()
@@ -154,7 +147,6 @@ class CORSRequestHandler(SimpleHTTPRequestHandler):
                 files = []
                 for json_file in sorted(requests_dir.glob('*.json'), reverse=True):
                     stat = json_file.stat()
-<<<<<<< HEAD
 
                     # Parse filename to extract timestamp and title
                     parsed = parse_session_filename(json_file.name)
@@ -186,21 +178,6 @@ class CORSRequestHandler(SimpleHTTPRequestHandler):
                             'title': parsed['title'],
                             'size': stat.st_size
                         })
-=======
-                    timestamp = None
-
-                    # Match session-based format: YYYY-MM-DD_HH-MM-SS-{session-id}.json
-                    match = re.match(r'(\d{4})-(\d{2})-(\d{2})_(\d{2})-(\d{2})-(\d{2})-(.+)\.json', json_file.name)
-                    if match:
-                        year, month, day, hour, minute, second, session_id = match.groups()
-                        timestamp = f"{year}-{month}-{day}T{hour}:{minute}:{second}"
-
-                    files.append({
-                        'filename': json_file.name,
-                        'timestamp': timestamp,
-                        'size': stat.st_size
-                    })
->>>>>>> fase-1-analysis
 
                 self.wfile.write(json.dumps(files).encode())
             else:
@@ -210,7 +187,6 @@ class CORSRequestHandler(SimpleHTTPRequestHandler):
         # Default file serving
         super().do_GET()
 
-<<<<<<< HEAD
     def do_PUT(self):
         """Handle PUT requests for API endpoints."""
         # API endpoint to rename session file
@@ -344,8 +320,6 @@ class CORSRequestHandler(SimpleHTTPRequestHandler):
         self.send_error(404, 'Not found')
 
 
-=======
->>>>>>> fase-1-analysis
     def do_OPTIONS(self):
         """Handle OPTIONS requests for CORS preflight."""
         self.send_response(200)
