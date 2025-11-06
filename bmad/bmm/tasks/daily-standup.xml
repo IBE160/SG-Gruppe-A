@@ -64,7 +64,7 @@
       <i>Primary: Sarah (PO), Bob (SM), James (Dev)</i>
       <i>Secondary: Murat (TEA)</i>
     </context>
-    <context type="architecture-review">
+    <context type="validate-architecture">
       <i>Primary: Winston (Architect), James (Dev), Murat (TEA)</i>
       <i>Secondary: Sarah (PO)</i>
     </context>

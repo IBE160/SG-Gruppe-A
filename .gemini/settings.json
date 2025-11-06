@@ -1,8 +1,0 @@
-{
-  "telemetry": {
-    "enabled": true,
-    "target": "local",
-    "outfile": ".logging/log.jsonl",
-    "logPrompts": true
-  }
-}

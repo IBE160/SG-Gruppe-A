@@ -13,8 +13,7 @@
     <rule n="1">Steps execute in exact numerical order (1, 2, 3...)</rule>
     <rule n="2">Optional steps: Ask user unless #yolo mode active</rule>
     <rule n="3">Template-output tags: Save content → Show user → Get approval before continuing</rule>
-    <rule n="4">Elicit tags: Execute immediately unless #yolo mode (which skips ALL elicitation)</rule>
-    <rule n="5">User must approve each major section before continuing UNLESS #yolo mode active</rule>
+    <rule n="4">User must approve each major section before continuing UNLESS #yolo mode active</rule>
   </WORKFLOW-RULES>
 
   <flow>
@@ -75,14 +74,6 @@
           <action>Display generated content</action>
           <ask>Continue [c] or Edit [e]? WAIT for response</ask>
         </if>
-
-        <if tag="elicit-required">
-          <mandate critical="true">YOU MUST READ the file at {project-root}/bmad/core/tasks/adv-elicit.xml using Read tool BEFORE presenting
-            any elicitation menu</mandate>
-          <action>Load and run task {project-root}/bmad/core/tasks/adv-elicit.xml with current context</action>
-          <action>Show elicitation menu 5 relevant options (list 1-5 options, Continue [c] or Reshuffle [r])</action>
-          <mandate>HALT and WAIT for user selection</mandate>
-        </if>
       </substep>
 
       <substep n="2d" title="Step Completion">
@@ -123,7 +114,6 @@
     </execution>
     <output>
       <tag>template-output - Save content checkpoint</tag>
-      <tag>elicit-required - Trigger enhancement</tag>
       <tag>critical - Cannot be skipped</tag>
       <tag>example - Show example output</tag>
     </output>

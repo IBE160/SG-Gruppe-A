@@ -9,8 +9,8 @@
 <critical>Communicate all responses in {communication_language} and tailor to {user_skill_level}</critical>
 <critical>Generate all documents in {document_output_language}</critical>
 <critical>SAVE PROGRESS after each major step - use <template-output> tags throughout</critical>
-
 <critical>DOCUMENT OUTPUT: Professional, specific, actionable UX design decisions WITH RATIONALE. User skill level ({user_skill_level}) affects conversation style ONLY, not document content.</critical>
+<critical>Input documents specified in workflow.yaml input_file_patterns - workflow engine handles fuzzy matching, whole vs sharded document discovery automatically</critical>
 
 <step n="0" goal="Validate workflow readiness" tag="workflow-status">
 <action>Check if {output_folder}/bmm-workflow-status.yaml exists</action>
