@@ -35,7 +35,7 @@ The AI CV & Job Application Assistant directly addresses this problem by acting 
 *   **FR011:** The system must provide actionable suggestions to the user for improving their ATS score.
 *   **FR012:** The system must allow users to copy the generated cover letter text to their clipboard.
 *   **FR013:** The system must allow users to download the generated cover letter as a text file.
-*   **FR014:** The user interface must be responsive and accessible on modern web browsers (Chrome, Firefox, Safari, Edge) on both desktop and mobile devices.
+*   **FR014:** The user interface must be responsive and accessible on modern web browsers on both desktop and mobile devices.
 
 ### Non-Functional Requirements
 

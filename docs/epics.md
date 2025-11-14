@@ -38,12 +38,15 @@ As a developer,
 I want to set up the initial frontend and backend project structures with automated deployment,
 So that we have a stable foundation for building and testing features.
 
+**Related FRs:** FR014
+
 **Acceptance Criteria:**
 1.  A Next.js frontend application is initialized and linked to a new Git repository.
 2.  A FastAPI backend application is initialized in the same repository.
 3.  A basic "Hello World" page on the frontend is successfully deployed to Vercel.
 4.  A basic health check endpoint on the backend is successfully deployed to Render.
 5.  The repository contains a clear README with setup instructions.
+6.  The deployment setup is configured for high availability to meet the 99.5% uptime requirement (NFR004).
 
 **Prerequisites:** None
 
@@ -54,6 +57,8 @@ So that we have a stable foundation for building and testing features.
 As a user,
 I want to see a clean, professional, and consistent layout with a header, footer, and main content area,
 So that I can easily navigate the application and understand its structure.
+
+**Related FRs:** FR014
 
 **Acceptance Criteria:**
 1.  A main layout component is created and applied to all pages.
@@ -70,6 +75,8 @@ So that I can easily navigate the application and understand its structure.
 As a user,
 I want a simple interface to upload my CV document,
 So that the system can begin to analyze it.
+
+**Related FRs:** FR003
 
 **Acceptance Criteria:**
 1.  The main workspace displays a clearly marked "Upload CV" button or drag-and-drop area.
@@ -88,12 +95,15 @@ As a developer,
 I want to create a secure backend endpoint that accepts a CV file upload,
 So that the frontend can send the user's document for processing.
 
+**Related FRs:** FR003
+
 **Acceptance Criteria:**
 1.  A new POST endpoint (e.g., `/api/v1/cv/upload`) is created in the FastAPI backend.
 2.  The endpoint is configured to accept `multipart/form-data` file uploads.
 3.  The endpoint successfully receives and temporarily saves the uploaded `.doc` or `.docx` file.
 4.  The endpoint returns a unique identifier for the uploaded file upon success.
 5.  The endpoint is connected to the frontend, and the file from Story 1.3 can be successfully sent to it.
+6.  All data in transit to and from the endpoint is encrypted using HTTPS (NFR001).
 
 **Prerequisites:** Story 1.3
 
@@ -104,6 +114,8 @@ So that the frontend can send the user's document for processing.
 As a developer,
 I want to create a service that extracts the raw text content from an uploaded CV document,
 So that it can be used as input for the AI analysis in the next epic.
+
+**Related FRs:** FR004
 
 **Acceptance Criteria:**
 1.  A new service or function is created that takes a file path as input.
@@ -122,6 +134,8 @@ As a user,
 I want a simple text area to paste the job description I'm interested in,
 So that the system can analyze it against my CV.
 
+**Related FRs:** FR005
+
 **Acceptance Criteria:**
 1.  The main workspace displays a large, clearly labeled text area for the job description.
 2.  A "Submit for Analysis" or similar button is present below the text area.
@@ -138,11 +152,14 @@ As a developer,
 I want to create a backend endpoint that accepts the job description text,
 So that the frontend can send it for analysis.
 
+**Related FRs:** FR005
+
 **Acceptance Criteria:**
 1.  A new POST endpoint (e.g., `/api/v1/job/analyze`) is created in the FastAPI backend.
 2.  The endpoint accepts a JSON payload containing the raw text of the job description.
 3.  The endpoint returns a unique identifier for the analysis job upon successful submission.
 4.  The endpoint is connected to the frontend, and the text from the form in Story 1.6 can be successfully sent to it.
+5.  All data in transit to and from the endpoint is encrypted using HTTPS (NFR001).
 
 **Prerequisites:** Story 1.6
 
@@ -153,6 +170,8 @@ So that the frontend can send it for analysis.
 As a developer,
 I want a basic service to receive the job description text and prepare it for analysis,
 So that it's ready for the AI keyword extraction in the next epic.
+
+**Related FRs:** FR006
 
 **Acceptance Criteria:**
 1.  A new service is created that takes the raw job description text as input.
@@ -176,6 +195,8 @@ As a developer,
 I want to establish a secure and reliable connection to the Gemini API,
 So that the backend can send requests and receive responses from the AI model.
 
+**Related FRs:** FR006, FR007, FR009, FR010, FR011
+
 **Acceptance Criteria:**
 1.  A new service or module is created to handle all interactions with the Gemini API.
 2.  API keys and other sensitive configuration are securely managed (e.g., using environment variables).
@@ -191,6 +212,8 @@ So that the backend can send requests and receive responses from the AI model.
 As a developer,
 I want to use the AI to analyze the job description text and extract a structured list of required skills and qualifications,
 So that we have a clear, machine-readable list of requirements to compare against the user's CV.
+
+**Related FRs:** FR006
 
 **Acceptance Criteria:**
 1.  A new function is created that sends the job description text to the Gemini API.
@@ -209,6 +232,8 @@ As a developer,
 I want to use the AI to analyze the user's CV text and extract a structured list of their skills, experiences, and qualifications,
 So that we have a clear, machine-readable list of the user's qualifications to compare against the job requirements.
 
+**Related FRs:** FR004, FR006, FR007, FR009, FR010
+
 **Acceptance Criteria:**
 1.  A new function is created that sends the extracted CV text to the Gemini API.
 2.  The prompt is engineered to request a structured output (e.g., JSON) containing lists of the user's skills, technologies, and a summary of their experience.
@@ -226,6 +251,8 @@ As a developer,
 I want to create a service that compares the skills extracted from the job description with the skills extracted from the user's CV,
 So that we can identify what qualifications the user is missing.
 
+**Related FRs:** FR009
+
 **Acceptance Criteria:**
 1.  A new service is created that takes the structured data from Story 2.2 (Job Analysis) and Story 2.3 (CV Analysis) as input.
 2.  The service compares the two lists of skills and identifies which required skills are present in the CV and which are missing.
@@ -241,6 +268,8 @@ So that we can identify what qualifications the user is missing.
 As a developer,
 I want to create a service that calculates a basic ATS (Applicant Tracking System) score,
 So that the user can get a simple metric of how well their CV matches the job description.
+
+**Related FRs:** FR010
 
 **Acceptance Criteria:**
 1.  A new service is created that uses the output from the Gap Analysis service (Story 2.4).
@@ -258,12 +287,15 @@ As a developer,
 I want to use the AI to generate a tailored cover letter,
 So that the user receives a high-quality first draft that highlights their relevant skills.
 
+**Related FRs:** FR007
+
 **Acceptance Criteria:**
 1.  A new service is created that sends a comprehensive prompt to the Gemini API.
 2.  The prompt includes the user's extracted CV data (Story 2.3), the job description's required skills (Story 2.2), and the identified gaps (Story 2.4).
 3.  The prompt is engineered to produce a professional, well-structured cover letter in Norwegian.
 4.  The generated cover letter text is received from the API and stored.
 5.  The service is integrated to run as part of the main analysis job.
+6.  The cover letter generation process consistently completes in under 120 seconds (NFR003).
 
 **Prerequisites:** Story 2.4
 
@@ -274,6 +306,8 @@ So that the user receives a high-quality first draft that highlights their relev
 As a user,
 I want to see the results of the Gap Analysis and my ATS score in a clear, easy-to-understand format,
 So that I can quickly identify my strengths and weaknesses for this job application.
+
+**Related FRs:** FR009, FR010
 
 **Acceptance Criteria:**
 1.  A new component is created in the frontend to display the analysis results.
@@ -292,6 +326,8 @@ As a user,
 I want to see the generated cover letter in a text editor,
 So that I can review it, make my own edits, and copy the final version.
 
+**Related FRs:** FR008, FR012, FR013
+
 **Acceptance Criteria:**
 1.  A text editor component is added to the main analysis view on the frontend.
 2.  The frontend fetches the generated cover letter text (Story 2.6) from the backend and displays it in the editor.
@@ -308,6 +344,8 @@ So that I can review it, make my own edits, and copy the final version.
 As a user,
 I want to see interactive suggestions that connect the analysis to the generated cover letter,
 So that I can understand *why* the AI made certain choices and how to improve my application.
+
+**Related FRs:** FR011
 
 **Acceptance Criteria:**
 1.  When a user hovers over a "missing skill" in the analysis panel, the relevant sections in the job description could be highlighted.
@@ -330,12 +368,16 @@ As a new user,
 I want to create a secure account with my email and a password,
 So that I can save my work and access my personal dashboard.
 
+**Related FRs:** FR001
+
 **Acceptance Criteria:**
 1.  A registration page is created with fields for name, email, and password.
 2.  Client-side validation provides immediate feedback on password strength and email format.
 3.  A backend endpoint is created to handle new user registration.
 4.  The user's password is securely hashed before being stored in the database.
 5.  Upon successful registration, the user is automatically logged in and redirected to their new dashboard.
+6.  The user's password is securely hashed before being stored in the database (NFR001).
+7.  The registration process is compliant with GDPR and Norwegian privacy regulations (NFR002).
 
 **Prerequisites:** Story 1.1
 
@@ -346,6 +388,8 @@ So that I can save my work and access my personal dashboard.
 As a returning user,
 I want to log in securely with my email and password and be able to log out,
 So that I can access my saved application history and protect my account.
+
+**Related FRs:** FR002
 
 **Acceptance Criteria:**
 1.  A login page is created with fields for email and password.
@@ -364,11 +408,15 @@ As a developer,
 I want to protect sensitive backend endpoints,
 So that only authenticated users can access their own data.
 
+**Related FRs:** FR001, FR002
+
 **Acceptance Criteria:**
 1.  Backend middleware is implemented to check for a valid session token on protected routes.
 2.  Endpoints for uploading CVs, analyzing jobs, and viewing history are protected.
 3.  Requests to protected endpoints without a valid token are rejected with a `401 Unauthorized` error.
 4.  A user can only access data that is associated with their own user ID.
+5.  All data in transit is encrypted using HTTPS (NFR001).
+6.  The authentication and authorization mechanisms are compliant with GDPR and Norwegian privacy regulations (NFR002).
 
 **Prerequisites:** Story 3.2
 
@@ -402,6 +450,8 @@ So that I can review it later without re-running the entire process.
 3.  The saved data includes the original CV text, the job description, the generated cover letter, the gap analysis results, and the ATS score.
 4.  Each saved analysis is linked to the authenticated user's ID.
 5.  The user receives a confirmation message after the analysis is successfully saved.
+6.  All saved data is encrypted at rest (NFR001).
+7.  The data saving process is compliant with GDPR and Norwegian privacy regulations (NFR002).
 
 **Prerequisites:** Story 2.8, Story 3.3
 
@@ -450,6 +500,7 @@ So that I can keep my workspace clean and organized.
 2.  Clicking the "Delete" button prompts the user with a confirmation dialog to prevent accidental deletion (e.g., "Are you sure you want to delete this application?").
 3.  Upon confirmation, a request is sent to a new backend endpoint to delete the application record from the database.
 4.  The item is immediately removed from the list on the dashboard without requiring a page reload.
+5.  The deletion process is compliant with GDPR and Norwegian privacy regulations, ensuring data is properly removed (NFR002).
 
 **Prerequisites:** Story 3.6
 
@@ -485,3 +536,49 @@ So that [benefit/value].
 ---
 
 **For implementation:** Use the `create-story` workflow to generate individual story implementation plans from this epic breakdown.
+
+---
+
+## Technical Unknowns and Spikes
+
+This section identifies potential technical risks and proposes "spikes" (time-boxed research tasks) to address them before full implementation.
+
+### 1. Gemini API for Structured Data Extraction
+
+- **Unknown:** How reliably can the Gemini API consistently extract structured JSON data from unstructured CV and job description text? The format and quality of user-uploaded CVs and pasted job descriptions will vary significantly.
+- **Risk:** If the AI cannot reliably provide structured data, the downstream services (Gap Analysis, ATS Score) will fail or produce inaccurate results.
+- **Spike:**
+    - **Goal:** Determine the optimal prompt engineering techniques and data cleaning strategies to ensure consistent and accurate JSON output from the Gemini API for a variety of sample CVs and job descriptions.
+    - **Tasks:**
+        1.  Gather a diverse set of 10-15 sample CVs and job descriptions (different formats, lengths, and industries).
+        2.  Develop and test multiple prompt variations for Story 2.2 and Story 2.3.
+        3.  Measure the success rate of parsing the AI's response into the required JSON structure.
+        4.  Document the most effective prompt strategies and any pre-processing steps required.
+    - **Timebox:** 8 hours.
+
+### 2. CV Parsing Robustness
+
+- **Unknown:** How robust is the `python-docx` library when handling a wide variety of `.doc` and `.docx` files, especially those with complex layouts, tables, columns, or embedded objects?
+- **Risk:** The system may fail to parse certain CVs, leading to a poor user experience and inability to use the service.
+- **Spike:**
+    - **Goal:** Test the `python-docx` library against a corpus of challenging CV documents to identify potential failure points.
+    - **Tasks:**
+        1.  Collect a set of "difficult" CVs: old `.doc` formats, complex tables, multi-column layouts, headers/footers with important information, etc.
+        2.  Write a script to run the parsing service from Story 1.5 against each document.
+        3.  Log any errors or documents that result in incomplete or garbled text extraction.
+        4.  Investigate and document potential workarounds or alternative libraries if `python-docx` proves insufficient for a significant percentage of cases.
+    - **Timebox:** 4 hours.
+
+### 3. End-to-End Analysis Performance
+
+- **Unknown:** Can the entire analysis pipeline (CV parsing, job ad analysis, gap analysis, cover letter generation) consistently meet the <120 second performance requirement (NFR003)?
+- **Risk:** If the process is too slow, users may become frustrated and abandon the service.
+- **Spike:**
+    - **Goal:** Create a proof-of-concept for the end-to-end analysis pipeline to measure its typical and worst-case performance.
+    - **Tasks:**
+        1.  Create a single script that simulates the full process: text extraction, calls to the Gemini API for job/CV analysis and cover letter generation, and gap analysis logic.
+        2.  Run the script with a variety of input sizes (short and long CVs/job descriptions).
+        3.  Measure the time taken for each step and the total time.
+        4.  Identify any bottlenecks in the process.
+        5.  Document the performance findings and any recommendations for optimization (e.g., parallelizing API calls).
+    - **Timebox:** 6 hours.
