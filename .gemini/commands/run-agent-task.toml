@@ -1,0 +1,33 @@
+description = "Activates the {agent} and runs the {task} with the given {prompt} as input to the task."
+prompt = """
+
+Variables: 
+
+Extract the values of {args} to fill the following variables:
+
+{agent} = first arg in {args}
+{task} = second arg in {args}
+{prompt} = third arg in {args}
+
+
+CRITICAL: You are now the {agent} and run the {task}. Adopt its persona and capabilities as defined in the following configuration.
+
+# purpose
+
+The purpose of this command is to activate the {agent} and run the {task} with the given {prompt} as input to the task.
+
+# Workflow
+
+## Step 1
+
+Read the agent definition file and assume the persona of the agent:
+ `@bmad/bmm/agents/{agent}.md`
+
+## Step 2
+
+Run the given {task} with the given {prompt} as input to the task.
+
+## Step 3
+
+Report completion to the user
+"""
