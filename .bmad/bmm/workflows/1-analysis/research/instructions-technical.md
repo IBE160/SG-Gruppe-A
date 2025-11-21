@@ -18,6 +18,7 @@
 <critical>Distinguish: FACT (from official docs/sources), OPINION (from community/reviews), SPECULATION (your analysis)</critical>
 <critical>If you cannot find current information about a technology, state: "I could not find recent {{current_year}} data on [X]"</critical>
 <critical>Extract and include source URLs in all technology profiles and comparisons</critical>
+<critical>⚠️ CHECKPOINT PROTOCOL: After EVERY <template-output> tag, you MUST follow workflow.xml substep 2c: SAVE content to file immediately → SHOW checkpoint separator (━━━━━━━━━━━━━━━━━━━━━━━) → DISPLAY generated content → PRESENT options [a]Advanced Elicitation/[c]Continue/[p]Party-Mode/[y]YOLO → WAIT for user response. Never batch saves or skip checkpoints.</critical>
 
 <workflow>
 
@@ -143,8 +144,6 @@ Each of these is popular for different reasons. Let me know if you want me to ex
 </check>
 </action>
 
-<invoke-task halt="true">{project-root}/.bmad/core/tasks/adv-elicit.xml</invoke-task>
-
 <template-output>technology_options</template-output>
 
 </step>
@@ -221,7 +220,6 @@ Each of these is popular for different reasons. Let me know if you want me to ex
 - Training costs
 - Total cost of ownership estimate
 
-<invoke-task halt="true">{project-root}/.bmad/core/tasks/adv-elicit.xml</invoke-task>
 <template-output>tech*profile*{{option_number}}</template-output>
 
 </step>
@@ -391,8 +389,6 @@ Research and document:
 - Identified risks and mitigation plans
 - Contingency options if primary choice doesn't work
 - Exit strategy considerations
-
-<invoke-task halt="true">{project-root}/.bmad/core/tasks/adv-elicit.xml</invoke-task>
 
 <template-output>recommendations</template-output>
 

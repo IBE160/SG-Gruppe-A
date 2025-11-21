@@ -20,26 +20,16 @@ The brainstorming workflow facilitates interactive brainstorming sessions using 
 
 ## Usage
 
-### Basic Invocation
-
-```bash
-workflow brainstorming
-```
-
-### With Context Document
-
-```bash
-# Provide domain-specific context to guide the session
-workflow brainstorming --data /path/to/context.md
-```
-
 ### Configuration
 
-The workflow leverages configuration from `.bmad/cis/config.yaml`:
+The workflow leverages configuration from `.bmad/core/config.yaml`:
 
 - **output_folder**: Where session results are saved
 - **user_name**: Session participant identification
-- **brain_techniques**: CSV database of 36 creative techniques
+
+And the following has a default or can be passed in as an override for custom brainstorming scenarios.
+
+- **brain_techniques**: CSV database of 36 creative techniques, default is `./brain-methods.csv`
 
 ## Workflow Structure
 
