@@ -2,7 +2,7 @@
 
 ## Activating Agents
 
-BMAD agents are installed as slash commands in `.claude/commands/agents/`.
+BMAD agents are installed as slash commands in `.claude/commands/bmad/`.
 
 ### How to Use
 

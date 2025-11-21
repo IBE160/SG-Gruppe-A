@@ -39,7 +39,7 @@
 1. Run `story-context` to generate context file and mark drafted stories as ready
 2. Run `story-ready` to quickly mark drafted stories as ready without generating context
 3. Run `create-story` if no incomplete stories are drafted yet
-4. Check {output-folder}/sprint-status.yaml to see current sprint status
+4. Check {output_folder}/sprint-status.yaml to see current sprint status
       </output>
       <action>HALT</action>
     </check>
@@ -70,6 +70,11 @@ Proceeding with story file only. For better context, consider running `story-con
     <action if="no incomplete tasks"><goto step="6">Completion sequence</goto></action>
     <action if="story file inaccessible">HALT: "Cannot develop story without access to story file"</action>
     <action if="incomplete task or subtask requirements ambiguous">ASK user to clarify or HALT</action>
+  </step>
+
+  <step n="0.5" goal="Discover and load project documents">
+    <invoke-protocol name="discover_inputs" />
+    <note>After discovery, these content variables are available: {architecture_content}, {tech_spec_content}, {ux_design_content}, {epics_content} (selective load), {document_project_content}</note>
   </step>
 
   <step n="1.5" goal="Detect review continuation and extract review context">

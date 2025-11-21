@@ -23,19 +23,6 @@ domain_knowledge_base: "{installed_path}/domain-knowledge-base.md"
 # Output configuration
 default_output_file: "{output_folder}/domain-brief.md"
 
-# Workflow metadata
-version: "6.0.0-alpha"
-category: "analysis"
-complexity: "medium"
-execution_time: "30-45 minutes"
-prerequisites:
-  - "Basic project understanding"
-when_to_use:
-  - "Complex regulated domains (healthcare, finance, aerospace)"
-  - "Novel technical domains requiring deep understanding"
-  - "Before PRD when domain expertise needed"
-  - "When compliance and regulations matter"
-
 standalone: true
 
 # Web bundle configuration for standalone deployment
