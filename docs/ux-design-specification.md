@@ -45,7 +45,7 @@ No specific apps or examples were provided for inspiration. The design will focu
 
 ### 1.1 Design System Choice
 
-**System:** shadcn/ui
+**System:** shadcn/ui (v0.8.0)
 **Rationale:** The user chose shadcn/ui for its balance of speed, aesthetics, and customization, especially given the project's use of Tailwind CSS. It allows for rapid development of a polished UI while retaining full control over the code and ensuring accessibility.
 **Provides:** A collection of pre-styled, accessible components built on Radix UI and styled with Tailwind CSS.
 **Customization needs:** Components are owned by the project, allowing for full customization.
@@ -61,7 +61,17 @@ No specific apps or examples were provided for inspiration. The design will focu
 
 ### 2.2 Novel UX Patterns
 
-{{novel_ux_patterns}}
+**AI-Assisted Critique Panel**
+
+To elevate the user experience beyond simple generation, a novel UX pattern called the "AI-Assisted Critique Panel" will be introduced. This is a real-time feedback mechanism that analyzes the user's cover letter as they type.
+
+*   **Purpose:** To provide immediate, actionable suggestions that help users refine their writing, align it with the job description, and improve its overall quality and effectiveness.
+*   **Interaction:** As the user types in the cover letter editor, the Critique Panel on the side provides color-coded highlights and suggestions directly on the text. On hover, a small pop-up explains the suggestion.
+*   **Feedback Categories:** The panel will provide feedback on:
+    *   **Tone:** Is the tone professional, confident, and appropriate for the role?
+    *   **Keyword Alignment:** Does the letter incorporate key skills and terms from the job description?
+    *   **Clarity and Conciseness:** Are there sentences that are too long, confusing, or contain jargon?
+    *   **Impact:** Does the user effectively communicate their accomplishments and value?
 
 ### 2.3 Core Experience Principles
 
@@ -86,6 +96,9 @@ No specific apps or examples were provided for inspiration. The design will focu
 *   **Success:** #16a34a (positive feedback)
 *   **Error:** #dc2626 (negative feedback)
 *   **Neutral:** Grayscale (for backgrounds, text, borders)
+
+**Color Accessibility:**
+*   All text and UI elements will be checked to ensure they meet a minimum contrast ratio of 4.5:1 (WCAG AA) against their background.
 
 **Typography System:**
 *   **Font Families:** Clean sans-serif for body and headings (e.g., system font stack or a font like Inter/Roboto). Monospace for code/technical elements.
@@ -246,7 +259,22 @@ graph TD
 
 ### 6.1 Component Strategy
 
-{{component_library_strategy}}
+Our strategy is to leverage the `shadcn/ui` component library as the primary source for all UI elements to ensure consistency, accessibility, and development speed. Custom components will only be created when a specific need is not met by the existing library.
+
+**Primary Source:**
+*   **Library:** `shadcn/ui`
+*   **Usage:** All standard UI elements (buttons, forms, modals, etc.) will be sourced directly from this library.
+
+**Custom Components:**
+The following custom components have been identified as necessary for the application's unique features:
+
+1.  **`GapAnalysisDisplay`**
+    *   **Purpose:** To visually represent the skills and qualifications that the user is missing for a specific job.
+    *   **Functionality:** This component will display a list of missing keywords and skills, potentially with a visual indicator (e.g., a red 'x') next to each. It may also suggest ways to incorporate these skills into the user's CV.
+
+2.  **`ATSScoreGauge`**
+    *   **Purpose:** To provide a visual representation of the user's ATS score.
+    *   **Functionality:** This component will display a circular gauge or progress bar that shows the calculated ATS score as a percentage. The color of the gauge will change based on the score (e.g., red for low, yellow for medium, green for high) to provide immediate visual feedback.
 
 ---
 
@@ -353,20 +381,20 @@ graph TD
 
 ### Related Documents
 
-- Product Requirements: `{{prd_file}}`
-- Product Brief: `{{brief_file}}`
-- Brainstorming: `{{brainstorm_file}}`
+- Product Requirements: `docs/PRD.md`
+- Product Brief: `docs/product-brief-ibe160-2025-11-04.md`
+- Brainstorming: `docs/brainstorming user flows - 2025-10-29.md`
 
 ### Core Interactive Deliverables
 
 This UX Design Specification was created through visual collaboration:
 
-- **Color Theme Visualizer**: {{color_themes_html}}
+- **Color Theme Visualizer**: [ux-color-themes.html](./ux-color-themes.html)
   - Interactive HTML showing all color theme options explored
   - Live UI component examples in each theme
   - Side-by-side comparison and semantic color usage
 
-- **Design Direction Mockups**: {{design_directions_html}}
+- **Design Direction Mockups**: [ux-design-directions.html](./ux-design-directions.html)
   - Interactive HTML with 6-8 complete design approaches
   - Full-screen mockups of key screens
   - Design philosophy and rationale for each direction
