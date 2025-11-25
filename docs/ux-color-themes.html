@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UX Color Themes</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; background-color: #f9fafb; color: #111827; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        h1 { text-align: center; font-size: 2.5rem; margin-bottom: 2rem; }
+        .theme-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .theme { border: 1px solid #e5e7eb; border-radius: 0.5rem; background-color: #ffffff; overflow: hidden; }
+        .theme-header { padding: 1.5rem; border-bottom: 1px solid #e5e7eb; }
+        .theme-header h2 { margin: 0; font-size: 1.5rem; }
+        .theme-header p { margin: 0.25rem 0 0; color: #6b7280; }
+        .theme-body { padding: 1.5rem; }
+        .palette { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+        .swatch { width: 100%; height: 50px; border-radius: 0.25rem; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        .components { display: flex; flex-direction: column; gap: 1rem; }
+        .button { padding: 0.5rem 1rem; border: none; border-radius: 0.25rem; font-size: 1rem; cursor: pointer; }
+        .input { padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.25rem; font-size: 1rem; width: 100%; box-sizing: border-box; }
+        .alert { padding: 1rem; border-radius: 0.25rem; }
+        .card { padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1); }
+        /* Theme 1: Trustworthy Professional */
+        .theme-1 .swatch-primary { background-color: #2563eb; }
+        .theme-1 .swatch-secondary { background-color: #4f46e5; }
+        .theme-1 .swatch-accent { background-color: #db2777; }
+        .theme-1 .swatch-success { background-color: #16a34a; }
+        .theme-1 .swatch-error { background-color: #dc2626; }
+        .theme-1 .button-primary { background-color: #2563eb; color: white; }
+        .theme-1 .input-focus:focus { border-color: #2563eb; outline: 2px solid #2563eb; }
+        .theme-1 .alert-success { background-color: #dcfce7; color: #166534; }
+        .theme-1 .card { background-color: #eff6ff; }
+        /* Theme 2: Modern & Efficient */
+        .theme-2 .swatch-primary { background-color: #111827; }
+        .theme-2 .swatch-secondary { background-color: #4b5563; }
+        .theme-2 .swatch-accent { background-color: #16a34a; }
+        .theme-2 .swatch-success { background-color: #16a34a; }
+        .theme-2 .swatch-error { background-color: #dc2626; }
+        .theme-2 .button-primary { background-color: #111827; color: white; }
+        .theme-2 .input-focus:focus { border-color: #111827; outline: 2px solid #111827; }
+        .theme-2 .alert-success { background-color: #dcfce7; color: #166534; }
+        .theme-2 .card { background-color: #f3f4f6; }
+        /* Theme 3: Creative & Empowering */
+        .theme-3 .swatch-primary { background-color: #8b5cf6; }
+        .theme-3 .swatch-secondary { background-color: #ec4899; }
+        .theme-3 .swatch-accent { background-color: #f59e0b; }
+        .theme-3 .swatch-success { background-color: #10b981; }
+        .theme-3 .swatch-error { background-color: #ef4444; }
+        .theme-3 .button-primary { background-color: #8b5cf6; color: white; }
+        .theme-3 .input-focus:focus { border-color: #8b5cf6; outline: 2px solid #8b5cf6; }
+        .theme-3 .alert-success { background-color: #d1fae5; color: #047857; }
+        .theme-3 .card { background-color: #f5f3ff; }
+        /* Theme 4: Calm & Focused */
+        .theme-4 .swatch-primary { background-color: #0d9488; }
+        .theme-4 .swatch-secondary { background-color: #0891b2; }
+        .theme-4 .swatch-accent { background-color: #f97316; }
+        .theme-4 .swatch-success { background-color: #16a34a; }
+        .theme-4 .swatch-error { background-color: #dc2626; }
+        .theme-4 .button-primary { background-color: #0d9488; color: white; }
+        .theme-4 .input-focus:focus { border-color: #0d9488; outline: 2px solid #0d9488; }
+        .theme-4 .alert-success { background-color: #dcfce7; color: #166534; }
+        .theme-4 .card { background-color: #f0fdfa; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Color Theme Visualizer</h1>
+        <div class="theme-grid">
+            <!-- Theme 1: Trustworthy Professional -->
+            <div class="theme theme-1">
+                <div class="theme-header">
+                    <h2>1. Trustworthy Professional</h2>
+                    <p>Professional & Secure</p>
+                </div>
+                <div class="theme-body">
+                    <div class="palette">
+                        <div class="swatch swatch-primary">Primary</div>
+                        <div class="swatch swatch-secondary">Secondary</div>
+                        <div class="swatch swatch-accent">Accent</div>
+                        <div class="swatch swatch-success">Success</div>
+                        <div class="swatch swatch-error">Error</div>
+                    </div>
+                    <div class="components">
+                        <button class="button button-primary">Primary Button</button>
+                        <input class="input input-focus" placeholder="Input field">
+                        <div class="alert alert-success">Success message</div>
+                        <div class="card">Card component</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Theme 2: Modern & Efficient -->
+            <div class="theme theme-2">
+                <div class="theme-header">
+                    <h2>2. Modern & Efficient</h2>
+                    <p>Clean & Minimalist</p>
+                </div>
+                <div class="theme-body">
+                    <div class="palette">
+                        <div class="swatch swatch-primary">Primary</div>
+                        <div class="swatch swatch-secondary">Secondary</div>
+                        <div class="swatch swatch-accent">Accent</div>
+                        <div class="swatch swatch-success">Success</div>
+                        <div class="swatch swatch-error">Error</div>
+                    </div>
+                    <div class="components">
+                        <button class="button button-primary">Primary Button</button>
+                        <input class="input input-focus" placeholder="Input field">
+                        <div class="alert alert-success">Success message</div>
+                        <div class="card">Card component</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Theme 3: Creative & Empowering -->
+            <div class="theme theme-3">
+                <div class="theme-header">
+                    <h2>3. Creative & Empowering</h2>
+                    <p>Vibrant & Inspiring</p>
+                </div>
+                <div class="theme-body">
+                    <div class="palette">
+                        <div class="swatch swatch-primary">Primary</div>
+                        <div class="swatch swatch-secondary">Secondary</div>
+                        <div class="swatch swatch-accent">Accent</div>
+                        <div class="swatch swatch-success">Success</div>
+                        <div class="swatch swatch-error">Error</div>
+                    </div>
+                    <div class="components">
+                        <button class="button button-primary">Primary Button</button>
+                        <input class="input input-focus" placeholder="Input field">
+                        <div class="alert alert-success">Success message</div>
+                        <div class="card">Card component</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Theme 4: Calm & Focused -->
+            <div class="theme theme-4">
+                <div class="theme-header">
+                    <h2>4. Calm & Focused</h2>
+                    <p>Subtle & Supportive</p>
+                </div>
+                <div class="theme-body">
+                    <div class="palette">
+                        <div class="swatch swatch-primary">Primary</div>
+                        <div class="swatch swatch-secondary">Secondary</div>
+                        <div class="swatch swatch-accent">Accent</div>
+                        <div class="swatch swatch-success">Success</div>
+                        <div class="swatch swatch-error">Error</div>
+                    </div>
+                    <div class="components">
+                        <button class="button button-primary">Primary Button</button>
+                        <input class="input input-focus" placeholder="Input field">
+                        <div class="alert alert-success">Success message</div>
+                        <div class="card">Card component</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

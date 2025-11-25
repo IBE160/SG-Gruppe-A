@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ibe160 - Key Screens Showcase</title>
+    <style>
+        /* General Setup */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            background-color: #f8f9fa;
+            color: #212529;
+            line-height: 1.6;
+        }
+        .showcase-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #111827;
+        }
+        h1 { font-size: 2.8rem; margin-bottom: 1rem; }
+        h2 { font-size: 1.5rem; margin-bottom: 2.5rem; color: #6b7280; font-weight: 400; }
+
+        /* Screen Grid Layout */
+        .screen-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 2.5rem;
+        }
+        .screen {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            background-color: #ffffff;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        .screen-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            background-color: #f9fafb;
+        }
+        .screen-header h3 { margin: 0; font-size: 1.2rem; color: #111827; }
+        .screen-header p { margin: 0.25rem 0 0; color: #6b7280; font-size: 0.9rem; }
+        .screen-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            background-color: #f9fafb; /* Default background for mockups */
+        }
+
+        /* Trustworthy Professional Theme */
+        :root {
+            --primary: #2563eb;
+            --secondary: #4f46e5;
+            --accent: #db2777;
+            --success: #16a34a;
+            --error: #dc2626;
+            --neutral-100: #f3f4f6;
+            --neutral-200: #e5e7eb;
+            --neutral-500: #6b7280;
+            --neutral-800: #1f2937;
+            --neutral-900: #111827;
+        }
+
+        /* Components */
+        .button {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        .button:hover { transform: translateY(-1px); }
+        .button-primary { background-color: var(--primary); color: white; }
+        .button-primary:hover { background-color: #1d4ed8; }
+        .button-secondary { background-color: var(--secondary); color: white; }
+        .button-secondary:hover { background-color: #4338ca; }
+        .button-outline { background-color: white; color: var(--neutral-800); border: 1px solid var(--neutral-200); }
+        .button-outline:hover { background-color: var(--neutral-100); }
+
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--neutral-800); }
+        .input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--neutral-200);
+            border-radius: 0.5rem;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+        .input:focus { border-color: var(--primary); outline: 2px solid transparent; box-shadow: 0 0 0 2px var(--primary); }
+
+        /* Mockup Specific Styles */
+        .mock-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background-color: white;
+            border-bottom: 1px solid var(--neutral-200);
+        }
+        .mock-logo { font-weight: bold; font-size: 1.25rem; color: var(--neutral-900); }
+        .mock-nav a { margin-left: 1.5rem; text-decoration: none; color: var(--neutral-500); font-weight: 500; }
+        .mock-nav a:hover { color: var(--primary); }
+
+        .mock-hero { text-align: center; padding: 5rem 2rem; background-color: #eff6ff; }
+        .mock-hero h3 { font-size: 2.5rem; margin-bottom: 1rem; color: var(--neutral-900); }
+        .mock-hero p { font-size: 1.1rem; color: var(--neutral-500); max-width: 600px; margin: 0 auto 2rem; }
+
+        .mock-features { display: flex; gap: 2rem; text-align: center; padding: 3rem 1.5rem; }
+        .mock-feature { flex: 1; }
+        .mock-feature .icon { font-size: 2.5rem; margin-bottom: 1rem; color: var(--primary); }
+
+        .mock-login-card { max-width: 400px; margin: 4rem auto; }
+
+        .mock-workspace { display: flex; flex-grow: 1; background-color: white; }
+        .mock-input-pane { flex: 1; padding: 1.5rem; border-right: 1px solid var(--neutral-200); }
+        .mock-output-pane { flex: 1; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
+        
+        .mock-gauge {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: black; /* Changed to black for visibility */
+            background: conic-gradient(var(--success) 75%, var(--neutral-100) 0);
+        }
+        .mock-gap-item {
+            padding: 0.75rem;
+            background-color: #fffbeb;
+            color: #b45309;
+            border-left: 4px solid #f59e0b;
+            border-radius: 0.25rem;
+        }
+
+        .mock-modal-overlay { position: absolute; inset: 0; background-color: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; }
+        .mock-modal { background-color: white; padding: 2rem; border-radius: 0.75rem; width: 90%; max-width: 450px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="showcase-container">
+        <h1>Key Screens Showcase</h1>
+        <h2>An interactive overview of the application's core user interface.</h2>
+
+        <div class="screen-grid">
+
+            <!-- Screen 1: Hybrid Landing Page -->
+            <div class="screen">
+                <div class="screen-header">
+                    <h3>1. Landing Page</h3>
+                    <p>Combines a focused hero with feature highlights.</p>
+                </div>
+                <div class="screen-body" style="padding: 0;">
+                    <div class="mock-header">
+                        <div class="mock-logo">ibe160</div>
+                        <nav class="mock-nav">
+                            <a href="#">Login</a>
+                            <a href="#" class="button button-primary" style="padding: 0.5rem 1rem;">Sign Up</a>
+                        </nav>
+                    </div>
+                    <div class="mock-hero">
+                        <h3>Optimize Your Job Applications with AI</h3>
+                        <p>Upload your CV and job description to get tailored cover letters and actionable feedback that beats the ATS.</p>
+                        <a href="#" class="button button-primary">Get Started Now</a>
+                    </div>
+                    <div class="mock-features">
+                        <div class="mock-feature">
+                            <div class="icon">📄</div>
+                            <h4>Smart Analysis</h4>
+                            <p>Our AI identifies key skills and keywords in any job description.</p>
+                        </div>
+                        <div class="mock-feature">
+                            <div class="icon">✨</div>
+                            <h4>Instant Generation</h4>
+                            <p>Create tailored, professional cover letters in seconds.</p>
+                        </div>
+                        <div class="mock-feature">
+                            <div class="icon">🎯</div>
+                            <h4>Gap Highlighting</h4>
+                            <p>Discover what's missing from your CV and get suggestions to improve it.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen 2: Login Screen -->
+            <div class="screen">
+                <div class="screen-header">
+                    <h3>2. Login / Sign Up</h3>
+                    <p>A clean, simple authentication form.</p>
+                </div>
+                <div class="screen-body">
+                    <div class="mock-login-card card">
+                        <h3 style="text-align: center; margin-bottom: 2rem;">Welcome Back</h3>
+                        <div>
+                            <label class="label">Email Address</label>
+                            <input type="email" class="input" placeholder="you@example.com">
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <label class="label">Password</label>
+                            <input type="password" class="input">
+                        </div>
+                        <button class="button button-primary" style="width: 100%; margin-top: 2rem;">Login</button>
+                        <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem;">Don't have an account? <a href="#" style="color: var(--primary);">Sign Up</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen 3: Workspace - Empty State -->
+            <div class="screen">
+                <div class="screen-header">
+                    <h3>3. Workspace - Empty State</h3>
+                    <p>The dual-pane view before the user has provided input.</p>
+                </div>
+                <div class="screen-body" style="padding: 0;">
+                    <div class="mock-workspace">
+                        <div class="mock-input-pane">
+                            <h3 style="margin-top: 0;">Application Details</h3>
+                            <div>
+                                <label class="label">1. Upload Your CV</label>
+                                <button class="button button-outline" style="width: 100%;">Click to upload (.doc, .docx)</button>
+                            </div>
+                            <div style="margin-top: 1.5rem;">
+                                <label class="label">2. Paste Job Description</label>
+                                <textarea class="input" style="min-height: 150px;" placeholder="Paste the full job description here..."></textarea>
+                            </div>
+                            <button class="button button-primary" style="width: 100%; margin-top: 1.5rem;">Generate & Analyze</button>
+                        </div>
+                        <div class="mock-output-pane" style="align-items: center; justify-content: center; text-align: center; color: var(--neutral-500);">
+                            <div>
+                                <div style="font-size: 3rem;">🚀</div>
+                                <h3>Your Results Will Appear Here</h3>
+                                <p>Provide your CV and a job description to get started.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen 4: Workspace - With Results -->
+            <div class="screen">
+                <div class="screen-header">
+                    <h3>4. Workspace - With Results</h3>
+                    <p>The dual-pane view showing the AI-generated output.</p>
+                </div>
+                <div class="screen-body" style="padding: 0;">
+                    <div class="mock-workspace">
+                        <div class="mock-input-pane">
+                            <h3 style="margin-top: 0;">Application Details</h3>
+                            <div>
+                                <label class="label">1. Your CV</label>
+                                <p style="padding: 0.75rem; border: 1px solid var(--neutral-200); border-radius: 0.5rem; background-color: #eff6ff;">my_cv_final.docx</p>
+                            </div>
+                            <div style="margin-top: 1.5rem;">
+                                <label class="label">2. Job Description</label>
+                                <textarea class="input" style="min-height: 150px;">Senior Frontend Developer...</textarea>
+                            </div>
+                            <button class="button button-secondary" style="width: 100%; margin-top: 1.5rem;">Regenerate</button>
+                        </div>
+                        <div class="mock-output-pane">
+                            <div class="card">
+                                <h4>Generated Cover Letter</h4>
+                                <p style="font-size: 0.9rem; color: var(--neutral-500);">Dear Hiring Manager, I am writing to express my keen interest in the Senior Frontend Developer position...</p>
+                            </div>
+                            <div class="card" style="display: flex; align-items: center; gap: 1.5rem;">
+                                <div>
+                                    <h4>ATS Score</h4>
+                                    <div class="mock-gauge">75%</div>
+                                </div>
+                                <div style="flex: 1;">
+                                    <h4>Gap Analysis</h4>
+                                    <div class="mock-gap-item">Missing: Agile Methodology</div>
+                                    <div class="mock-gap-item" style="margin-top: 0.5rem;">Missing: Project Management Software</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen 5: Modal Dialog -->
+            <div class="screen">
+                <div class="screen-header">
+                    <h3>5. Modal Dialog</h3>
+                    <p>Example of a confirmation modal for a destructive action.</p>
+                </div>
+                <div class="screen-body" style="position: relative;">
+                    <p>This is the page content behind the modal.</p>
+                    <div class="mock-modal-overlay">
+                        <div class="mock-modal card">
+                            <h3 style="margin-top: 0;">Are you sure?</h3>
+                            <p style="color: var(--neutral-500);">This action cannot be undone. This will permanently delete the application analysis.</p>
+                            <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: flex-end;">
+                                <button class="button button-outline">Cancel</button>
+                                <button class="button" style="background-color: var(--error); color: white;">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
