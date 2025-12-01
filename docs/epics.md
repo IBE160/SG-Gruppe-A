@@ -145,6 +145,22 @@ As an authenticated user, I want to be able to log out of the application, so th
 
 **Technical Notes:** The client should discard the JWT token. If using server-side sessions, the session should be invalidated.
 
+### Story 1.5: AI Service Integration and Proof-of-Concept
+
+As a developer, I want to establish a connection to the AI service and validate its core functionalities, so that we can de-risk the project and ensure the AI-powered features can be built.
+
+**Acceptance Criteria:**
+
+*   **Given** the project is set up
+*   **When** a connection to the chosen LLM's API is attempted
+*   **Then** the connection is successful.
+*   **And when** a sample CV and job description are sent to the AI service
+*   **Then** the service can successfully parse the CV, analyze the job description, and generate a basic cover letter.
+
+**Prerequisites:** Story 1.1
+
+**Technical Notes:** This story involves selecting the LLM provider (e.g., OpenAI, Gemini), setting up API keys securely, and creating a basic Python script or service to interact with the API. The focus is on a proof-of-concept, not a production-ready implementation. This story is a critical prerequisite for Epic 2 and Epic 3.
+
 
 
 ---
