@@ -1,8 +1,8 @@
 # Epic Technical Specification: {{epic_title}}
 
-Date: {{date}}
-Author: {{user_name}}
-Epic ID: {{epic_id}}
+Date: Friday, December 5, 2025
+Author: BIP
+Epic ID: 3
 Status: Draft
 
 ---
