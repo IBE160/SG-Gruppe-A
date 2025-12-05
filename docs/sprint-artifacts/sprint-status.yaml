@@ -43,7 +43,7 @@ development_status:
   1-4-user-logout: backlog
   1-5-ai-service-integration-and-proof-of-concept: backlog
   epic-1-retrospective: optional
-  epic-2: backlog
+  epic-2: contexted
   2-1-cv-upload: backlog
   2-2-cv-parsing: backlog
   2-3-job-description-input: backlog
