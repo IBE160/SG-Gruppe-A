@@ -1,0 +1,93 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>1.4</storyId>
+    <title>User Logout</title>
+    <status>drafted</status>
+    <generatedAt>2025-12-06</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/1-4-user-logout.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>an authenticated user</asA>
+    <iWant>to be able to log out of the application</iWant>
+    <soThat>my session is terminated and my account is secure</soThat>
+    <tasks><![CDATA[
+- **Frontend Development:**
+    - Implement a "Log Out" button in the appropriate UI component (e.g., navigation bar, user profile dropdown).
+    - Attach an event handler to the "Log Out" button to:
+        - Call the backend logout API (`POST /api/auth/logout`).
+        - Clear the client-side JWT token (e.g., from local storage or cookies).
+        - Redirect the user to the homepage.
+- **Backend Development:**
+    - Create a `POST /api/auth/logout` endpoint. (Source: `tech-spec-epic-1.md`)
+    - Implement logic within the endpoint to:
+        - Invalidate the JWT token if a server-side token invalidation mechanism is in place (e.g., by adding to a blacklist).
+        - Ensure the response to the client indicates successful logout.
+- **Testing:**
+    - **Unit Tests:**
+        - Verify Frontend `logout` function correctly clears JWT and redirects.
+        - Verify Backend `POST /api/auth/logout` endpoint handles token invalidation correctly (if applicable).
+    - **Integration Tests:**
+        - Test the full flow: login, then logout, and attempt to access a protected route (should fail).
+        - Verify the client-side token is successfully removed after logout.
+    - **E2E Tests:**
+        - Simulate a user logging in, navigating, and then logging out, verifying redirection to the homepage.
+    - **Security Testing:**
+        - Ensure the logout endpoint is secure and cannot be exploited.
+]]></tasks>
+  </story>
+
+  <acceptanceCriteria><![CDATA[
+*   **Given** an authenticated user is in the application
+*   **When** they click the "Log Out" button
+*   **Then** their session is terminated
+*   **And** they are redirected to the homepage.
+]]></acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-1.md</path>
+        <title>Epic Technical Specification: Foundation &amp; Core Application</title>
+        <section>APIs and Interfaces</section>
+        <snippet>POST /api/auth/logout: User logout (invalidate token server-side or client-side clear).</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture Specification</title>
+        <section>Backend API</section>
+        <snippet>Authentication: JSON Web Tokens (JWT). Stateless and secure method for authenticating users.</snippet>
+      </doc>
+    </docs>
+    <code></code>
+    <dependencies></dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>Authentication Mechanism: JSON Web Tokens (JWT)</constraint>
+    <constraint>Frontend: Next.js with Tailwind CSS</constraint>
+    <constraint>Backend: Node.js with Express.js and PostgreSQL</constraint>
+    <constraint>Security: HTTPS/TLS for all API communication</constraint>
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>Logout Endpoint</name>
+      <kind>REST API</kind>
+      <signature>POST /api/auth/logout</signature>
+      <path>docs/sprint-artifacts/tech-spec-epic-1.md</path>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>Unit tests for backend logic, Integration tests for API endpoints, E2E tests for user flows (Cypress/Playwright), Security testing for auth endpoints.</standards>
+    <locations></locations>
+    <ideas>
+      <idea>Verify client-side token removal upon logout action</idea>
+      <idea>Verify redirection to homepage after logout</idea>
+      <idea>Attempt to access protected resource after logout (expect 401/403)</idea>
+    </ideas>
+  </tests>
+</story-context>
