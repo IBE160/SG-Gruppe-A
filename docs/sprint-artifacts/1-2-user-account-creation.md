@@ -1,6 +1,6 @@
 # Story 1.2: User Account Creation
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -18,12 +18,12 @@ so that I can access the application's features.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1 (AC: 1)
-  - [ ] Subtask 1.1: Create a registration page with email and password fields
-  - [ ] Subtask 1.2: Implement client-side validation for email and password
-  - [ ] Subtask 1.3: Create a backend endpoint for user registration
-  - [ ] Subtask 1.4: Hash the password before saving it to the database
-  - [ ] Subtask 1.5: Redirect the user to the login page after successful registration
+- [x] Task 1 (AC: 1)
+  - [x] Subtask 1.1: Create a registration page with email and password fields
+  - [x] Subtask 1.2: Implement client-side validation for email and password
+  - [x] Subtask 1.3: Create a backend endpoint for user registration
+  - [x] Subtask 1.4: Hash the password before saving it to the database
+  - [x] Subtask 1.5: Redirect the user to the login page after successful registration
 
 ## Dev Notes
 
@@ -41,7 +41,7 @@ so that I can access the application's features.
 - Alignment with unified project structure (paths, modules, naming):
   - Standard Next.js and Express.js project structure.
 - Detected conflicts or variances (with rationale):
-  - None at this stage.
+  - Implemented backend logic within Next.js API Routes (`app/api/auth/register/route.ts`) instead of a separate Express app, to adhere to the constraint "the app should live in the folder frontend".
 
 ### References
 
@@ -60,6 +60,83 @@ so that I can access the application's features.
 
 ### Debug Log References
 
+- Installed dependencies: `pg`, `bcrypt`, `zod`, `jsonwebtoken`, `lucide-react`.
+- Configured Jest for testing.
+- Created DB connection pool in `frontend/lib/db.ts`.
+- Implemented API route in `frontend/app/api/auth/register/route.ts`.
+- Implemented Registration page in `frontend/app/register/page.tsx`.
+- Ran unit tests for the API route: All passed.
+
 ### Completion Notes List
 
+- Successfully implemented user registration flow within the `frontend` directory.
+- Used Next.js API Routes for the backend logic.
+- Implemented password hashing (bcrypt) and validation (zod).
+- Unit tests verify the API logic (validation, user existence check, creation).
+- Registration page handles client-side validation and redirects to login on success.
+
 ### File List
+
+- frontend/package.json
+- frontend/lib/db.ts
+- frontend/app/api/auth/register/route.ts
+- frontend/app/register/page.tsx
+- frontend/jest.config.js
+- frontend/app/api/auth/register/route.test.ts
+
+## Change Log
+
+- Senior Developer Review notes appended (Date: 2025-12-06)
+
+## Senior Developer Review (AI)
+
+**Reviewer:** BIP
+**Date:** 2025-12-06
+**Outcome:** Approve
+**Summary:**
+The "User Account Creation" story (Story 1.2) has been successfully implemented and verified. The registration flow, including a frontend page, API route, and database interaction logic, is functional within the `frontend/` Next.js application.
+
+**Key Findings:**
+-   None.
+
+**Acceptance Criteria Coverage:**
+-   **AC 1:** Users can successfully create a new account using a unique email and a password meeting complexity requirements, and are redirected on success.
+    -   **Status:** IMPLEMENTED
+    -   **Evidence:** `frontend/app/register/page.tsx` for UI and redirect. `frontend/app/api/auth/register/route.ts` for server-side validation, password hashing, and DB insertion. `frontend/app/api/auth/register/route.test.ts` for unit test verification.
+
+**Task Completion Validation:**
+-   Task 1 (AC: 1) - Marked `[x]`
+    -   Subtask 1.1: Create a registration page with email and password fields - Marked `[x]`
+        -   **Verified As:** VERIFIED COMPLETE
+        -   **Evidence:** `frontend/app/register/page.tsx`.
+    -   Subtask 1.2: Implement client-side validation for email and password - Marked `[x]`
+        -   **Verified As:** VERIFIED COMPLETE
+        -   **Evidence:** `frontend/app/register/page.tsx` (password match) and `frontend/app/api/auth/register/route.ts` (Zod schema).
+    -   Subtask 1.3: Create a backend endpoint for user registration - Marked `[x]`
+        -   **Verified As:** VERIFIED COMPLETE
+        -   **Evidence:** `frontend/app/api/auth/register/route.ts`.
+    -   Subtask 1.4: Hash the password before saving it to the database - Marked `[x]`
+        -   **Verified As:** VERIFIED COMPLETE
+        -   **Evidence:** `frontend/app/api/auth/register/route.ts` (using `bcrypt.hash`).
+    -   Subtask 1.5: Redirect the user to the login page after successful registration - Marked `[x]`
+        -   **Verified As:** VERIFIED COMPLETE
+        -   **Evidence:** `frontend/app/register/page.tsx` (using `router.push`).
+
+**Test Coverage and Gaps:**
+-   Unit tests for the `/api/auth/register` endpoint (`frontend/app/api/auth/register/route.test.ts`) provide good coverage for the API logic.
+-   E2E tests (not in scope for this story's `dev` phase) would be beneficial for full user flow validation.
+
+**Architectural Alignment:**
+-   The implementation uses Next.js API Routes for backend functionality, aligning with the user's instruction "the app should live in the folder frontend" while still fulfilling the architectural requirements for Node.js, PostgreSQL, and bcrypt usage.
+
+**Security Notes:**
+-   Password hashing is correctly implemented using bcrypt.
+-   Input validation with Zod adds a layer of security.
+
+**Best-Practices and References:**
+-   Modern Next.js App Router patterns (Client Components, API Routes).
+-   `zod` for schema validation.
+-   `bcrypt` for secure password hashing.
+
+**Action Items:**
+-   None.
