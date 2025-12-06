@@ -1,0 +1,88 @@
+<story-context id="2-6-ats-score-calculation" v="1.0">
+  <metadata>
+    <epicId>2</epicId>
+    <storyId>6</storyId>
+    <title>ATS Score Calculation</title>
+    <status>drafted</status>
+    <generatedAt>2025-12-06</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/2-6-ats-score-calculation.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>user</asA>
+    <iWant>to see a basic ATS compatibility score</iWant>
+    <soThat>I can understand how well my CV matches the job description.</soThat>
+    <tasks>
+      <task id="1" ac_ref="1">
+        <description>AI Service Scoring Logic</description>
+        <subtask id="1.1">Define scoring criteria prompt (e.g., keyword match weight, skills weight).</subtask>
+        <subtask id="1.2">Implement scoring function in `app/services/ats_scorer.py` using `pydantic-ai`.</subtask>
+        <subtask id="1.3">Ensure output is a normalized integer (0-100).</subtask>
+      </task>
+      <task id="2" ac_ref="1">
+        <description>Backend Integration</description>
+        <subtask id="2.1">Add ATS scoring call to the existing analysis flow (or create `POST /ai/score-ats`).</subtask>
+        <subtask id="2.2">Store the score in the `Results` table.</subtask>
+      </task>
+      <task id="3" ac_ref="1">
+        <description>Frontend Display</description>
+        <subtask id="3.1">Create `ATSScoreGauge` component (e.g., a radial progress bar).</subtask>
+        <subtask id="3.2">Integrate score display into the main analysis view.</subtask>
+      </task>
+      <task id="4" ac_ref="1">
+        <description>Testing</description>
+        <subtask id="4.1">Unit test scoring logic with perfect match vs. zero match inputs.</subtask>
+        <subtask id="4.2">Integration test frontend display of score.</subtask>
+      </task>
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <ac id="1">
+      <given>a CV and job description have been analyzed</given>
+      <when>the ATS score is displayed</when>
+      <then>the system shall calculate and display a basic ATS compatibility score (percentage) based on keyword matching between the CV and the job description</then>
+    </ac>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc path="docs/epics.md" description="Epic Breakdown" section="Story-2.6-ATS-Score-Calculation" />
+      <doc path="docs/sprint-artifacts/2-5-gap-analysis.md" description="Learnings from Previous Story" />
+      <doc path="docs/sprint-artifacts/tech-spec-epic-2.md" description="Technical Specification for Epic 2" section="AC-EL2.5" />
+      <doc path="docs/architecture.md" description="System Architecture" />
+    </docs>
+    <code>
+      <file path="app/services/ats_scorer.py" description="AI Service logic for ATS score calculation" />
+      <file path="Results" description="Backend database table for storing ATS score" type="database" />
+      <file path="src/components/analysis/ATSScoreGauge.tsx" description="Frontend component for displaying ATS score" />
+    </code>
+    <dependencies>
+      <dependency id="2.5">Story 2.5 (Gap Analysis)</dependency>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>AI Service: Python, FastAPI.</constraint>
+    <constraint>Backend: Node.js.</constraint>
+    <constraint>Frontend: Next.js, Tailwind.</constraint>
+  </constraints>
+  <interfaces>
+    <interface type="API" method="POST" endpoint="/ai/analyze-and-generate">
+      <description>AI Service API endpoint for analysis and generation</description>
+      <response_field name="ats_score" type="integer" description="ATS compatibility score (0-100)" />
+    </interface>
+  </interfaces>
+  <tests>
+    <standards>
+      <standard>Verify that identical texts yield 100 (or near 100) and completely unrelated texts yield low scores.</standard>
+    </standards>
+    <locations>
+      <!-- Specific test file paths will be added during implementation -->
+    </locations>
+    <ideas>
+      <!-- Test cases will be elaborated during implementation -->
+    </ideas>
+  </tests>
+</story-context>
