@@ -1,0 +1,112 @@
+<story-context id="docs/sprint-artifacts/1-5-ai-service-integration.context.xml" v="1.0">
+  <metadata>
+    <epicId>epic-1</epicId>
+    <storyId>1.5</storyId>
+    <title>AI Service Integration and Proof-of-Concept</title>
+    <status>drafted</status>
+    <generatedAt>2025-12-06</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/1-5-ai-service-integration.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>developer</asA>
+    <iWant>establish a connection to the AI service and validate its core functionalities</iWant>
+    <soThat>we can de-risk the project and ensure the AI-powered features can be built</soThat>
+    <tasks>
+      - Task 1: Setup AI Environment (AC: 1)
+        - Subtask 1.1: Obtain API keys for Gemini 2.5 Flash/Pro.
+        - Subtask 1.2: Configure environment variables for secure key storage.
+        - Subtask 1.3: Install necessary Python libraries (e.g., `google-generativeai`, `pydantic-ai`, `fastapi`, `python-docx`).
+      - Task 2: Implement Proof-of-Concept Script (AC: 1, 2)
+        - Subtask 2.1: Create a standalone Python script to authenticate with the API.
+        - Subtask 2.2: Implement a function to read a sample `.docx` file (mock CV).
+        - Subtask 2.3: Implement a function to send a prompt (parsed CV + Job Ad) to the model.
+        - Subtask 2.4: Implement a function to receive and print the generated cover letter.
+      - Task 3: Testing &amp; Validation (AC: 1, 2)
+        - Subtask 3.1: Execute POC script and verify successful API connection and authentication (AC 1).
+        - Subtask 3.2: Verify script output contains coherent text generated from the input prompt (AC 2).
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    1. Given the project is set up, When a connection to the chosen LLM's API is attempted, Then the connection is successful.
+    2. Given the project is set up, When a sample CV and job description are sent to the AI service, Then the service can successfully parse the CV, analyze the job description, and generate a basic cover letter.
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-1.md</path>
+        <title>Epic Technical Specification: Foundation &amp; Core Application</title>
+        <section>System Architecture Alignment</section>
+        <snippet>This epic primarily engages with the Frontend Application and the Backend API. The initial CV parsing will likely be a basic text extraction on the backend, preparing for the more advanced AI Service integration in subsequent epics.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-1.md</path>
+        <title>Epic Technical Specification: Foundation &amp; Core Application</title>
+        <section>Dependencies and Integrations</section>
+        <snippet>Backend: Node.js/Express.js, PostgreSQL, python-docx (or similar library via interop) for basic text extraction.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture Specification</title>
+        <section>3.3. AI Service</section>
+        <snippet>AI Service: A dedicated Python service responsible for all AI-related tasks. Framework: Python with FastAPI. Core Functionality: CV Parsing (python-docx), AI Analysis &amp; Generation (LLM API).</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>Technical Constraints</section>
+        <snippet>Backend will be developed using Python with FastAPI. AI integration: CV parsing, Job analysis, Cover letter generation (GPT-4/Gemini).</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Story 1.5: AI Service Integration and Proof-of-Concept</section>
+        <snippet>Technical Notes: Select LLM provider (Gemini), set up API keys securely, create basic Python script/service for POC.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/1-4-user-logout.md</path>
+        <title>Story 1.4: User Logout</title>
+        <section>Dev Notes</section>
+        <snippet>Learnings: Security practices regarding environment variables and secure configuration must be strictly adhered to.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <!-- No existing code artifacts found for AI service yet -->
+    </code>
+    <dependencies>
+      <dependency ecosystem="python">
+        <package>fastapi</package>
+        <package>pydantic-ai</package>
+        <package>google-generativeai</package>
+        <package>python-docx</package>
+        <package>python-dotenv</package>
+      </dependency>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>Backend: Python with FastAPI</constraint>
+    <constraint>AI Model: Gemini 2.5 Flash/Pro</constraint>
+    <constraint>Library: Pydantic AI</constraint>
+    <constraint>Security: API keys must NEVER be committed to version control. Use .env files.</constraint>
+    <constraint>Structure: Ensure backend setup aligns with planned directory structure.</constraint>
+  </constraints>
+
+  <interfaces>
+    <!-- No formal interfaces defined yet for this POC -->
+  </interfaces>
+
+  <tests>
+    <standards>Manual verification of the script output. Ensure no errors during API connection.</standards>
+    <locations>backend/poc/</locations>
+    <ideas>
+      <idea ac="1">Run script with valid API key -> Success</idea>
+      <idea ac="1">Run script with invalid/missing API key -> Error handled gracefully</idea>
+      <idea ac="2">Run script with valid .docx and job desc -> returns text output</idea>
+      <idea ac="2">Run script with malformed .docx -> Error handled</idea>
+    </ideas>
+  </tests>
+</story-context>

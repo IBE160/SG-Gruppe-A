@@ -1,0 +1,118 @@
+<story-context id="docs/sprint-artifacts/2-1-cv-upload.context.xml" v="1.0">
+  <metadata>
+    <epicId>epic-2</epicId>
+    <storyId>2.1</storyId>
+    <title>CV Upload</title>
+    <status>drafted</status>
+    <generatedAt>2025-12-06</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/2-1-cv-upload.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>user</asA>
+    <iWant>upload my CV in .doc or .docx format</iWant>
+    <soThat>the system can analyze it</soThat>
+    <tasks>
+      - Task 1: Frontend CV Upload Component (AC: 1)
+        - Subtask 1.1: Create a file input component in React that accepts only .doc and .docx extensions.
+        - Subtask 1.2: Implement a progress indicator for the upload process.
+        - Subtask 1.3: Integrate with the backend upload endpoint.
+        - Subtask 1.4: Handle upload errors (e.g., wrong format, file too large) and display user-friendly messages.
+      - Task 2: Backend CV Upload Endpoint (AC: 1)
+        - Subtask 2.1: Implement POST /api/cv/upload endpoint in Node.js/Express.
+        - Subtask 2.2: Configure multer (or similar middleware) to handle multipart/form-data.
+        - Subtask 2.3: Validate file type (ensure actual .doc/.docx MIME type) and size limit.
+        - Subtask 2.4: Store the file securely (local storage for dev, prepared for S3/blob storage).
+        - Subtask 2.5: Save metadata to the CV table in PostgreSQL (filename, upload timestamp, user_id).
+      - Task 3: Testing (AC: 1)
+        - Subtask 3.1: Unit test the upload component's validation logic.
+        - Subtask 3.2: Integration test the API endpoint with valid and invalid files.
+        - Subtask 3.3: Manual verification of the full upload flow.
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    1. Given a user is on the dashboard, When they select a .doc or .docx file to upload, And they click "Upload", Then the file is successfully uploaded to the server.
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-1.md</path>
+        <title>Epic Technical Specification: Foundation &amp; Core Application</title>
+        <section>CV API</section>
+        <snippet>POST /api/cv/upload: Upload a CV file. Request: multipart/form-data with file. Response: { cv_id, filename }</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-1.md</path>
+        <title>Epic Technical Specification: Foundation &amp; Core Application</title>
+        <section>CV Model (PostgreSQL / File Storage)</section>
+        <snippet>id (UUID, PK), user_id (FK), filename, file_path, extracted_text, uploaded_at. Stores file securely and performs initial text extraction.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture Specification</title>
+        <section>3.2. Backend API</section>
+        <snippet>Framework: Node.js with Express.js. Authentication: JSON Web Tokens (JWT). Deployment: Containerized Service (Docker).</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture Specification</title>
+        <section>3.1. Frontend Application</section>
+        <snippet>Framework: Next.js (with React). Styling: Tailwind CSS. State Management: React Context or Zustand.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Story 2.1: CV Upload</section>
+        <snippet>As a user, I want to upload my CV in .doc or .docx format... Technical Notes: Frontend needs file input component. Backend needs endpoint to handle file uploads.</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>Functional Requirements</section>
+        <snippet>FR003: The system must allow users to upload a CV in .doc or .docx format.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <!-- No existing code artifacts found for CV upload feature yet -->
+    </code>
+    <dependencies>
+      <dependency ecosystem="javascript">
+        <package>multer</package>
+        <package>react-dropzone</package>
+        <package>axios</package>
+        <package>zod</package>
+      </dependency>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>Frontend: Next.js, Tailwind CSS, shadcn/ui</constraint>
+    <constraint>Backend: Node.js, Express.js, PostgreSQL, Multer</constraint>
+    <constraint>Security: Validate file types strictly (MIME type check) to prevent malicious uploads</constraint>
+    <constraint>Storage: Files should be stored outside the web root or in a private bucket/folder</constraint>
+    <constraint>Data Model: Use CV Model defined in tech-spec-epic-1.md</constraint>
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>Upload Endpoint</name>
+      <kind>REST API</kind>
+      <signature>POST /api/cv/upload</signature>
+      <path>docs/sprint-artifacts/tech-spec-epic-1.md</path>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>Verify both success and error states (e.g., network fail, invalid file). Unit test validation logic.</standards>
+    <locations>frontend/src/components/cv/__tests__, backend/src/tests/integration</locations>
+    <ideas>
+      <idea ac="1">Upload valid .docx file -> Success, file stored, DB updated</idea>
+      <idea ac="1">Upload .pdf file -> Error: Invalid file format</idea>
+      <idea ac="1">Upload large file (>5MB) -> Error: File too large</idea>
+      <idea ac="1">Upload without auth token -> Error: Unauthorized</idea>
+    </ideas>
+  </tests>
+</story-context>
