@@ -1,0 +1,187 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>2</storyId>
+    <title>User Account Creation</title>
+    <status>drafted</status>
+    <generatedAt>2025-12-06</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/1-2-user-account-creation.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>a new user</asA>
+    <iWant>to be able to create a secure account with my email and password</iWant>
+    <soThat>I can access the application's features.</soThat>
+    <tasks>
+        - Task 1 (AC: 1)
+            - Subtask 1.1: Create a registration page with email and password fields
+            - Subtask 1.2: Implement client-side validation for email and password
+            - Subtask 1.3: Create a backend endpoint for user registration
+            - Subtask 1.4: Hash the password before saving it to the database
+            - Subtask 1.5: Redirect the user to the login page after successful registration
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    1.  Given a user is on the registration page
+        When they enter a valid email and a password that meets the security requirements (e.g., 8+ characters, 1 uppercase, 1 number, 1 special character)
+        And they click the "Sign Up" button
+        Then a new user account is created in the database
+        And the user is redirected to the login page or directly logged in.
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Story 1.2: User Account Creation</section>
+        <snippet>As a new user, I want to be able to create a secure account with my email and password, so that I can access the application's features.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture Specification</title>
+        <section>3.2. Backend API</section>
+        <snippet>The backend serves as the central hub for the application's business logic. Framework: Node.js with Express.js, Database: PostgreSQL, Authentication: JSON Web Tokens (JWT).</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-1.md</path>
+        <title>Epic Technical Specification: Foundation & Core Application</title>
+        <section>Detailed Design - Services and Modules</section>
+        <snippet>Frontend (Next.js): User Authentication Module. Backend (Node.js/Express.js): User Service, Authentication Middleware.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-1.md</path>
+        <title>Epic Technical Specification: Foundation & Core Application</title>
+        <section>Detailed Design - Data Models and Contracts</section>
+        <snippet>User Model (PostgreSQL): id, email, password_hash, created_at, updated_at.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-1.md</path>
+        <title>Epic Technical Specification: Foundation & Core Application</title>
+        <section>Detailed Design - APIs and Interfaces</section>
+        <snippet>Authentication API: POST /api/auth/register (User registration). Request: { email, password }. Response: { token, user: { id, email } }.</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>Functional Requirements</section>
+        <snippet>FR001: The system must allow users to create a secure account using an email and password.</snippet>
+      </doc>
+      <doc>
+        <path>docs/ux-design-specification.md</path>
+        <title>UX Design Specification</title>
+        <section>2.3 Core Experience Principles</section>
+        <snippet>Speed: Key actions (upload, generate, receive feedback) should feel instantaneous or very fast, with clear progress indicators for longer processes. Guidance: Users need clear, concise guidance, especially for first-time use and understanding AI feedback.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <code-artifact>
+        <path>pages/register.js</path>
+        <kind>frontend component</kind>
+        <symbol>Registration Page</symbol>
+        <reason>UI for user registration, including input fields and validation.</reason>
+      </code-artifact>
+      <code-artifact>
+        <path>routes/auth.js</path>
+        <kind>backend route</kind>
+        <symbol>Authentication Routes</symbol>
+        <reason>Defines the API endpoint for user registration (e.g., POST /api/v1/auth/register).</reason>
+      </code-artifact>
+      <code-artifact>
+        <path>controllers/authController.js</path>
+        <kind>backend controller</kind>
+        <symbol>Authentication Controller</symbol>
+        <reason>Handles the business logic for user registration, including password hashing and database interaction.</reason>
+      </code-artifact>
+      <code-artifact>
+        <path>models/User.js</path>
+        <kind>backend model</kind>
+        <symbol>User Model</symbol>
+        <reason>Defines the schema for storing user data in the database.</reason>
+      </code-artifact>
+    </code>
+    <dependencies>
+      <dependency>
+        <name>Next.js</name>
+        <type>Framework</type>
+        <ecosystem>npm</ecosystem>
+      </dependency>
+      <dependency>
+        <name>React</name>
+        <type>Library</type>
+        <ecosystem>npm</ecosystem>
+      </dependency>
+      <dependency>
+        <name>Tailwind CSS</name>
+        <type>Utility-first CSS Framework</type>
+        <ecosystem>npm</ecosystem>
+      </dependency>
+      <dependency>
+        <name>shadcn/ui</name>
+        <type>Component Library</type>
+        <ecosystem>npm</ecosystem>
+      </dependency>
+      <dependency>
+        <name>Node.js</name>
+        <type>Runtime</type>
+        <ecosystem>npm</ecosystem>
+      </dependency>
+      <dependency>
+        <name>Express.js</name>
+        <type>Framework</type>
+        <ecosystem>npm</ecosystem>
+      </dependency>
+      <dependency>
+        <name>PostgreSQL</name>
+        <type>Database</type>
+        <ecosystem>n/a</ecosystem>
+      </dependency>
+      <dependency>
+        <name>bcrypt</name>
+        <type>Library</type>
+        <ecosystem>npm</ecosystem>
+      </dependency>
+      <dependency>
+        <name>jsonwebtoken</name>
+        <type>Library</type>
+        <ecosystem>npm</ecosystem>
+      </dependency>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>Backend API endpoint: POST /api/v1/auth/register</constraint>
+    <constraint>Passwords must be hashed before being stored in the database.</constraint>
+  </constraints>
+  <interfaces>
+    <interface>
+      <name>User Registration API</name>
+      <kind>REST endpoint</kind>
+      <signature>POST /api/auth/register</signature>
+      <path>routes/auth.js</path>
+    </interface>
+  </interfaces>
+  <tests>
+    <standards>Unit tests for the registration endpoint. Integration tests for the registration flow.</standards>
+    <locations>
+      <location>backend/tests/unit/auth.test.js</location>
+      <location>backend/tests/integration/auth.test.js</location>
+    </locations>
+    <ideas>
+      <idea>
+        <acId>1</acId>
+        <description>Verify that a new user account is created in the database when valid credentials are provided.</description>
+      </idea>
+      <idea>
+        <acId>1</acId>
+        <description>Verify that the user is redirected to the login page (or directly logged in) after successful registration.</description>
+      </idea>
+      <idea>
+        <acId>1</acId>
+        <description>Verify client-side and server-side validation for email format, password strength, and unique email.</description>
+      </idea>
+    </ideas>
+  </tests>
+</story-context>
