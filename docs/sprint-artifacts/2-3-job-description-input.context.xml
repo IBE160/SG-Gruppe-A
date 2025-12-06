@@ -1,0 +1,115 @@
+<story-context id="docs/sprint-artifacts/2-3-job-description-input.context.xml" v="1.0">
+  <metadata>
+    <epicId>epic-2</epicId>
+    <storyId>2.3</storyId>
+    <title>Job Description Input</title>
+    <status>drafted</status>
+    <generatedAt>2025-12-06</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/2-3-job-description-input.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>user</asA>
+    <iWant>paste a job description into a text area</iWant>
+    <soThat>the system can analyze it</soThat>
+    <tasks>
+      - Task 1: Frontend Job Description Component (AC: 1)
+        - Subtask 1.1: Create a text area component in React for pasting job descriptions.
+        - Subtask 1.2: Implement basic client-side validation (e.g., minimum character count) to ensure meaningful input.
+        - Subtask 1.3: Create a "Save" or "Analyze" button to trigger the submission.
+      - Task 2: Backend Job Description Endpoint (AC: 1)
+        - Subtask 2.1: Implement POST /api/job-description endpoint in Node.js/Express.
+        - Subtask 2.2: Validate the input text (ensure it's not empty or too long).
+        - Subtask 2.3: Save the job description text to the JobDescription table in PostgreSQL.
+        - Subtask 2.4: Link the job description to the authenticated user (user_id).
+      - Task 3: Testing (AC: 1)
+        - Subtask 3.1: Unit test the frontend component for state updates on text input.
+        - Subtask 3.2: Integration test the API endpoint with valid and empty text.
+        - Subtask 3.3: Verify that the job description is correctly persisted in the database.
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    1. Given a user is on the dashboard, When they paste text into the job description text area, Then the text is successfully captured by the application.
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-1.md</path>
+        <title>Epic Technical Specification: Foundation &amp; Core Application</title>
+        <section>Job Description API</section>
+        <snippet>POST /api/job-description: Save a job description. Request: { content }. Response: { jd_id, title }</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-1.md</path>
+        <title>Epic Technical Specification: Foundation &amp; Core Application</title>
+        <section>JobDescription Model (PostgreSQL)</section>
+        <snippet>id (UUID, PK), user_id (FK), title, content (TEXT, NOT NULL), created_at.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture Specification</title>
+        <section>3.2. Backend API</section>
+        <snippet>Framework: Node.js with Express.js. Database: PostgreSQL.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture Specification</title>
+        <section>3.1. Frontend Application</section>
+        <snippet>Framework: Next.js (with React). Styling: Tailwind CSS.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Story 2.3: Job Description Input</section>
+        <snippet>As a user, I want to paste a job description... Technical Notes: A simple &lt;textarea&gt; element on the frontend will suffice.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/2-2-cv-parsing.md</path>
+        <title>Story 2.2: CV Parsing</title>
+        <section>Dev Notes</section>
+        <snippet>Security: Input sanitization is crucial here to prevent XSS or SQL injection.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <!-- No existing code artifacts for JD input yet -->
+    </code>
+    <dependencies>
+      <dependency ecosystem="javascript">
+        <package>zod</package>
+        <package>react-hook-form</package>
+        <package>axios</package>
+      </dependency>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>Frontend: Next.js, Tailwind CSS</constraint>
+    <constraint>Backend: Node.js, Express.js</constraint>
+    <constraint>Database: PostgreSQL (JobDescription table)</constraint>
+    <constraint>Security: Input sanitization (prevent XSS/SQLi)</constraint>
+    <constraint>Data Model: Use JobDescription Model defined in tech-spec-epic-1.md</constraint>
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>Save Job Description Endpoint</name>
+      <kind>REST API</kind>
+      <signature>POST /api/job-description</signature>
+      <path>docs/sprint-artifacts/tech-spec-epic-1.md</path>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>Ensure input validation works on both client and server sides.</standards>
+    <locations>frontend/src/components/job/__tests__, backend/src/tests/integration</locations>
+    <ideas>
+      <idea ac="1">Paste valid text -> Success, saved to DB</idea>
+      <idea ac="1">Submit empty text -> Error: Content required</idea>
+      <idea ac="1">Submit extremely long text -> Error: Text too long</idea>
+      <idea ac="1">Submit without auth -> Error: Unauthorized</idea>
+    </ideas>
+  </tests>
+</story-context>

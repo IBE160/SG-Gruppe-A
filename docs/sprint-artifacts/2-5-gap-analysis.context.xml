@@ -1,0 +1,108 @@
+<story-context id="docs/sprint-artifacts/2-5-gap-analysis.context.xml" v="1.0">
+  <metadata>
+    <epicId>epic-2</epicId>
+    <storyId>2.5</storyId>
+    <title>Gap Analysis</title>
+    <status>drafted</status>
+    <generatedAt>2025-12-06</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/2-5-gap-analysis.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>user</asA>
+    <iWant>see a list of key skills and qualifications from the job description that are missing from my CV</iWant>
+    <soThat>I can improve my CV</soThat>
+    <tasks>
+      - Task 1: AI Service Gap Analysis Logic (AC: 1)
+        - Subtask 1.1: Define prompt template to compare extracted CV skills vs. JD skills.
+        - Subtask 1.2: Create Pydantic model for gap analysis result (e.g., class GapAnalysisResult(BaseModel): missing_skills: list[str], missing_qualifications: list[str], match_percentage: float).
+        - Subtask 1.3: Implement the comparison function in app/services/gap_analyzer.py using the LLM.
+      - Task 2: Backend Integration (AC: 1)
+        - Subtask 2.1: Implement POST /ai/analyze-gap endpoint in FastAPI service.
+        - Subtask 2.2: Update Node.js backend to orchestrate this: Call Python API with parsed CV content and JD analysis results.
+        - Subtask 2.3: Store gap analysis results in Results table (or JSONB in CV or JobDescription join table).
+      - Task 3: Frontend Display (AC: 1)
+        - Subtask 3.1: Create GapAnalysisDisplay component in React.
+        - Subtask 3.2: Fetch gap analysis results from Node.js API.
+        - Subtask 3.3: Render missing skills/qualifications clearly (e.g., red tags or list).
+      - Task 4: Testing (AC: 1)
+        - Subtask 4.1: Unit test Python logic with known mismatching text.
+        - Subtask 4.2: Integration test the full flow (frontend -> node -> python -> db).
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    1. Given a CV and job description have been analyzed, When the gap analysis is displayed, Then the user can see a clear list of missing skills and qualifications.
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/sprint-artifacts/2-4-job-description-analysis.md</path>
+        <title>Story 2.4: Job Description Analysis</title>
+        <section>Dev Notes</section>
+        <snippet>Prompt engineering is critical. We need distinct lists for "skills" (hard skills), "qualifications", and "keywords".</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-2.md</path>
+        <title>Epic Technical Specification: AI-Powered Generation &amp; Analysis</title>
+        <section>Detailed Design</section>
+        <snippet>AI Service: Responsibilities: gap analysis... Outputs: Missing Skills (list)...</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture Specification</title>
+        <section>3.3. AI Service</section>
+        <snippet>AI Analysis &amp; Generation: Analyze a user's CV against the job description to identify gaps.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Story 2.5: Gap Analysis</section>
+        <snippet>As a user, I want to see a list of key skills... Technical Notes: The AI service will compare the extracted skills from the CV and job description and return the differences.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <!-- No existing code artifacts for Gap Analysis yet -->
+    </code>
+    <dependencies>
+      <dependency ecosystem="python">
+        <package>pydantic-ai</package>
+        <package>fastapi</package>
+      </dependency>
+      <dependency ecosystem="javascript">
+        <package>axios</package>
+        <package>react</package>
+      </dependency>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>AI Service: Python, FastAPI, Pydantic AI</constraint>
+    <constraint>Backend: Node.js (orchestrator)</constraint>
+    <constraint>Frontend: Next.js, Tailwind</constraint>
+    <constraint>Data Persistence: Store gap analysis results (for future Saved Applications feature)</constraint>
+    <constraint>Prompt Engineering: One-shot comparison prompt ("Here is CV, here is JD, find missing")</constraint>
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>Analyze Gap Endpoint</name>
+      <kind>REST API</kind>
+      <signature>POST /ai/analyze-gap</signature>
+      <path>docs/sprint-artifacts/2-5-gap-analysis.md</path>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>Verify that synonyms are handled gracefully by the LLM (e.g., "React.js" vs "ReactJS" shouldn't be a gap).</standards>
+    <locations>backend/python/tests/, backend/src/tests/integration</locations>
+    <ideas>
+      <idea ac="1">Compare CV with missing skills -> Returns list of missing items</idea>
+      <idea ac="1">Compare perfect match CV -> Returns empty missing list</idea>
+      <idea ac="1">Compare with synonyms -> Returns empty missing list (robustness check)</idea>
+      <idea ac="1">Integration: Full flow check</idea>
+    </ideas>
+  </tests>
+</story-context>
