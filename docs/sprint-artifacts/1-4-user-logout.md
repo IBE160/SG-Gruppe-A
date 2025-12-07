@@ -5,37 +5,39 @@ Status: ready-for-dev
 ## Story
 
 As an authenticated user,
-I want to be able to log out of the application,
+I want to be able to log out of the application using Supabase Authentication,
 so that my session is terminated and my account is secure.
 
 ## Acceptance Criteria
 
 *   **Given** an authenticated user is in the application
 *   **When** they click the "Log Out" button
-*   **Then** their session is terminated
-*   **And** they are redirected to the homepage.
+*   **Then** their Supabase session is terminated
+*   **And** they are redirected to the homepage or login page.
 
 ## Tasks / Subtasks
 
 - **Frontend Development:**
     - Implement a "Log Out" button in the appropriate UI component (e.g., navigation bar, user profile dropdown).
     - Attach an event handler to the "Log Out" button to:
-        - Call the backend logout API (`POST /api/auth/logout`).
-        - Clear the client-side JWT token (e.g., from local storage or cookies).
-        - Redirect the user to the homepage.
-- **Backend Development:**
-    - Create a `POST /api/auth/logout` endpoint. (Source: `tech-spec-epic-1.md`)
-    - Implement logic within the endpoint to:
-        - Invalidate the JWT token if a server-side token invalidation mechanism is in place (e.g., by adding to a blacklist).
-        - Ensure the response to the client indicates successful logout.
+        - Call Supabase `signOut` method (`supabase.auth.signOut()`).
+        - Ensure client-side session/cookies are cleared.
+        - Redirect the user to the homepage/login page.
+- **Backend/Server-Side:**
+    - Ensure Supabase server-side client (if used in middleware/actions) respects the logout and clears cookies.
 
-...
+## Dev Notes
 
-**Relevant Project Structure:**
-*   **Frontend (Next.js Application)**: Will contain the UI for the logout button and handle client-side JWT token disposal.
-*   **Backend (Python/FastAPI API)**: Will provide the `/api/auth/logout` endpoint to handle server-side session termination if necessary, and potentially invalidate the JWT.
-
-No specific file paths, module names, or component locations are explicitly mandated by `unified-project-structure.md` (which is not present). Alignment will follow general project conventions for Frontend and Backend API development.
+- **Relevant architecture patterns and constraints:**
+  - Authentication: Supabase Auth (`supabase.auth.signOut`).
+  - Frontend: Next.js (App Router).
+- **Source tree components to touch:**
+  - `frontend/components/SignOutButton.tsx` (or similar)
+  - `frontend/app/login/actions.ts` (if using Server Action for logout)
+  - `frontend/utils/supabase/server.ts`
+- **Testing standards summary:**
+  - Verify "Log Out" button appears only when authenticated.
+  - Verify clicking it redirects to home/login and clears session.
 
 ### References
 

@@ -5,7 +5,7 @@ Status: ready-for-dev
 ## Story
 
 As a registered user,
-I want to be able to log in with my email and password,
+I want to be able to log in with my email and password using Supabase Authentication,
 so that I can access my account and saved data.
 
 ## Acceptance Criteria
@@ -13,51 +13,40 @@ so that I can access my account and saved data.
 1.  Given a user is on the login page
     When they enter their correct email and password
     And they click the "Log In" button
-    Then the system authenticates the user
-    And a JWT token is returned to the client
+    Then the system authenticates the user using Supabase
+    And a session is established
     And the user is redirected to their dashboard.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Implement Backend Login Endpoint (AC: 1)
-  - [ ] Subtask 1.1: Create `POST /api/v1/auth/login` endpoint
-  - [ ] Subtask 1.2: Implement password verification (using bcrypt)
-  - [ ] Subtask 1.3: Implement JWT token generation
-  - [ ] Subtask 1.4: Securely return JWT (e.g. HttpOnly cookie)
-  - [ ] Subtask 1.5: Create unit tests for login logic (success, invalid credentials)
-  - [ ] Subtask 1.6: Create integration test for `/login` endpoint
-- [ ] Task 2: Implement Frontend Login Form (AC: 1)
-  - [ ] Subtask 2.1: Create Login Page UI
-  - [ ] Subtask 2.2: Implement form state and validation
-  - [ ] Subtask 2.3: Connect form submission to backend API
-  - [ ] Subtask 2.4: Handle successful login (redirect to dashboard)
-  - [ ] Subtask 2.5: Handle login errors (display error message)
-  - [ ] Subtask 2.6: Create unit/component tests for LoginForm interaction
+- [ ] Task 1: Implement Supabase Login (AC: 1)
+  - [ ] Subtask 1.1: Create/Update Login Page UI with email and password fields
+  - [ ] Subtask 1.2: Implement form submission handler using Supabase `signInWithPassword`
+  - [ ] Subtask 1.3: Handle Auth state changes and session persistence (via Supabase SSR/cookies)
+  - [ ] Subtask 1.4: Handle login errors (e.g., wrong password, user not found)
+  - [ ] Subtask 1.5: Redirect user to dashboard/home upon successful login
+  - [ ] Subtask 1.6: Create unit/component tests for Login interaction
 
 ## Dev Notes
 
 - **Relevant architecture patterns and constraints:**
-  - Backend: Python/FastAPI
-  - Database: PostgreSQL (User model)
-  - Authentication: Supabase handles authentication and JWT management.
+  - Authentication: Supabase Auth (`supabase.auth.signInWithPassword`).
+  - Frontend: Next.js (App Router).
+  - Use `@supabase/ssr` for server-side auth support and cookie management.
 - **Source tree components to touch:**
-  - `backend/main.py` (or router file)
-  - `backend/app/api/auth.py` (or similar)
-  - `frontend/pages/login.tsx` (or similar)
-  - `frontend/components/LoginForm.tsx`
+  - `frontend/app/login/page.tsx`
+  - `frontend/app/login/actions.ts` (Server Actions)
+  - `frontend/utils/supabase/server.ts`
+  - `frontend/utils/supabase/client.ts`
 - **Testing standards summary:**
-  - Unit tests for backend login logic (success, invalid credentials) using `pytest`.
-  - Integration tests for API endpoint using `TestClient`.
-  - Frontend tests for form interaction.
+  - Frontend tests for form interaction and error display.
+  - Integration tests for the Supabase login flow (mocking Supabase client).
 
 ### Project Structure Notes
 
 - Alignment with unified project structure (paths, modules, naming):
-  - Backend routes should follow standard FastAPI patterns (Routers).
-  - Frontend should use Next.js pages/app directory structure.
-  - File paths above are indicative; follow structure established in Story 1.1/1.2.
-- Detected conflicts or variances (with rationale):
-  - None.
+  - Frontend should use Next.js App Router structure.
+  - Supabase utilities in `frontend/utils/supabase`.
 
 ### References
 
@@ -69,7 +58,6 @@ so that I can access my account and saved data.
 
 ### Context Reference
 
-- `docs/sprint-artifacts/1-3-user-login.context.xml`
 - `docs/sprint-artifacts/1-3-user-login.context.xml`
 
 ### Agent Model Used

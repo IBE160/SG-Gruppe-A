@@ -5,43 +5,44 @@ Status: review
 ## Story
 
 As a new user,
-I want to be able to create a secure account with my email and password,
+I want to be able to create a secure account with my email and password using Supabase Authentication,
 so that I can access the application's features.
 
 ## Acceptance Criteria
 
 1.  Given a user is on the registration page
-    When they enter a valid email and a password that meets the security requirements (e.g., 8+ characters, 1 uppercase, 1 number, 1 special character)
+    When they enter a valid email and a password that meets the security requirements
     And they click the "Sign Up" button
-    Then a new user account is created in the database
-    And the user is redirected to the login page or directly logged in.
+    Then a new user account is created in Supabase Auth
+    And the user is logged in or redirected to the login page.
 
 ## Tasks / Subtasks
 
-- [x] Task 1 (AC: 1)
+- [x] Task 1: Implement Registration with Supabase (AC: 1)
   - [x] Subtask 1.1: Create a registration page with email and password fields
   - [x] Subtask 1.2: Implement client-side validation for email and password
-  - [x] Subtask 1.3: Create a backend endpoint for user registration
-  - [x] Subtask 1.4: Hash the password before saving it to the database
-  - [x] Subtask 1.5: Redirect the user to the login page after successful registration
+  - [x] Subtask 1.3: Integrate Supabase `signUp` method in the frontend/backend
+  - [x] Subtask 1.4: Handle Supabase response (success/error)
+  - [x] Subtask 1.5: Redirect the user to the login page or dashboard after successful registration
 
 ## Dev Notes
 
 - **Relevant architecture patterns and constraints:**
-  - The backend API needs an endpoint for user registration (e.g., `POST /api/v1/auth/register`). Passwords must be hashed before being stored in the database.
+  - Authentication: Use Supabase Auth (`supabase.auth.signUp`).
+  - Frontend: Next.js (App Router).
+  - State Management: Handle loading and error states during the async Supabase call.
 - **Source tree components to touch:**
-  - Frontend: `pages/register.js`
-  - Backend: `routes/auth.js`, `controllers/authController.js`, `models/User.js`
+  - `frontend/app/register/page.tsx` (or similar)
+  - `frontend/utils/supabase/server.ts` (if using server actions)
+  - `frontend/utils/supabase/client.ts`
 - **Testing standards summary:**
-  - Unit tests for the registration endpoint
-  - Integration tests for the registration flow
+  - Unit tests for the registration form validation.
+  - Integration tests for the Supabase sign-up flow (mocking Supabase client).
 
 ### Project Structure Notes
 
 - Alignment with unified project structure (paths, modules, naming):
-  - Standard Next.js and Express.js project structure.
-- Detected conflicts or variances (with rationale):
-  - Implemented backend logic within Next.js API Routes (`app/api/auth/register/route.ts`) instead of a separate Express app, to adhere to the constraint "the app should live in the folder frontend".
+  - Use `frontend/utils/supabase` for Supabase client initialization.
 
 ### References
 
