@@ -116,7 +116,7 @@ As a new user, I want to be able to create a secure account with my email and pa
 
 **Prerequisites:** Story 1.1
 
-**Technical Notes:** The backend API needs an endpoint for user registration (e.g., `POST /api/v1/auth/register`). Passwords must be hashed using a secure method (e.g., `passlib[bcrypt]`) before being stored in the database.
+**Technical Notes:** The backend API needs an endpoint for user registration (e.g., `POST /api/v1/auth/register`). Supabase handles password hashing automatically.
 
 ### Story 1.3: User Login
 

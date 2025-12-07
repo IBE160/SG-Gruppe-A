@@ -4,5 +4,16 @@
     "target": "local",
     "outfile": ".logging/log.jsonl",
     "logPrompts": true
+  } ,
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest"
+      ]
+    },	
+    "supabase": {
+      "httpUrl": "https://mcp.supabase.com/mcp?project_ref=xdibifflnsykxrcszjhu"
+    }
   }
 }

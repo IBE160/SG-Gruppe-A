@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
-import bcrypt from 'bcrypt';
 import { z } from 'zod';
-import pool from '@/lib/db';
+import { supabase } from '@/lib/supabaseClient';
 
 const registerSchema = z.object({
   email: z.string().email(),
@@ -13,27 +12,18 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { email, password } = registerSchema.parse(body);
 
-    // Check if user exists
-    const userCheck = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
-    if (userCheck.rows.length > 0) {
-      return NextResponse.json({ error: 'User already exists' }, { status: 400 });
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
     }
-
-    // Hash password
-    const saltRounds = 10;
-    const passwordHash = await bcrypt.hash(password, saltRounds);
-
-    // Insert user
-    // Assuming table 'users' exists with columns: id (SERIAL/UUID), email, password_hash, created_at
-    // We'll use RETURNING id, email to confirm creation
-    const newUser = await pool.query(
-      'INSERT INTO users (email, password_hash, created_at, updated_at) VALUES ($1, $2, NOW(), NOW()) RETURNING id, email',
-      [email, passwordHash]
-    );
 
     return NextResponse.json({ 
       message: 'User created successfully', 
-      user: newUser.rows[0] 
+      user: data.user
     }, { status: 201 });
 
   } catch (error) {

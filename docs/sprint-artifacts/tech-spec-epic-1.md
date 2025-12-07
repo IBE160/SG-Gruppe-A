@@ -129,7 +129,7 @@ This epic primarily engages with the **Frontend Application** (Next.js, React, T
 
 *   **NFR001:** All user data, including CVs and personal information (email, password hashes), must be encrypted at rest (PostgreSQL encryption) and in transit (HTTPS/TLS for all API communication).
 *   **NFR002:** The platform must comply with GDPR and Norwegian privacy regulations regarding the collection and storage of personal data. This implies secure storage and appropriate access controls for CVs and user profiles.
-*   Password hashing (e.g., bcrypt) will be used for user passwords.
+*   Password hashing is handled by Supabase.
 *   JWTs will be used for session management, with appropriate expiry and secure storage (e.g., HttpOnly cookies).
 
 ### Reliability/Availability
@@ -157,10 +157,9 @@ This epic primarily engages with the **Frontend Application** (Next.js, React, T
 *   **Uvicorn**: ASGI server.
 *   **PostgreSQL**: Database.
 *   **SQLAlchemy / Pydantic**: ORM and data validation.
-*   **`passlib[bcrypt]`**: For password hashing.
-*   **`python-jose`**: For JWT generation and verification.
 *   **`python-multipart`**: For handling multipart/form-data (file uploads).
 *   **`python-docx`**: For basic text extraction from `.doc/.docx` files.
+*   **`@supabase/supabase-js`**: For authentication.
 
 ## Acceptance Criteria (Authoritative)
 

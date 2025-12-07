@@ -39,8 +39,7 @@ so that I can access my account and saved data.
 - **Relevant architecture patterns and constraints:**
   - Backend: Python/FastAPI
   - Database: PostgreSQL (User model)
-  - Authentication: JWT (Json Web Token)
-  - Security: Passlib (bcrypt) for password hashing, HttpOnly cookies for token storage
+  - Authentication: Supabase handles authentication and JWT management.
 - **Source tree components to touch:**
   - `backend/main.py` (or router file)
   - `backend/app/api/auth.py` (or similar)

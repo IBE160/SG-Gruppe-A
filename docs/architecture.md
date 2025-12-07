@@ -94,8 +94,8 @@ This service is a specialized microservice that encapsulates all AI/ML functiona
 - **Cloud Provider:** **Amazon Web Services (AWS)**
   - *Reasoning:* AWS offers a comprehensive suite of managed services that align with our architectural needs, from database hosting to container orchestration.
 
-- **Database Hosting:** **Amazon RDS for PostgreSQL**
-  - *Reasoning:* A managed relational database service that handles backups, patching, and scaling, reducing operational overhead.
+- **Database Hosting:** **Supabase**
+  - *Reasoning:* Supabase provides a managed PostgreSQL database, along with a suite of other backend services like authentication, storage, and auto-generating APIs. This simplifies development and reduces the need to manage separate services.
 
 - **Container Registry:** **Amazon ECR**
   - *Reasoning:* A secure and private Docker container registry to store our application images.

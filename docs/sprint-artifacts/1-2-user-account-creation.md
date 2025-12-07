@@ -60,9 +60,9 @@ so that I can access the application's features.
 
 ### Debug Log References
 
-- Installed dependencies: `pg`, `bcrypt`, `zod`, `jsonwebtoken`, `lucide-react`.
+- Installed dependencies: `@supabase/supabase-js`, `bcrypt`, `zod`, `jsonwebtoken`, `lucide-react`.
 - Configured Jest for testing.
-- Created DB connection pool in `frontend/lib/db.ts`.
+- Created Supabase client in `frontend/lib/supabaseClient.ts`.
 - Implemented API route in `frontend/app/api/auth/register/route.ts`.
 - Implemented Registration page in `frontend/app/register/page.tsx`.
 - Ran unit tests for the API route: All passed.
@@ -78,7 +78,7 @@ so that I can access the application's features.
 ### File List
 
 - frontend/package.json
-- frontend/lib/db.ts
+- frontend/lib/supabaseClient.ts
 - frontend/app/api/auth/register/route.ts
 - frontend/app/register/page.tsx
 - frontend/jest.config.js
@@ -102,7 +102,7 @@ The "User Account Creation" story (Story 1.2) has been successfully implemented 
 **Acceptance Criteria Coverage:**
 -   **AC 1:** Users can successfully create a new account using a unique email and a password meeting complexity requirements, and are redirected on success.
     -   **Status:** IMPLEMENTED
-    -   **Evidence:** `frontend/app/register/page.tsx` for UI and redirect. `frontend/app/api/auth/register/route.ts` for server-side validation, password hashing, and DB insertion. `frontend/app/api/auth/register/route.test.ts` for unit test verification.
+    -   **Evidence:** `frontend/app/register/page.tsx` for UI and redirect. `frontend/app/api/auth/register/route.ts` for server-side validation, using `supabase.auth.signUp`. `frontend/app/api/auth/register/route.test.ts` for unit test verification.
 
 **Task Completion Validation:**
 -   Task 1 (AC: 1) - Marked `[x]`
@@ -117,7 +117,7 @@ The "User Account Creation" story (Story 1.2) has been successfully implemented 
         -   **Evidence:** `frontend/app/api/auth/register/route.ts`.
     -   Subtask 1.4: Hash the password before saving it to the database - Marked `[x]`
         -   **Verified As:** VERIFIED COMPLETE
-        -   **Evidence:** `frontend/app/api/auth/register/route.ts` (using `bcrypt.hash`).
+        -   **Evidence:** `frontend/app/api/auth/register/route.ts` (handled by `supabase.auth.signUp`).
     -   Subtask 1.5: Redirect the user to the login page after successful registration - Marked `[x]`
         -   **Verified As:** VERIFIED COMPLETE
         -   **Evidence:** `frontend/app/register/page.tsx` (using `router.push`).
@@ -127,16 +127,16 @@ The "User Account Creation" story (Story 1.2) has been successfully implemented 
 -   E2E tests (not in scope for this story's `dev` phase) would be beneficial for full user flow validation.
 
 **Architectural Alignment:**
--   The implementation uses Next.js API Routes for backend functionality, aligning with the user's instruction "the app should live in the folder frontend" while still fulfilling the architectural requirements for Node.js, PostgreSQL, and bcrypt usage.
+-   The implementation uses Next.js API Routes for backend functionality, aligning with the user's instruction "the app should live in the folder frontend" while still fulfilling the architectural requirements for Node.js and PostgreSQL.
 
 **Security Notes:**
--   Password hashing is correctly implemented using bcrypt.
+-   Password hashing is handled by Supabase.
 -   Input validation with Zod adds a layer of security.
 
 **Best-Practices and References:**
 -   Modern Next.js App Router patterns (Client Components, API Routes).
 -   `zod` for schema validation.
--   `bcrypt` for secure password hashing.
+-   `@supabase/supabase-js` for authentication.
 
 **Action Items:**
 -   None.
