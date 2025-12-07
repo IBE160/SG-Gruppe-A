@@ -11,24 +11,35 @@
 
   <story>
     <asA>a developer</asA>
-    <iWant>to have a bootstrapped Next.js application with all the necessary dependencies</iWant>
-    <soThat>I can start building the frontend.</soThat>
+    <iWant>to have the project's frontend (Next.js) and backend (FastAPI) bootstrapped with all necessary dependencies</iWant>
+    <soThat>I can start building both parts of the application.</soThat>
     <tasks>
-        - Task 1 (AC: 1, 2)
-            - Subtask 1.1: Initialize Next.js project with `create-next-app`
-            - Subtask 1.2: Install Tailwind CSS
-            - Subtask 1.3: Verify `npm install` runs without errors
-            - Subtask 1.4: Verify `npm run dev` starts the development server
+        - Task 1 (AC: 1, 2, 3, 4) - Frontend and Backend Setup
+            - Subtask 1.1: Initialize Next.js project with `create-next-app` in `frontend/`
+            - Subtask 1.2: Install Tailwind CSS in `frontend/`
+            - Subtask 1.3: Verify `npm install` runs without errors in `frontend/`
+            - Subtask 1.4: Verify `npm run dev` starts the development server in `frontend/`
+            - Subtask 1.5: Initialize Python virtual environment for backend in `backend/`
+            - Subtask 1.6: Install FastAPI, Uvicorn, and other core dependencies in `backend/`
+            - Subtask 1.7: Create a basic FastAPI application structure (e.g., `main.py`) in `backend/`
+            - Subtask 1.8: Verify backend dependencies are installed without errors
+            - Subtask 1.9: Verify FastAPI backend starts successfully (e.g., `uvicorn main:app --reload`)
     </tasks>
   </story>
 
   <acceptanceCriteria>
     1.  Given a new project is created
-        When I run `npm install`
-        Then all dependencies are installed without errors
+        When I run `npm install` in the frontend directory
+        Then all frontend dependencies are installed without errors
     2.  Given a new project is created
-        When I run `npm run dev`
+        When I run `npm run dev` in the frontend directory
         Then the Next.js development server starts successfully.
+    3.  Given the backend project is initialized
+        When Python dependencies are installed (e.g., `pip install -r requirements.txt`)
+        Then all backend dependencies are installed without errors
+    4.  Given the backend project is initialized
+        When I run the backend server (e.g., `uvicorn main:app --reload`)
+        Then the FastAPI backend starts successfully.
   </acceptanceCriteria>
 
   <artifacts>
@@ -37,7 +48,7 @@
         <path>docs/epics.md</path>
         <title>Epic Breakdown</title>
         <section>Story 1.1: Project Setup</section>
-        <snippet>As a developer, I want to have a bootstrapped Next.js application with all the necessary dependencies, so that I can start building the frontend.</snippet>
+        <snippet>As a developer, I want to have the project's frontend (Next.js) and backend (FastAPI) bootstrapped with all necessary dependencies, so that I can start building both parts of the application.</snippet>
       </doc>
       <doc>
         <path>docs/architecture.md</path>
@@ -66,22 +77,34 @@
     </docs>
     <code>
       <code-artifact>
-        <path>next.config.js</path>
+        <path>frontend/next.config.ts</path>
         <kind>config file</kind>
         <symbol>Next.js Configuration</symbol>
         <reason>Main configuration file for Next.js, used for setting up features like custom server, environment variables, etc.</reason>
       </code-artifact>
       <code-artifact>
-        <path>tailwind.config.js</path>
+        <path>frontend/tailwind.config.ts</path>
         <kind>config file</kind>
         <symbol>Tailwind CSS Configuration</symbol>
         <reason>Configuration file for Tailwind CSS, used to customize themes, extend utilities, and manage plugins.</reason>
       </code-artifact>
       <code-artifact>
-        <path>postcss.config.js</path>
+        <path>frontend/postcss.config.mjs</path>
         <kind>config file</kind>
         <symbol>PostCSS Configuration</symbol>
         <reason>Configuration file for PostCSS, often used with Tailwind CSS for processing CSS and adding vendor prefixes.</reason>
+      </code-artifact>
+      <code-artifact>
+        <path>backend/main.py</path>
+        <kind>main application file</kind>
+        <symbol>FastAPI Application</symbol>
+        <reason>Entry point for the FastAPI backend application.</reason>
+      </code-artifact>
+      <code-artifact>
+        <path>backend/requirements.txt</path>
+        <kind>dependency file</kind>
+        <symbol>Python Dependencies</symbol>
+        <reason>Lists all Python packages required for the FastAPI backend.</reason>
       </code-artifact>
     </code>
     <dependencies>
@@ -105,28 +128,65 @@
         <type>Component Library</type>
         <ecosystem>npm</ecosystem>
       </dependency>
+      <dependency>
+        <name>Python 3.11+</name>
+        <type>Language Runtime</type>
+        <ecosystem>python</ecosystem>
+      </dependency>
+      <dependency>
+        <name>FastAPI</name>
+        <type>Web Framework</type>
+        <ecosystem>python</ecosystem>
+      </dependency>
+      <dependency>
+        <name>Uvicorn</name>
+        <type>ASGI Server</type>
+        <ecosystem>python</ecosystem>
+      </dependency>
+      <dependency>
+        <name>Pydantic</name>
+        <type>Data Validation</type>
+        <ecosystem>python</ecosystem>
+      </dependency>
+      <dependency>
+        <name>SQLAlchemy</name>
+        <type>ORM</type>
+        <ecosystem>python</ecosystem>
+      </dependency>
     </dependencies>
   </artifacts>
 
   <constraints>
     <constraint>Frontend Framework: Next.js (with React)</constraint>
     <constraint>Styling: Tailwind CSS</constraint>
-    <constraint>Deployment: Vercel</constraint>
+    <constraint>Frontend Deployment: Vercel</constraint>
+    <constraint>Backend Framework: Python with FastAPI</constraint>
+    <constraint>Backend Deployment: Containerized Service (Docker)</constraint>
   </constraints>
   <interfaces></interfaces>
   <tests>
-    <standards>Basic verification of installation and server startup.</standards>
+    <standards>Basic verification of installation and server startup for both frontend and backend.</standards>
     <locations>
-      <location>package.json</location>
+      <location>frontend/package.json</location>
+      <location>backend/requirements.txt</location>
+      <location>backend/main.py</location>
     </locations>
     <ideas>
       <idea>
         <acId>1</acId>
-        <description>Verify `npm install` runs without errors.</description>
+        <description>Verify `npm install` runs without errors in the frontend directory.</description>
       </idea>
       <idea>
         <acId>2</acId>
-        <description>Verify `npm run dev` starts the development server and is accessible.</description>
+        <description>Verify `npm run dev` starts the frontend development server and is accessible.</description>
+      </idea>
+      <idea>
+        <acId>3</acId>
+        <description>Verify Python dependencies are installed without errors in the backend directory.</description>
+      </idea>
+      <idea>
+        <acId>4</acId>
+        <description>Verify FastAPI backend starts successfully (e.g., `uvicorn main:app --reload`) and is accessible.</description>
       </idea>
     </ideas>
   </tests>
