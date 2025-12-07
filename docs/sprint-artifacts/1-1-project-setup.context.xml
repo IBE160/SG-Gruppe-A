@@ -19,10 +19,10 @@
             - Subtask 1.2: Install Tailwind CSS in `frontend/`
             - Subtask 1.3: Verify `npm install` runs without errors in `frontend/`
             - Subtask 1.4: Verify `npm run dev` starts the development server in `frontend/`
-            - Subtask 1.5: Initialize Python virtual environment for backend in `backend/`
-            - Subtask 1.6: Install FastAPI, Uvicorn, and other core dependencies in `backend/`
+            - Subtask 1.5: Initialize backend project with UV in `backend/`
+            - Subtask 1.6: Install FastAPI, Uvicorn, and other core dependencies in `backend/` using UV
             - Subtask 1.7: Create a basic FastAPI application structure (e.g., `main.py`) in `backend/`
-            - Subtask 1.8: Verify backend dependencies are installed without errors
+            - Subtask 1.8: Verify backend dependencies are installed without errors using UV
             - Subtask 1.9: Verify FastAPI backend starts successfully (e.g., `uvicorn main:app --reload`)
     </tasks>
   </story>
@@ -35,7 +35,7 @@
         When I run `npm run dev` in the frontend directory
         Then the Next.js development server starts successfully.
     3.  Given the backend project is initialized
-        When Python dependencies are installed (e.g., `pip install -r requirements.txt`)
+        When Python dependencies are installed (e.g., `uv pip install -r requirements.txt` or `uv install`)
         Then all backend dependencies are installed without errors
     4.  Given the backend project is initialized
         When I run the backend server (e.g., `uvicorn main:app --reload`)
@@ -148,13 +148,17 @@
         <type>Data Validation</type>
         <ecosystem>python</ecosystem>
       </dependency>
-      <dependency>
-        <name>SQLAlchemy</name>
-        <type>ORM</type>
-        <ecosystem>python</ecosystem>
-      </dependency>
-    </dependencies>
-  </artifacts>
+                <dependency>
+                  <name>SQLAlchemy</name>
+                  <type>ORM</type>
+                  <ecosystem>python</ecosystem>
+                </dependency>
+                <dependency>
+                  <name>UV</name>
+                  <type>Package and Project Manager</type>
+                  <ecosystem>python</ecosystem>
+                </dependency>
+              </dependencies>  </artifacts>
 
   <constraints>
     <constraint>Frontend Framework: Next.js (with React)</constraint>
@@ -182,7 +186,7 @@
       </idea>
       <idea>
         <acId>3</acId>
-        <description>Verify Python dependencies are installed without errors in the backend directory.</description>
+        <description>Verify Python dependencies are installed without errors in the backend directory using UV.</description>
       </idea>
       <idea>
         <acId>4</acId>

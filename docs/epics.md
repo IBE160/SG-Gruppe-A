@@ -100,7 +100,7 @@ As a developer, I want to have the project's frontend and backend bootstrapped w
 
 **Technical Notes:**
 *   Frontend: Use `create-next-app` to bootstrap the project. Include `tailwindcss`.
-*   Backend: Initialize a Python virtual environment, install FastAPI, Uvicorn, and other core dependencies (e.g., Pydantic, SQLAlchemy). Set up a basic FastAPI application structure.
+*   Backend: Use UV to manage the Python environment and dependencies. Install FastAPI, Uvicorn, and other core dependencies (e.g., Pydantic, SQLAlchemy). Set up a basic FastAPI application structure.
 
 ### Story 1.2: User Account Creation
 

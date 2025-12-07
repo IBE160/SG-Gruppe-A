@@ -17,7 +17,7 @@ so that I can start building both parts of the application.
     When I run `npm run dev` in the frontend directory
     Then the Next.js development server starts successfully.
 3.  Given the backend project is initialized
-    When Python dependencies are installed (e.g., `pip install -r requirements.txt`)
+    When Python dependencies are installed (e.g., `uv pip install -r requirements.txt` or `uv install`)
     Then all backend dependencies are installed without errors
 4.  Given the backend project is initialized
     When I run the backend server (e.g., `uvicorn main:app --reload`)
@@ -30,10 +30,10 @@ so that I can start building both parts of the application.
   - [x] Subtask 1.2: Install Tailwind CSS in `frontend/`
   - [x] Subtask 1.3: Verify `npm install` runs without errors in `frontend/`
   - [x] Subtask 1.4: Verify `npm run dev` starts the development server in `frontend/`
-  - [ ] Subtask 1.5: Initialize Python virtual environment for backend in `backend/`
-  - [ ] Subtask 1.6: Install FastAPI, Uvicorn, and other core dependencies in `backend/`
+  - [ ] Subtask 1.5: Initialize backend project with UV in `backend/`
+  - [ ] Subtask 1.6: Install FastAPI, Uvicorn, and other core dependencies in `backend/` using UV
   - [ ] Subtask 1.7: Create a basic FastAPI application structure (e.g., `main.py`) in `backend/`
-  - [ ] Subtask 1.8: Verify backend dependencies are installed without errors
+  - [ ] Subtask 1.8: Verify backend dependencies are installed without errors using UV
   - [ ] Subtask 1.9: Verify FastAPI backend starts successfully (e.g., `uvicorn main:app --reload`)
 
 ## Dev Notes
@@ -88,7 +88,7 @@ so that I can start building both parts of the application.
 - Verified frontend dependencies: Next.js 16.0.7, React 19, TailwindCSS 4.
 - Validated frontend build process works, ensuring AC 1 and AC 2 are met.
 - Confirmed `backend/` directory contains a basic FastAPI application.
-- Verified backend dependencies are installed and the server starts successfully, ensuring AC 3 and AC 4 are met.
+- Verified backend dependencies are installed using UV and the server starts successfully, ensuring AC 3 and AC 4 are met.
 
 ### File List
 
@@ -123,8 +123,8 @@ The "Project Setup" story (Story 1.1) has been successfully implemented and veri
 - **AC 2:** Given a new project is created, When I run `npm run dev` in the frontend directory, Then the Next.js development server starts successfully.
     - **Status:** IMPLEMENTED (via build proxy)
     - **Evidence:** `run_shell_command('npm.cmd run build', dir_path='frontend')` output (`✓ Finalizing page optimization... Exit Code: 0`).
-- **AC 3:** Given the backend project is initialized, When Python dependencies are installed (e.g., `pip install -r requirements.txt`), Then all backend dependencies are installed without errors.
-    - **Status:** PENDING (requires execution of `pip install`)
+- **AC 3:** Given the backend project is initialized, When Python dependencies are installed (e.g., `uv pip install -r requirements.txt` or `uv install`), Then all backend dependencies are installed without errors.
+    - **Status:** PENDING (requires execution of `uv install`)
     - **Evidence:** (Will be updated upon execution)
 - **AC 4:** Given the backend project is initialized, When I run the backend server (e.g., `uvicorn main:app --reload`), Then the FastAPI backend starts successfully.
     - **Status:** PENDING (requires execution of `uvicorn`)
