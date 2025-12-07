@@ -82,20 +82,25 @@ Establish the project's technical foundation and allow users to create an accoun
 
 ### Story 1.1: Project Setup
 
-As a developer, I want to have a bootstrapped Next.js application with all the necessary dependencies, so that I can start building the frontend.
+As a developer, I want to have the project's frontend and backend bootstrapped with all necessary dependencies, so that I can start building both parts of the application.
 
 **Acceptance Criteria:**
 
 **Given** a new project is created
-**When** I run `npm install`
-**Then** all dependencies are installed without errors
+**When** I run `npm install` in the frontend directory
+**Then** all frontend dependencies are installed without errors
 
-**And** when I run `npm run dev`
+**And** when I run `npm run dev` in the frontend directory
 **Then** the Next.js development server starts successfully.
+
+**And** when the backend environment is set up and dependencies are installed
+**Then** the FastAPI backend can be started successfully.
 
 **Prerequisites:** None
 
-**Technical Notes:** Use `create-next-app` to bootstrap the project. Include `tailwindcss`.
+**Technical Notes:**
+*   Frontend: Use `create-next-app` to bootstrap the project. Include `tailwindcss`.
+*   Backend: Initialize a Python virtual environment, install FastAPI, Uvicorn, and other core dependencies (e.g., Pydantic, SQLAlchemy). Set up a basic FastAPI application structure.
 
 ### Story 1.2: User Account Creation
 

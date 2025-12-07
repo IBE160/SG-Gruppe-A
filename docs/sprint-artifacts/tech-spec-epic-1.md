@@ -33,7 +33,7 @@ The "Foundation & Core Application" epic focuses on establishing the essential t
 
 ## System Architecture Alignment
 
-This epic primarily engages with the **Frontend Application** (Next.js, React, Tailwind CSS) for user interface and interaction, and the **Backend API** (Node.js, Express.js, PostgreSQL) for user management, authentication, and initial CV storage. The initial CV parsing will likely be a basic text extraction on the backend, preparing for the more advanced AI Service integration in subsequent epics. It establishes the basic data flow and user interaction patterns required before integrating the specialized **AI Service**.
+This epic primarily engages with the **Frontend Application** (Next.js, React, Tailwind CSS) for user interface and interaction, and the **Backend API** (Python, FastAPI, PostgreSQL) for user management, authentication, and initial CV storage. The initial CV parsing will likely be a basic text extraction on the backend, preparing for the more advanced AI Service integration in subsequent epics. It establishes the basic data flow and user interaction patterns required before integrating the specialized **AI Service**.
 
 ## Detailed Design
 
@@ -47,10 +47,10 @@ This epic primarily engages with the **Frontend Application** (Next.js, React, T
     *   **`GapAnalysisDisplay`**: (Placeholder component - not active in this epic, but foundation may be laid).
     *   **`ATSScoreGauge`**: (Placeholder component - not active in this epic, but foundation may be laid).
 
-*   **Backend (Node.js/Express.js API)**:
+*   **Backend (Python/FastAPI API)**:
     *   **User Service**: Manages user registration, login, session management (JWT), and user profile data storage in PostgreSQL.
     *   **Authentication Middleware**: Protects API routes, validates JWT tokens.
-    *   **CV Handling Service**: Receives uploaded CV files, stores them securely, and performs initial text extraction/parsing using a basic `python-docx` integration (potentially via a lightweight child process or early AI Service interaction if determined feasible for basic parsing).
+    *   **CV Handling Service**: Receives uploaded CV files, stores them securely, and performs initial text extraction/parsing using a basic `python-docx` integration (natively within the Python service).
     *   **Job Description Service**: Stores and retrieves job descriptions linked to user accounts.
 
 ### Data Models and Contracts
@@ -152,12 +152,15 @@ This epic primarily engages with the **Frontend Application** (Next.js, React, T
 *   **Axios/Fetch API**: For interacting with the Backend API.
 
 ### Backend:
-*   **Node.js/Express.js**: Core framework.
+*   **Python 3.11+**: Core language.
+*   **FastAPI**: Web framework.
+*   **Uvicorn**: ASGI server.
 *   **PostgreSQL**: Database.
-*   **`bcrypt`**: For password hashing.
-*   **`jsonwebtoken`**: For JWT generation and verification.
-*   **`multer`**: For handling multipart/form-data (file uploads).
-*   **`python-docx` (or similar library via interop)**: For basic text extraction from `.doc/.docx` files. This may involve invoking a Python script or a lightweight microservice.
+*   **SQLAlchemy / Pydantic**: ORM and data validation.
+*   **`passlib[bcrypt]`**: For password hashing.
+*   **`python-jose`**: For JWT generation and verification.
+*   **`python-multipart`**: For handling multipart/form-data (file uploads).
+*   **`python-docx`**: For basic text extraction from `.doc/.docx` files.
 
 ## Acceptance Criteria (Authoritative)
 
@@ -183,7 +186,7 @@ This epic primarily engages with the **Frontend Application** (Next.js, React, T
 | AC1.6               | Detailed Design (JobDescription API, Frontend Components) | Frontend JD Input, Backend JD Service | Paste sample JD, verify save success.                  |
 | AC1.7               | UX Design Spec (Responsive Strategy)            | Frontend Application                 | Manual testing across device emulators/real devices.   |
 | AC1.8               | Non-Functional (Security), Detailed Design (DB) | PostgreSQL                           | Database configuration review, data inspection.        |
-| AC1.9               | Non-Functional (Security)                       | Nginx/Load Balancer, Express.js      | Network traffic inspection (ensure HTTPS).             |
+| AC1.9               | Non-Functional (Security)                       | Nginx/Load Balancer, Uvicorn/FastAPI | Network traffic inspection (ensure HTTPS).             |
 
 ## Risks, Assumptions, Open Questions
 

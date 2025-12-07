@@ -93,7 +93,7 @@ The AI CV & Job Application Assistant directly addresses this problem by acting 
 
 #### Design Constraints
 
-*   **Technology:** The frontend will be built with React/Next.js and styled with Tailwind CSS.
+*   **Technology:** The frontend will be built with React/Next.js and styled with Tailwind CSS. The backend will be developed using Python with FastAPI.
 *   **Branding:** The design will need to establish a new, clean, and professional brand identity. (No existing design system to adhere to).
 
 ### Epic List

@@ -25,7 +25,7 @@ The architecture is based on the requirements and constraints outlined in the [P
 The system is composed of three main components:
 
 1.  **Frontend Application:** A responsive web interface built with Next.js.
-2.  **Backend API:** A Node.js/Express application that handles business logic, user management, and data storage.
+2.  **Backend API:** A Python/FastAPI application that handles business logic, user management, and data storage.
 3.  **AI Service:** A dedicated Python service responsible for all AI-related tasks, including CV parsing, text generation, and analysis.
 
 ![System Diagram](images/system-diagram.png)
@@ -55,8 +55,8 @@ The frontend is the primary user interface for the platform.
 
 The backend serves as the central hub for the application's business logic.
 
-- **Framework:** **Node.js with Express.js**
-  - *Reasoning:* A mature and widely-used framework with a vast ecosystem. Its non-blocking I/O model is well-suited for handling many concurrent user requests.
+- **Framework:** **Python with FastAPI**
+  - *Reasoning:* A modern, high-performance web framework for building APIs with Python. Using FastAPI allows for a unified language stack (Python) across both the backend and AI services, simplifying development and maintenance while offering excellent performance and automatic documentation.
 
 - **Database:** **PostgreSQL**
   - *Reasoning:* A powerful, open-source relational database known for its reliability and data integrity. It can easily handle the user data, CV content, and application history required for this project.
