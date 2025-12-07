@@ -1,0 +1,1 @@
+- do not start frontend and backend servers yourself, they are already running on localhost3000 and localhost 8000
