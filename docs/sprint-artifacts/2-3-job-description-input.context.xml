@@ -19,7 +19,7 @@
         - Subtask 1.2: Implement basic client-side validation (e.g., minimum character count) to ensure meaningful input.
         - Subtask 1.3: Create a "Save" or "Analyze" button to trigger the submission.
       - Task 2: Backend Job Description Endpoint (AC: 1)
-        - Subtask 2.1: Implement POST /api/job-description endpoint in Node.js/Express.
+        - Subtask 2.1: Implement POST /api/job-description endpoint in Python/FastAPI.
         - Subtask 2.2: Validate the input text (ensure it's not empty or too long).
         - Subtask 2.3: Save the job description text to the JobDescription table in PostgreSQL.
         - Subtask 2.4: Link the job description to the authenticated user (user_id).
@@ -52,7 +52,7 @@
         <path>docs/architecture.md</path>
         <title>Architecture Specification</title>
         <section>3.2. Backend API</section>
-        <snippet>Framework: Node.js with Express.js. Database: PostgreSQL.</snippet>
+        <snippet>Framework: Python with FastAPI. Database: PostgreSQL.</snippet>
       </doc>
       <doc>
         <path>docs/architecture.md</path>
@@ -87,7 +87,7 @@
 
   <constraints>
     <constraint>Frontend: Next.js, Tailwind CSS</constraint>
-    <constraint>Backend: Node.js, Express.js</constraint>
+    <constraint>Backend: Python, FastAPI</constraint>
     <constraint>Database: PostgreSQL (JobDescription table)</constraint>
     <constraint>Security: Input sanitization (prevent XSS/SQLi)</constraint>
     <constraint>Data Model: Use JobDescription Model defined in tech-spec-epic-1.md</constraint>

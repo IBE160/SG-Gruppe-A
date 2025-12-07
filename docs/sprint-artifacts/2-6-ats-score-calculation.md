@@ -31,11 +31,10 @@ so that I can understand how well my CV matches the job description.
 ## Dev Notes
 
 - **Relevant architecture patterns and constraints:**
-  - **AI Service:** Python, FastAPI.
-  - **Backend:** Node.js.
+  - **Backend:** Python, FastAPI.
   - **Frontend:** Next.js, Tailwind.
 - **Source tree components to touch:**
-  - AI: `app/services/ats_scorer.py`.
+  - Backend: `app/services/ats_scorer.py`.
   - Frontend: `src/components/analysis/ATSScoreGauge.tsx` (new).
 - **Testing standards summary:**
   - Verify that identical texts yield 100 (or near 100) and completely unrelated texts yield low scores.

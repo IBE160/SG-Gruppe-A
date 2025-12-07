@@ -30,7 +30,7 @@ As a user, I want to receive actionable suggestions for improving my ATS score, 
 
 ### Architecture patterns and constraints
 - **AI Service:** Follow the pattern of `app/services` modules. Ensure the prompt context includes both the CV gaps and the JD to make suggestions specific.
-- **Backend:** Node.js/Express. Update the `Results` model if necessary to store this text field.
+- **Backend:** Python/FastAPI. Update the `Results` model if necessary to store this text field.
 - **Frontend:** Next.js/Tailwind. Use consistent styling with the existing Gap Analysis display.
 
 ### Learnings from Previous Story

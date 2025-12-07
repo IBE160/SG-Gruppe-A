@@ -52,7 +52,7 @@
         <path>docs/architecture.md</path>
         <title>Architecture Specification</title>
         <section>3.2 Backend API</section>
-        <snippet>Authentication: JSON Web Tokens (JWT). A stateless and secure method for authenticating users.</snippet>
+        <snippet>Authentication: JSON Web Tokens (JWT). A stateless and secure method for authenticating users. Framework: Python/FastAPI.</snippet>
       </doc>
       <doc>
         <path>docs/ux-design-specification.md</path>
@@ -65,15 +65,15 @@
       <!-- No existing code found (Greenfield state for implementation) -->
       <!-- Expected implementation paths -->
       <item>
-        <path>backend/routes/auth.js</path>
+        <path>backend/app/routers/auth.py</path>
         <kind>route</kind>
         <symbol>POST /login</symbol>
         <reason>Target file for login endpoint implementation</reason>
       </item>
       <item>
-        <path>backend/controllers/authController.js</path>
-        <kind>controller</kind>
-        <symbol>loginUser</symbol>
+        <path>backend/app/services/auth_service.py</path>
+        <kind>service</kind>
+        <symbol>authenticate_user</symbol>
         <reason>Target file for login logic (hashing, JWT)</reason>
       </item>
       <item>
@@ -84,9 +84,10 @@
       </item>
     </code>
     <dependencies>
-      <pkg type="npm">bcrypt</pkg>
-      <pkg type="npm">jsonwebtoken</pkg>
-      <pkg type="npm">express</pkg>
+      <pkg type="python">passlib[bcrypt]</pkg>
+      <pkg type="python">python-jose</pkg>
+      <pkg type="python">fastapi</pkg>
+      <pkg type="python">uvicorn</pkg>
       <pkg type="npm">react-hook-form</pkg>
       <pkg type="npm">axios</pkg>
     </dependencies>
@@ -109,9 +110,9 @@
   </interfaces>
 
   <tests>
-    <standards>Unit tests for controller logic (mocking DB). Integration tests for API endpoints (using supertest). Component tests for React forms (using React Testing Library).</standards>
+    <standards>Unit tests for service logic (mocking DB). Integration tests for API endpoints (using TestClient). Component tests for React forms (using React Testing Library).</standards>
     <locations>
-      <loc>backend/tests/auth.test.js</loc>
+      <loc>backend/tests/test_auth.py</loc>
       <loc>frontend/tests/login.test.tsx</loc>
     </locations>
     <ideas>

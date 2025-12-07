@@ -20,8 +20,8 @@
         - Subtask 1.3: Integrate with the backend upload endpoint.
         - Subtask 1.4: Handle upload errors (e.g., wrong format, file too large) and display user-friendly messages.
       - Task 2: Backend CV Upload Endpoint (AC: 1)
-        - Subtask 2.1: Implement POST /api/cv/upload endpoint in Node.js/Express.
-        - Subtask 2.2: Configure multer (or similar middleware) to handle multipart/form-data.
+        - Subtask 2.1: Implement POST /api/cv/upload endpoint in Python/FastAPI.
+        - Subtask 2.2: Configure python-multipart (or similar middleware) to handle multipart/form-data.
         - Subtask 2.3: Validate file type (ensure actual .doc/.docx MIME type) and size limit.
         - Subtask 2.4: Store the file securely (local storage for dev, prepared for S3/blob storage).
         - Subtask 2.5: Save metadata to the CV table in PostgreSQL (filename, upload timestamp, user_id).
@@ -54,7 +54,7 @@
         <path>docs/architecture.md</path>
         <title>Architecture Specification</title>
         <section>3.2. Backend API</section>
-        <snippet>Framework: Node.js with Express.js. Authentication: JSON Web Tokens (JWT). Deployment: Containerized Service (Docker).</snippet>
+        <snippet>Framework: Python with FastAPI. Authentication: JSON Web Tokens (JWT). Deployment: Containerized Service (Docker).</snippet>
       </doc>
       <doc>
         <path>docs/architecture.md</path>
@@ -80,17 +80,21 @@
     </code>
     <dependencies>
       <dependency ecosystem="javascript">
-        <package>multer</package>
         <package>react-dropzone</package>
         <package>axios</package>
         <package>zod</package>
+      </dependency>
+      <dependency ecosystem="python">
+        <package>fastapi</package>
+        <package>python-multipart</package>
+        <package>pydantic</package>
       </dependency>
     </dependencies>
   </artifacts>
 
   <constraints>
     <constraint>Frontend: Next.js, Tailwind CSS, shadcn/ui</constraint>
-    <constraint>Backend: Node.js, Express.js, PostgreSQL, Multer</constraint>
+    <constraint>Backend: Python, FastAPI, PostgreSQL, python-multipart</constraint>
     <constraint>Security: Validate file types strictly (MIME type check) to prevent malicious uploads</constraint>
     <constraint>Storage: Files should be stored outside the web root or in a private bucket/folder</constraint>
     <constraint>Data Model: Use CV Model defined in tech-spec-epic-1.md</constraint>

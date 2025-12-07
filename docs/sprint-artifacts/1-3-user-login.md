@@ -37,24 +37,24 @@ so that I can access my account and saved data.
 ## Dev Notes
 
 - **Relevant architecture patterns and constraints:**
-  - Backend: Node.js/Express.js
+  - Backend: Python/FastAPI
   - Database: PostgreSQL (User model)
   - Authentication: JWT (Json Web Token)
-  - Security: Bcrypt for password hashing, HttpOnly cookies for token storage
+  - Security: Passlib (bcrypt) for password hashing, HttpOnly cookies for token storage
 - **Source tree components to touch:**
-  - `backend/routes/auth.js` (or similar)
-  - `backend/controllers/authController.js`
+  - `backend/main.py` (or router file)
+  - `backend/app/api/auth.py` (or similar)
   - `frontend/pages/login.tsx` (or similar)
   - `frontend/components/LoginForm.tsx`
 - **Testing standards summary:**
-  - Unit tests for backend login logic (success, invalid credentials).
-  - Integration tests for API endpoint.
+  - Unit tests for backend login logic (success, invalid credentials) using `pytest`.
+  - Integration tests for API endpoint using `TestClient`.
   - Frontend tests for form interaction.
 
 ### Project Structure Notes
 
 - Alignment with unified project structure (paths, modules, naming):
-  - Backend routes should follow standard Express patterns.
+  - Backend routes should follow standard FastAPI patterns (Routers).
   - Frontend should use Next.js pages/app directory structure.
   - File paths above are indicative; follow structure established in Story 1.1/1.2.
 - Detected conflicts or variances (with rationale):

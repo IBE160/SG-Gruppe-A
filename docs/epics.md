@@ -116,7 +116,7 @@ As a new user, I want to be able to create a secure account with my email and pa
 
 **Prerequisites:** Story 1.1
 
-**Technical Notes:** The backend API needs an endpoint for user registration (e.g., `POST /api/v1/auth/register`). Passwords must be hashed before being stored in the database.
+**Technical Notes:** The backend API needs an endpoint for user registration (e.g., `POST /api/v1/auth/register`). Passwords must be hashed using a secure method (e.g., `passlib[bcrypt]`) before being stored in the database.
 
 ### Story 1.3: User Login
 
@@ -205,7 +205,7 @@ As a developer, I want to parse the uploaded CV file, so that I can extract the 
 
 **Prerequisites:** Story 2.1
 
-**Technical Notes:** Use a library like `python-docx` in the AI service to parse the CV content.
+**Technical Notes:** Use a library like `python-docx` in the backend to parse the CV content.
 
 ### Story 2.3: Job Description Input
 
@@ -233,7 +233,7 @@ As a developer, I want to analyze the job description to identify key skills, qu
 
 **Prerequisites:** Story 2.3
 
-**Technical Notes:** Use an LLM in the AI service to analyze the job description.
+**Technical Notes:** Use an LLM in the backend to analyze the job description.
 
 ### Story 2.5: Gap Analysis
 
@@ -247,7 +247,7 @@ As a user, I want to see a list of key skills and qualifications from the job de
 
 **Prerequisites:** Story 2.2, Story 2.4
 
-**Technical Notes:** The AI service will compare the extracted skills from the CV and job description and return the differences.
+**Technical Notes:** The backend will compare the extracted skills from the CV and job description and return the differences.
 
 ### Story 2.6: ATS Score Calculation
 
@@ -261,7 +261,7 @@ As a user, I want to see a basic ATS compatibility score, so that I can understa
 
 **Prerequisites:** Story 2.2, Story 2.4
 
-**Technical Notes:** The AI service will calculate a score based on keyword matching.
+**Technical Notes:** The backend will calculate a score based on keyword matching.
 
 ### Story 2.7: Actionable Suggestions
 
@@ -275,7 +275,7 @@ As a user, I want to receive actionable suggestions for improving my ATS score, 
 
 **Prerequisites:** Story 2.6
 
-**Technical Notes:** The AI service will generate suggestions based on the gap analysis.
+**Technical Notes:** The backend will generate suggestions based on the gap analysis.
 
 ---
 
@@ -295,7 +295,7 @@ As a user, I want the system to generate a tailored cover letter in Norwegian ba
 
 **Prerequisites:** Story 2.2, Story 2.4
 
-**Technical Notes:** The AI service will use an LLM to generate the cover letter.
+**Technical Notes:** The backend will use an LLM to generate the cover letter.
 
 ### Story 3.2: Display Generated Cover Letter
 

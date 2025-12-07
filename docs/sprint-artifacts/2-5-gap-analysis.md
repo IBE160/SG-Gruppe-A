@@ -21,27 +21,25 @@ so that I can improve my CV.
   - [ ] Subtask 1.2: Create Pydantic model for gap analysis result (e.g., `class GapAnalysisResult(BaseModel): missing_skills: list[str], missing_qualifications: list[str], match_percentage: float`).
   - [ ] Subtask 1.3: Implement the comparison function in `app/services/gap_analyzer.py` using the LLM.
 - [ ] Task 2: Backend Integration (AC: 1)
-  - [ ] Subtask 2.1: Implement `POST /ai/analyze-gap` endpoint in FastAPI service.
-  - [ ] Subtask 2.2: Update Node.js backend to orchestrate this: Call Python API with parsed CV content and JD analysis results.
+  - [ ] Subtask 2.1: Implement `POST /ai/analyze-gap` endpoint (or service method) in FastAPI.
+  - [ ] Subtask 2.2: Call the gap analysis logic with parsed CV content and JD analysis results.
   - [ ] Subtask 2.3: Store gap analysis results in `Results` table (or JSONB in `CV` or `JobDescription` join table).
 - [ ] Task 3: Frontend Display (AC: 1)
   - [ ] Subtask 3.1: Create `GapAnalysisDisplay` component in React.
-  - [ ] Subtask 3.2: Fetch gap analysis results from Node.js API.
+  - [ ] Subtask 3.2: Fetch gap analysis results from the backend API.
   - [ ] Subtask 3.3: Render missing skills/qualifications clearly (e.g., red tags or list).
 - [ ] Task 4: Testing (AC: 1)
-  - [ ] Subtask 4.1: Unit test Python logic with known mismatching text.
-  - [ ] Subtask 4.2: Integration test the full flow (frontend -> node -> python -> db).
+  - [ ] Subtask 4.1: Unit test logic with known mismatching text.
+  - [ ] Subtask 4.2: Integration test the full flow (frontend -> backend -> db).
 
 ## Dev Notes
 
 - **Relevant architecture patterns and constraints:**
-  - **AI Service:** Python, FastAPI, Pydantic AI.
-  - **Backend:** Node.js.
+  - **Backend:** Python, FastAPI, Pydantic AI.
   - **Frontend:** Next.js, Tailwind.
   - **Data:** Gap analysis is derived data; consider if it needs permanent storage or transient calculation. *Decision:* Store it to allow "Saved Applications Dashboard" later (Nice to Have feature, but good practice for MVP persistence).
 - **Source tree components to touch:**
-  - AI: `app/services/gap_analyzer.py`, `app/models/gap.py`.
-  - Backend: `src/controllers/analysisController.ts` (new).
+  - Backend: `app/services/gap_analyzer.py` (new), `app/models/gap.py` (new), `app/routers/analysis.py` (new).
   - Frontend: `src/components/analysis/GapAnalysisDisplay.tsx` (new).
 - **Testing standards summary:**
   - Verify that synonyms are handled gracefully by the LLM (e.g., "React.js" vs "ReactJS" shouldn't be a gap).

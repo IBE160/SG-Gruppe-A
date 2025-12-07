@@ -21,24 +21,21 @@ so that I can compare them with the user's CV.
   - [ ] Subtask 1.2: Create a Pydantic model to structure the LLM output (e.g., `class JobAnalysisResult(BaseModel): skills: list[str], qualifications: list[str], keywords: list[str]`).
   - [ ] Subtask 1.3: Implement the analysis function in the Python AI Service using `pydantic-ai` and the Gemini model.
 - [ ] Task 2: Integration with JD Input Flow (AC: 1)
-  - [ ] Subtask 2.1: Implement `POST /ai/analyze-job-description` endpoint in the FastAPI service.
-  - [ ] Subtask 2.2: Update the Node.js backend to call this endpoint (likely triggered after Story 2.3's save, or on a separate "Analyze" button click). *Decision:* Trigger on user request ("Analyze" button) to allow them to review/edit JD first.
+  - [ ] Subtask 2.1: Implement `POST /ai/analyze-job-description` endpoint (or service method) in the FastAPI service.
+  - [ ] Subtask 2.2: Integrate the analysis call into the backend route (triggered by button).
   - [ ] Subtask 2.3: Store the analysis results (skills, keywords) in the `JobDescription` table (add JSONB column `analysis_results`) or a related table.
 - [ ] Task 3: Testing (AC: 1)
   - [ ] Subtask 3.1: Unit test the prompt and Pydantic model with sample JDs.
-  - [ ] Subtask 3.2: Integration test the API call from Node.js to Python.
+  - [ ] Subtask 3.2: Integration test the analysis flow.
   - [ ] Subtask 3.3: Verify the extracted data quality manually with a few real-world examples.
 
 ## Dev Notes
 
 - **Relevant architecture patterns and constraints:**
-  - **AI Service:** Python, FastAPI, Pydantic AI, Gemini 2.5.
-  - **Backend:** Node.js (orchestrator).
+  - **Backend:** Python, FastAPI, Pydantic AI, Gemini 2.5.
   - **Database:** PostgreSQL.
-  - **Communication:** REST API.
 - **Source tree components to touch:**
-  - AI Service: `app/services/jd_analyzer.py` (new), `app/models/jd.py` (new schema).
-  - Backend: `src/services/aiService.ts` (update), `src/controllers/jobController.ts` (update).
+  - Backend: `app/services/jd_analyzer.py` (new), `app/models/jd.py` (new schema), `app/routers/jobs.py` (update).
   - Database: Migration to add `analysis_results` to `job_descriptions`.
 - **Testing standards summary:**
   - Focus on the structure of the returned JSON. The LLM might hallucinate, so validation of the *format* is more critical than 100% semantic accuracy for unit tests.
@@ -47,14 +44,13 @@ so that I can compare them with the user's CV.
 
 - **From Story 2.3 (JD Input):**
   - Story 2.3 handled the raw input. This story (2.4) adds intelligence to it.
-  - As with CV parsing (Story 2.2), the pattern is: Node receives input -> Saves to DB -> Calls Python AI Service -> AI Service processes -> Returns result -> Node saves result.
+  - As with CV parsing (Story 2.2), the pattern is: Receive input -> Save to DB -> Call AI Service (internal) -> Process -> Save result.
   - *Refinement:* The prompt engineering here is critical. We need distinct lists for "skills" (hard skills like Python, React), "qualifications" (degrees, years of exp), and "keywords" (soft skills, domain terms).
 
 ### Project Structure Notes
 
 - Alignment with unified project structure:
-  - Python AI service structure: `app/services`, `app/routers`, `app/models`.
-  - Node Backend structure: `src/services`, `src/controllers`.
+  - Backend structure: `app/services`, `app/routers`, `app/models`.
 - Detected conflicts or variances:
   - None.
 

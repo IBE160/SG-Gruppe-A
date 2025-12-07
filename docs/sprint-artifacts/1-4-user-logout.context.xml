@@ -68,7 +68,7 @@
   <constraints>
     <constraint>Authentication Mechanism: JSON Web Tokens (JWT)</constraint>
     <constraint>Frontend: Next.js with Tailwind CSS</constraint>
-    <constraint>Backend: Node.js with Express.js and PostgreSQL</constraint>
+    <constraint>Backend: Python with FastAPI and PostgreSQL</constraint>
     <constraint>Security: HTTPS/TLS for all API communication</constraint>
   </constraints>
 

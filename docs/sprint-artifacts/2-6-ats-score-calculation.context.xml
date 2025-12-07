@@ -64,8 +64,7 @@
   </artifacts>
 
   <constraints>
-    <constraint>AI Service: Python, FastAPI.</constraint>
-    <constraint>Backend: Node.js.</constraint>
+    <constraint>Backend: Python, FastAPI.</constraint>
     <constraint>Frontend: Next.js, Tailwind.</constraint>
   </constraints>
   <interfaces>

@@ -15,17 +15,16 @@
     <soThat>I can extract the text content for analysis</soThat>
     <tasks>
       - Task 1: CV Parsing Logic (AC: 1)
-        - Subtask 1.1: Create a Python script or function within the AI Service to handle .docx parsing using python-docx.
+        - Subtask 1.1: Create a Python script or function within the Backend (e.g. app/services/cv_parser.py) to handle .docx parsing using python-docx.
         - Subtask 1.2: Implement text extraction logic that preserves basic structure (paragraphs) but removes formatting noise.
         - Subtask 1.3: Handle errors gracefully (e.g., unreadable files, password-protected files).
       - Task 2: Integration with Upload Flow (AC: 1)
-        - Subtask 2.1: Define a trigger mechanism (e.g., an API call from the Node.js backend to the Python AI Service, or a shared database polling/queue). Decision: Use a direct API call for the MVP (POST /ai/parse-cv).
-        - Subtask 2.2: Implement the POST /ai/parse-cv endpoint in the FastAPI service.
-        - Subtask 2.3: Update the Node.js backend to call this endpoint after successful file upload (from Story 2.1).
-        - Subtask 2.4: Store the extracted text back into the CV table in PostgreSQL (extracted_text column).
+        - Subtask 2.1: Integrate the parsing service into the CV Upload endpoint (POST /api/cv/upload).
+        - Subtask 2.2: Ensure parsing happens asynchronously or efficiently after upload.
+        - Subtask 2.3: Store the extracted text back into the CV table in PostgreSQL (extracted_text column).
       - Task 3: Testing (AC: 1)
-        - Subtask 3.1: Unit test the Python parsing function with sample .docx files.
-        - Subtask 3.2: Integration test the communication between Node.js backend and Python AI service.
+        - Subtask 3.1: Unit test the parsing function with sample .docx files.
+        - Subtask 3.2: Integration test the upload-and-parse flow.
         - Subtask 3.3: Verify that extracted text is correctly saved to the database.
     </tasks>
   </story>
@@ -40,7 +39,7 @@
         <path>docs/sprint-artifacts/tech-spec-epic-2.md</path>
         <title>Epic Technical Specification: AI-Powered Generation &amp; Analysis</title>
         <section>Detailed Design</section>
-        <snippet>AI Service (Python/FastAPI): Responsibilities: CV parsing... Inputs: User's CV (text content from parsed .doc/.docx)... Dependencies: python-docx.</snippet>
+        <snippet>Backend (Python/FastAPI): Responsibilities: CV parsing... Inputs: User's CV (text content from parsed .doc/.docx)... Dependencies: python-docx.</snippet>
       </doc>
       <doc>
         <path>docs/architecture.md</path>
@@ -52,7 +51,7 @@
         <path>docs/sprint-artifacts/2-1-cv-upload.md</path>
         <title>Story 2.1: CV Upload</title>
         <section>Dev Notes</section>
-        <snippet>Backend: Node.js, Express.js, PostgreSQL... Data Model: See tech-spec-epic-1.md for CV Model definition.</snippet>
+        <snippet>Backend: Python, FastAPI, PostgreSQL... Data Model: See tech-spec-epic-1.md for CV Model definition.</snippet>
       </doc>
       <doc>
         <path>docs/epics.md</path>
@@ -70,28 +69,17 @@
         <package>fastapi</package>
         <package>pydantic</package>
       </dependency>
-      <dependency ecosystem="javascript">
-        <package>axios</package>
-        <package>form-data</package>
-      </dependency>
     </dependencies>
   </artifacts>
 
   <constraints>
-    <constraint>AI Service: Python, FastAPI, python-docx</constraint>
-    <constraint>Backend: Node.js, Express.js (orchestrator)</constraint>
-    <constraint>Communication: REST API (Node calls Python via POST /ai/parse-cv)</constraint>
+    <constraint>Backend: Python, FastAPI, python-docx</constraint>
     <constraint>Database: PostgreSQL (update 'extracted_text' column)</constraint>
-    <constraint>Data Flow: Node backend streams file buffer/content to Python service to avoid shared volume complexity for MVP.</constraint>
+    <constraint>Data Flow: Direct internal call or service invocation within FastAPI.</constraint>
   </constraints>
 
   <interfaces>
-    <interface>
-      <name>Parse CV Endpoint</name>
-      <kind>REST API</kind>
-      <signature>POST /ai/parse-cv</signature>
-      <path>docs/sprint-artifacts/2-2-cv-parsing.md</path>
-    </interface>
+    <!-- No external interface for parsing as it's internal service logic now -->
   </interfaces>
 
   <tests>

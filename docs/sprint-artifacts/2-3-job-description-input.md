@@ -21,25 +21,23 @@ so that the system can analyze it.
   - [ ] Subtask 1.2: Implement basic client-side validation (e.g., minimum character count) to ensure meaningful input.
   - [ ] Subtask 1.3: Create a "Save" or "Analyze" button to trigger the submission.
 - [ ] Task 2: Backend Job Description Endpoint (AC: 1)
-  - [ ] Subtask 2.1: Implement `POST /api/job-description` endpoint in Node.js/Express.
+  - [ ] Subtask 2.1: Implement `POST /api/job-description` endpoint in Python/FastAPI.
   - [ ] Subtask 2.2: Validate the input text (ensure it's not empty or too long).
   - [ ] Subtask 2.3: Save the job description text to the `JobDescription` table in PostgreSQL.
   - [ ] Subtask 2.4: Link the job description to the authenticated user (user_id).
-- [ ] Task 3: Testing (AC: 1)
-  - [ ] Subtask 3.1: Unit test the frontend component for state updates on text input.
-  - [ ] Subtask 3.2: Integration test the API endpoint with valid and empty text.
-  - [ ] Subtask 3.3: Verify that the job description is correctly persisted in the database.
+
+...
 
 ## Dev Notes
 
 - **Relevant architecture patterns and constraints:**
   - **Frontend:** Next.js, Tailwind CSS (for the text area styling).
-  - **Backend:** Node.js, Express.js.
+  - **Backend:** Python, FastAPI.
   - **Database:** PostgreSQL (`JobDescription` table).
   - **Data Model:** See `tech-spec-epic-1.md` for `JobDescription Model` definition.
 - **Source tree components to touch:**
   - Frontend: `src/components/job/JobDescriptionInput.tsx` (new).
-  - Backend: `src/routes/jobRoutes.ts` (new), `src/controllers/jobController.ts` (new).
+  - Backend: `app/routers/jobs.py` (new), `app/models/job.py` (new).
   - Database: Migration for `job_descriptions` table (if not already created in Epic 1).
 - **Testing standards summary:**
   - Ensure input validation works on both client and server sides.
@@ -48,13 +46,13 @@ so that the system can analyze it.
 
 - **From Story 2.2 (CV Parsing):**
   - Story 2.2 handled the CV side of the analysis equation. This story (2.3) handles the Job Description side.
-  - Similar to CV upload, the data needs to be stored in the Node.js backend's database first before it can be sent to the AI service for analysis (which will be a subsequent story, likely 2.4).
-  - Security: Input sanitization is crucial here to prevent XSS or SQL injection, even though we are using an ORM/query builder (implied by "PostgreSQL" and standard Node practices).
+  - Similar to CV upload, the data needs to be stored in the backend's database first before it can be sent to the AI service for analysis (which will be a subsequent story, likely 2.4).
+  - Security: Input sanitization is crucial here to prevent XSS or SQL injection, even though we are using an ORM (SQLAlchemy).
 
 ### Project Structure Notes
 
 - Alignment with unified project structure:
-  - Follow the pattern established in Story 2.1: Frontend components in `src/components`, Backend in `src/controllers` and `src/routes` (assuming the standard `node-api` structure).
+  - Follow the pattern established in Story 2.1: Frontend components in `src/components`, Backend in `app/routers`.
 - Detected conflicts or variances:
   - `epics.md` places this in Epic 2. `tech-spec-epic-1.md` defines the `JobDescription Model`. This confirms the pattern of using Epic 1 spec for foundational data structures used in Epic 2 features.
 

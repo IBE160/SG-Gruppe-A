@@ -30,11 +30,10 @@ This epic focuses on ensuring the application provides an excellent user experie
 
 ## System Architecture Alignment
 
-This epic is confined exclusively to the **Frontend Application**. It does not introduce any changes to the Backend API or the AI Service. The work involves modifying CSS, HTML structure, and client-side JavaScript to meet the specified design and accessibility requirements.
+This epic is confined exclusively to the **Frontend Application**. It does not introduce any changes to the Backend API.
 
 - **Frontend Application:** All implementation work will occur here. This includes adjusting styles, restructuring components for better semantics and responsiveness, and adding ARIA attributes.
-- **Backend API:** No impact.
-- **AI Service:** No impact.
+- **Backend API (Python/FastAPI):** No impact.
 
 
 ## Detailed Design

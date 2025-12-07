@@ -46,7 +46,7 @@
         <path>docs/sprint-artifacts/tech-spec-epic-1.md</path>
         <title>Epic Technical Specification: Foundation &amp; Core Application</title>
         <section>Dependencies and Integrations</section>
-        <snippet>Backend: Node.js/Express.js, PostgreSQL, python-docx (or similar library via interop) for basic text extraction.</snippet>
+        <snippet>Backend: Python/FastAPI, PostgreSQL, python-docx (native) for basic text extraction.</snippet>
       </doc>
       <doc>
         <path>docs/architecture.md</path>

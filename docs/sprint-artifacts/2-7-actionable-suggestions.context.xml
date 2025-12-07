@@ -66,7 +66,7 @@
 
   <constraints>
     <constraint>AI Service: Follow the pattern of `app/services` modules. Ensure the prompt context includes both the CV gaps and the JD to make suggestions specific.</constraint>
-    <constraint>Backend: Node.js/Express. Update the `Results` model if necessary to store this text field.</constraint>
+    <constraint>Backend: Python/FastAPI. Update the `Results` model if necessary to store this text field.</constraint>
     <constraint>Frontend: Next.js/Tailwind. Use consistent styling with the existing Gap Analysis display.</constraint>
   </constraints>
   <interfaces>
