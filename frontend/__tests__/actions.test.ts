@@ -1,5 +1,6 @@
 import { expect, test, vi, describe, beforeEach } from 'vitest'
-import { login } from '../app/login/actions'
+import { login, signOut } from '../app/login/actions'
+import { redirect } from 'next/navigation'
 
 const mockSignInWithPassword = vi.fn()
 const mockSignOut = vi.fn()
@@ -68,5 +69,17 @@ describe('login action', () => {
     expect(result).toEqual({
       message: 'Invalid login',
     })
+  })
+})
+
+describe('signOut action', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  test('calls supabase signOut and redirects', async () => {
+    await signOut()
+    expect(mockSignOut).toHaveBeenCalled()
+    expect(redirect).toHaveBeenCalledWith('/login')
   })
 })
