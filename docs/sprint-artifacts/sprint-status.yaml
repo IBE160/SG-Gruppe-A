@@ -42,7 +42,7 @@ development_status:
   1-1-project-setup: done
   1-2-user-account-creation: done
   1-3-user-login: done
-  1-4-user-logout: ready-for-review
+  1-4-user-logout: review
   1-5-ai-service-integration-and-proof-of-concept: ready-for-dev
   epic-1-retrospective: optional
   epic-2: contexted
