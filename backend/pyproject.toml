@@ -9,4 +9,12 @@ dependencies = [
     "uvicorn",
     "supabase",
     "python-dotenv",
+    "google-generativeai>=0.8.5",
+    "pydantic-ai>=1.27.0",
+    "python-docx>=1.2.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
 ]
