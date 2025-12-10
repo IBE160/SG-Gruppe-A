@@ -23,8 +23,9 @@ export default async function Home() {
                   Sign Out
                 </button>
             </form>
-            <Link href="/todos" className="text-blue-500 hover:underline">
-                View Todos
+
+            <Link href="/dashboard" className="text-green-500 hover:underline font-bold">
+                Go to Dashboard (CV Upload)
             </Link>
           </div>
         ) : (

@@ -196,6 +196,7 @@ dependencies = [
     { name = "pydantic-ai" },
     { name = "python-docx" },
     { name = "python-dotenv" },
+    { name = "python-multipart" },
     { name = "supabase" },
     { name = "uvicorn" },
 ]
@@ -212,6 +213,7 @@ requires-dist = [
     { name = "pydantic-ai", specifier = ">=1.27.0" },
     { name = "python-docx", specifier = ">=1.2.0" },
     { name = "python-dotenv" },
+    { name = "python-multipart", specifier = ">=0.0.20" },
     { name = "supabase" },
     { name = "uvicorn" },
 ]
