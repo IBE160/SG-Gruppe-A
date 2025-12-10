@@ -6,6 +6,10 @@ from datetime import datetime
 from fastapi import UploadFile
 from supabase import create_client, Client
 from dotenv import load_dotenv
+from app.services.cv_parser import parse_cv
+import logging
+
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 
@@ -35,8 +39,11 @@ async def save_cv(file: UploadFile, user_id: str):
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
     except Exception as e:
-        print(f"Error saving file to disk: {e}")
+        logger.error(f"Error saving file to disk: {e}", exc_info=True)
         raise e
+
+    # Extract text from the saved file
+    extracted_text = parse_cv(file_path)
 
     # Prepare metadata
     data = {
@@ -44,14 +51,15 @@ async def save_cv(file: UploadFile, user_id: str):
         "filename": safe_filename, # Store original (sanitized) name for display
         "file_path": file_path,
         "uploaded_at": datetime.now().isoformat(),
-        "user_id": user_id
+        "user_id": user_id,
+        "extracted_text": extracted_text
     }
 
     # Save metadata to Supabase 'cvs' table
     try:
         response = supabase.table("cvs").insert(data).execute()
     except Exception as e:
-        print(f"Error saving to DB: {e}")
+        logger.error(f"Error saving to DB: {e}", exc_info=True)
         # If DB save fails, we should probably delete the uploaded file to keep state consistent
         if os.path.exists(file_path):
             os.remove(file_path)
