@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import { CVUpload } from '@/components/cv/CVUpload'
+import JobDescriptionInput from '@/components/job/JobDescriptionInput'
 
 export default async function Dashboard() {
   const supabase = await createClient()
@@ -19,8 +20,12 @@ export default async function Dashboard() {
         <h1 className="text-3xl font-bold mb-8 text-gray-800">Dashboard</h1>
         <p className="mb-6 text-gray-600">Welcome, {user.email}</p>
         
-        <div className="bg-white p-6 rounded-lg shadow-sm">
+        <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
             <CVUpload />
+        </div>
+
+        <div className="bg-white p-6 rounded-lg shadow-sm">
+            <JobDescriptionInput />
         </div>
       </main>
     </div>

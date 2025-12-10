@@ -10,14 +10,18 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.86.2",
+    "@testing-library/jest-dom": "^6.9.1",
     "axios": "^1.13.2",
     "lucide-react": "^0.556.0",
     "next": "16.0.7",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-dropzone": "^14.3.8",
+    "react-hook-form": "^7.68.0",
+    "react-hot-toast": "^2.6.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {

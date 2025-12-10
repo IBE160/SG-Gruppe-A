@@ -48,7 +48,7 @@ development_status:
   epic-2: contexted
   2-1-cv-upload: done
   2-2-cv-parsing: done
-  2-3-job-description-input: ready-for-dev
+  2-3-job-description-input: done
   2-4-job-description-analysis: ready-for-dev
   2-5-gap-analysis: ready-for-dev
   2-6-ats-score-calculation: ready-for-dev

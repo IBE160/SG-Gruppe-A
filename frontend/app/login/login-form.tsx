@@ -23,7 +23,7 @@ export function LoginForm() {
           name="email" 
           type="email" 
           required 
-          className="border p-2 rounded"
+          className="border p-2 rounded text-gray-900"
           disabled={isPending}
         />
         {state?.errors?.email && (
@@ -38,7 +38,7 @@ export function LoginForm() {
           name="password" 
           type="password" 
           required 
-          className="border p-2 rounded"
+          className="border p-2 rounded text-gray-900"
           disabled={isPending}
         />
         {state?.errors?.password && (

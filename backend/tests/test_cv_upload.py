@@ -7,7 +7,7 @@ client = TestClient(app)
 
 # Mock user object
 class MockUser:
-    id = "test-user-id"
+    id = "123e4567-e89b-12d3-a456-426614174001"
 
 # Override dependency
 app.dependency_overrides[get_current_user] = lambda: MockUser()
@@ -32,8 +32,7 @@ def test_upload_cv_success():
         user_id = args[1]
         
         assert uploaded_file.filename == "test.docx"
-        assert user_id == "test-user-id"
-
+        assert user_id == "123e4567-e89b-12d3-a456-426614174001"
 def test_upload_invalid_file_type():
     file_content = b"fake pdf content"
     files = {"file": ("test.pdf", file_content, "application/pdf")}
