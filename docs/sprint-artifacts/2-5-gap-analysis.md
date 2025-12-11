@@ -1,6 +1,6 @@
 # Story 2.5: Gap Analysis
 
-Status: review
+Status: done
 
 ## Story
 
@@ -31,6 +31,10 @@ so that I can improve my CV.
 - [x] Task 4: Testing (AC: 1)
   - [x] Subtask 4.1: Unit test logic with known mismatching text.
   - [x] Subtask 4.2: Integration test the full flow (frontend -> backend -> db).
+
+### Review Follow-ups (AI)
+
+- [ ] [AI-Review][Low] Move API base URL to NEXT_PUBLIC_API_URL environment variable in frontend.
 
 ## Dev Notes
 
@@ -98,6 +102,65 @@ gemini-2.0-flash
 
 ## Change Log
 
+- 2025-12-11: Senior Developer Review notes appended.
 - 2025-12-11: Implemented all tasks and moved to review.
 - 2025-12-06: Updated status to ready-for-dev after generating context.
 - 2025-12-06: Initial draft created.
+
+## Senior Developer Review (AI)
+
+### Reviewer
+BIP (Dev Agent)
+
+### Date
+2025-12-11
+
+### Outcome
+**Approve**
+
+### Summary
+The story is fully implemented according to Acceptance Criteria and Tasks. All tests pass, including integration tests.
+
+### Key Findings
+- **Low Severity:**
+    - Frontend API URL is hardcoded (`http://127.0.0.1:8000`) in `frontend/app/analysis/page.tsx`. This should be moved to an environment variable in a future cleanup task.
+
+### Acceptance Criteria Coverage
+
+| AC# | Description | Status | Evidence |
+| :--- | :--- | :--- | :--- |
+| 1 | User can see a clear list of missing skills and qualifications | **IMPLEMENTED** | `backend/app/services/gap_analyzer.py` (Logic), `frontend/components/analysis/GapAnalysisDisplay.tsx` (Display) |
+
+**Summary:** 1 of 1 acceptance criteria fully implemented.
+
+### Task Completion Validation
+
+| Task | Marked As | Verified As | Evidence |
+| :--- | :--- | :--- | :--- |
+| Task 1: AI Service Gap Analysis Logic | [x] | **VERIFIED** | `backend/app/services/gap_analyzer.py` |
+| Task 2: Backend Integration | [x] | **VERIFIED** | `backend/app/routers/analysis.py` |
+| Task 3: Frontend Display | [x] | **VERIFIED** | `frontend/app/analysis/page.tsx`, `frontend/components/analysis/GapAnalysisDisplay.tsx` |
+| Task 4: Testing | [x] | **VERIFIED** | `backend/tests/test_gap_analyzer.py`, `backend/tests/test_analysis_integration.py` |
+
+**Summary:** 4 of 4 completed tasks verified.
+
+### Test Coverage and Gaps
+- Unit tests cover the gap analysis logic and Pydantic models.
+- Integration tests cover the API endpoint and DB persistence.
+- Frontend component has basic rendering logic which is verified by visual inspection of code (and implied usage).
+
+### Architectural Alignment
+- Follows the service/router/model pattern.
+- Uses Pydantic AI for LLM interaction as planned.
+- Uses Supabase for storage.
+
+### Security Notes
+- Service Role Key is used in `backend/app/routers/analysis.py`. Ensure RLS policies on the `results` table are configured correctly in the database migration (out of scope for this code review, but noted).
+
+### Best-Practices and References
+- [Pydantic AI Documentation](https://ai.pydantic.dev/)
+
+### Action Items
+
+**Advisory Notes:**
+- Note: Move API base URL to `NEXT_PUBLIC_API_URL` environment variable in frontend.

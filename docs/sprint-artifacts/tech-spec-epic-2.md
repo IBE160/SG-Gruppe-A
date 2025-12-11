@@ -170,3 +170,7 @@ This epic aligns with the dedicated **AI Service** component outlined in the sys
 *   **Performance Testing:** Conduct load testing on the AI Service to ensure it can handle expected concurrency and meet the 120-second cover letter generation SLA.
 *   **Security Testing:** Perform penetration testing and vulnerability assessments on the AI Service API, paying close attention to data encryption, access controls, and secure handling of LLM API keys.
 *   **UI Acceptance Tests:** Use frameworks like `Cypress` or `Playwright` to test the frontend display of generated content, gap analysis, ATS score, and the functionality of copy/download buttons.
+
+## Post-Review Follow-ups
+
+*   Move API base URL to NEXT_PUBLIC_API_URL environment variable in frontend (Ref: Story 2.5).

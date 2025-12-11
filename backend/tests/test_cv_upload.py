@@ -2,6 +2,7 @@ from fastapi.testclient import TestClient
 from unittest.mock import patch
 from main import app
 from app.dependencies import get_current_user
+import pytest
 
 client = TestClient(app)
 
@@ -10,7 +11,13 @@ class MockUser:
     id = "123e4567-e89b-12d3-a456-426614174001"
 
 # Override dependency
-app.dependency_overrides[get_current_user] = lambda: MockUser()
+# app.dependency_overrides[get_current_user] = lambda: MockUser()
+
+@pytest.fixture(autouse=True)
+def override_auth():
+    app.dependency_overrides[get_current_user] = lambda: MockUser()
+    yield
+    app.dependency_overrides = {}
 
 def test_upload_cv_success():
     # Mock save_cv to avoid hitting DB and FS

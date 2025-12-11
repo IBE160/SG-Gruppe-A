@@ -8,11 +8,14 @@ import pytest
 async def test_analyze_gap_success(mock_agent):
     # Mock the agent's run method
     mock_result = MagicMock()
-    mock_result.data = GapAnalysisResult(
-        missing_skills=["Java"],
-        missing_qualifications=["Master's Degree"],
-        match_percentage=75.0
-    )
+    # Return JSON string as the service parses it manually
+    mock_result.data = '''
+    {
+        "missing_skills": ["Java"],
+        "missing_qualifications": ["Master's Degree"],
+        "match_percentage": 75.0
+    }
+    '''
     mock_agent.run = AsyncMock(return_value=mock_result)
 
     cv_text = "I know Python and have a Bachelor's degree."
