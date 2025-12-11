@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from app.services.gap_analyzer import analyze_gap
+from app.services.ats_scorer import calculate_ats_score
 from app.models.gap import GapAnalysisResult
 from app.models.result import AnalysisResultDB
 from app.dependencies import get_current_user
@@ -9,6 +10,7 @@ import os
 import uuid
 from datetime import datetime, timezone
 import logging
+import asyncio
 
 logger = logging.getLogger(__name__)
 
@@ -30,10 +32,20 @@ async def analyze_gap_endpoint(
 ):
     logger.info(f"Received analyze-gap request from user: {current_user.id}")
     try:
-        # Call AI Logic
-        logger.info("Calling AI service...")
-        result = await analyze_gap(request.cv_text, request.job_description)
-        logger.info("AI service returned result")
+        # Call AI Logic in parallel
+        logger.info("Calling AI services (Gap Analysis + ATS Scoring)...")
+        
+        gap_task = analyze_gap(request.cv_text, request.job_description)
+        ats_task = calculate_ats_score(request.cv_text, request.job_description)
+        
+        gap_result, ats_result = await asyncio.gather(gap_task, ats_task)
+        
+        logger.info("AI services returned results")
+        
+        # Merge ATS result into gap result for response
+        # We override the basic match_percentage with the more detailed ATS score
+        gap_result.match_percentage = float(ats_result.score)
+        gap_result.ats_score_summary = ats_result.summary
         
         # Store in DB
         user_id = current_user.id
@@ -41,8 +53,8 @@ async def analyze_gap_endpoint(
         result_db = AnalysisResultDB(
             id=uuid.uuid4(),
             user_id=user_id,
-            ats_score=int(result.match_percentage),
-            gap_summary=result.model_dump(),
+            ats_score=ats_result.score,
+            gap_summary=gap_result.model_dump(),
             cover_letter_text=None,
             created_at=datetime.now(timezone.utc)
         )
@@ -54,7 +66,7 @@ async def analyze_gap_endpoint(
         # Insert into results table
         supabase.table("results").insert(data_to_insert).execute()
         
-        return result
+        return gap_result
 
     except Exception as e:
         logger.error(f"Error in analyze-gap: {e}", exc_info=True)

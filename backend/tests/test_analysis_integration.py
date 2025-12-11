@@ -2,19 +2,27 @@ from fastapi.testclient import TestClient
 from unittest.mock import MagicMock, patch, AsyncMock
 from main import app
 from app.models.gap import GapAnalysisResult
+from app.models.ats import ATSScoreResult
 from app.models.result import AnalysisResultDB
 import pytest
 
 client = TestClient(app)
 
 @patch("app.routers.analysis.supabase")
+@patch("app.routers.analysis.calculate_ats_score")
 @patch("app.routers.analysis.analyze_gap")
-def test_analyze_gap_endpoint(mock_analyze_gap, mock_supabase):
-    # Mock AI response
+def test_analyze_gap_endpoint(mock_analyze_gap, mock_calculate_ats_score, mock_supabase):
+    # Mock Gap Analysis response
     mock_analyze_gap.return_value = GapAnalysisResult(
         missing_skills=["Java"],
         missing_qualifications=[],
         match_percentage=80.0
+    )
+    
+    # Mock ATS Score response
+    mock_calculate_ats_score.return_value = ATSScoreResult(
+        score=95,
+        summary="Excellent match!"
     )
 
     # Mock Supabase
@@ -37,7 +45,9 @@ def test_analyze_gap_endpoint(mock_analyze_gap, mock_supabase):
 
     assert response.status_code == 200
     data = response.json()
-    assert data["match_percentage"] == 80.0
+    # match_percentage should be updated to ATS score
+    assert data["match_percentage"] == 95.0
+    assert data["ats_score_summary"] == "Excellent match!"
     assert "Java" in data["missing_skills"]
     
     # Verify DB insertion

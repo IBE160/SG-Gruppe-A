@@ -1,9 +1,11 @@
 import React from 'react';
+import ATSScoreGauge from './ATSScoreGauge';
 
 interface GapAnalysisResult {
   missing_skills: string[];
   missing_qualifications: string[];
   match_percentage: number;
+  ats_score_summary?: string;
 }
 
 interface GapAnalysisDisplayProps {
@@ -19,43 +21,37 @@ const GapAnalysisDisplay: React.FC<GapAnalysisDisplayProps> = ({ result, isLoadi
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md mt-6">
-      <h2 className="text-2xl font-bold mb-4">Analysis Results</h2>
+      <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Analysis Results</h2>
       
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-2">Match Score</h3>
-        <div className="flex items-center">
-          <div className="w-full bg-gray-200 rounded-full h-4 mr-4">
-            <div 
-              className={`h-4 rounded-full ${result.match_percentage > 70 ? 'bg-green-500' : result.match_percentage > 40 ? 'bg-yellow-500' : 'bg-red-500'}`}
-              style={{ width: `${result.match_percentage}%` }}
-            ></div>
-          </div>
-          <span className="font-bold text-xl">{result.match_percentage}%</span>
-        </div>
+      <div className="mb-8 flex justify-center">
+        <ATSScoreGauge 
+          score={result.match_percentage} 
+          summary={result.ats_score_summary}
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <h3 className="text-lg font-semibold mb-2 text-red-600">Missing Skills</h3>
+        <div className="bg-red-50 p-4 rounded-lg">
+          <h3 className="text-lg font-semibold mb-2 text-red-700 border-b border-red-200 pb-2">Missing Skills</h3>
           {result.missing_skills.length === 0 ? (
             <p className="text-green-600">Great job! No major skills missing.</p>
           ) : (
-            <ul className="list-disc list-inside space-y-1">
+            <ul className="list-disc list-inside space-y-2">
               {result.missing_skills.map((skill, index) => (
-                <li key={index} className="text-gray-700">{skill}</li>
+                <li key={index} className="text-gray-700 text-sm">{skill}</li>
               ))}
             </ul>
           )}
         </div>
 
-        <div>
-          <h3 className="text-lg font-semibold mb-2 text-red-600">Missing Qualifications</h3>
+        <div className="bg-yellow-50 p-4 rounded-lg">
+          <h3 className="text-lg font-semibold mb-2 text-yellow-700 border-b border-yellow-200 pb-2">Missing Qualifications</h3>
           {result.missing_qualifications.length === 0 ? (
             <p className="text-green-600">You meet the core qualifications.</p>
           ) : (
-            <ul className="list-disc list-inside space-y-1">
+            <ul className="list-disc list-inside space-y-2">
               {result.missing_qualifications.map((qual, index) => (
-                <li key={index} className="text-gray-700">{qual}</li>
+                <li key={index} className="text-gray-700 text-sm">{qual}</li>
               ))}
             </ul>
           )}
