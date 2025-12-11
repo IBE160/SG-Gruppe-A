@@ -22,7 +22,8 @@ def test_analyze_gap_endpoint(mock_analyze_gap, mock_calculate_ats_score, mock_s
     # Mock ATS Score response
     mock_calculate_ats_score.return_value = ATSScoreResult(
         score=95,
-        summary="Excellent match!"
+        summary="Excellent match!",
+        actionable_suggestions=["Learn Java"]
     )
 
     # Mock Supabase
@@ -48,6 +49,7 @@ def test_analyze_gap_endpoint(mock_analyze_gap, mock_calculate_ats_score, mock_s
     # match_percentage should be updated to ATS score
     assert data["match_percentage"] == 95.0
     assert data["ats_score_summary"] == "Excellent match!"
+    assert data["actionable_suggestions"] == ["Learn Java"]
     assert "Java" in data["missing_skills"]
     
     # Verify DB insertion

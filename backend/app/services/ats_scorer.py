@@ -22,7 +22,7 @@ configure(api_key=api_key)
 
 ATS_SCORING_PROMPT = """
 You are an expert ATS (Applicant Tracking System) algorithm.
-Your task is to calculate a compatibility score (0-100) between a candidate's CV and a Job Description.
+Your task is to calculate a compatibility score (0-100) between a candidate's CV and a Job Description, and provide actionable suggestions for improvement.
 
 Job Description:
 {job_description}
@@ -37,8 +37,14 @@ Scoring Criteria:
 4. Education & Certifications (10%): Alignment with educational requirements and certifications.
 
 Output:
-Provide the final calculated score as an integer (0-100) and a brief one-sentence summary explaining the main factor influencing the score.
+Provide the final calculated score as an integer (0-100), a brief one-sentence summary explaining the main factor influencing the score, and a list of 3-5 specific, actionable suggestions for the candidate to improve their CV for this specific job.
 Return ONLY raw JSON matching the ATSScoreResult schema. Do not include markdown formatting (like ```json).
+Schema:
+{{
+  "score": integer,
+  "summary": string,
+  "actionable_suggestions": [string]
+}}
 """
 
 agent = Agent(

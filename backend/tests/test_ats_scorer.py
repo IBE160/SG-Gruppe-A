@@ -11,7 +11,8 @@ async def test_calculate_ats_score_perfect_match(mock_agent):
     mock_result.data = '''
     {
         "score": 100,
-        "summary": "Perfect match."
+        "summary": "Perfect match.",
+        "actionable_suggestions": []
     }
     '''
     mock_agent.run = AsyncMock(return_value=mock_result)
@@ -33,7 +34,8 @@ async def test_calculate_ats_score_zero_match(mock_agent):
     mock_result.data = '''
     {
         "score": 0,
-        "summary": "No match found."
+        "summary": "No match found.",
+        "actionable_suggestions": ["Rewrite CV completely"]
     }
     '''
     mock_agent.run = AsyncMock(return_value=mock_result)
@@ -55,7 +57,8 @@ async def test_calculate_ats_score_json_parsing(mock_agent):
     ```json
     {
         "score": 85,
-        "summary": "Good match."
+        "summary": "Good match.",
+        "actionable_suggestions": ["Tweaks"]
     }
     ```
     '''

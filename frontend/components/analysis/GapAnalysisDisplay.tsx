@@ -1,11 +1,13 @@
 import React from 'react';
 import ATSScoreGauge from './ATSScoreGauge';
+import SuggestionsList from './SuggestionsList';
 
 interface GapAnalysisResult {
   missing_skills: string[];
   missing_qualifications: string[];
   match_percentage: number;
   ats_score_summary?: string;
+  actionable_suggestions?: string[];
 }
 
 interface GapAnalysisDisplayProps {
@@ -57,6 +59,10 @@ const GapAnalysisDisplay: React.FC<GapAnalysisDisplayProps> = ({ result, isLoadi
           )}
         </div>
       </div>
+
+      {result.actionable_suggestions && (
+        <SuggestionsList suggestions={result.actionable_suggestions} />
+      )}
     </div>
   );
 };

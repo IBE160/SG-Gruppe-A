@@ -46,6 +46,7 @@ async def analyze_gap_endpoint(
         # We override the basic match_percentage with the more detailed ATS score
         gap_result.match_percentage = float(ats_result.score)
         gap_result.ats_score_summary = ats_result.summary
+        gap_result.actionable_suggestions = ats_result.actionable_suggestions
         
         # Store in DB
         user_id = current_user.id

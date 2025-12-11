@@ -6,3 +6,4 @@ class GapAnalysisResult(BaseModel):
     missing_qualifications: List[str]
     match_percentage: float
     ats_score_summary: Optional[str] = None
+    actionable_suggestions: List[str] = []
