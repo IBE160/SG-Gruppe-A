@@ -1,0 +1,139 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>3</epicId>
+    <storyId>1</storyId>
+    <title>Cover Letter Generation</title>
+    <status>drafted</status>
+    <generatedAt>2025-12-11</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/3-1-cover-letter-generation.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>user</asA>
+    <iWant>generate a tailored cover letter in Norwegian based on my CV and the job description</iWant>
+    <soThat>I can have a strong starting point for my application</soThat>
+    <tasks>
+- [ ] **Backend: Data Models** (AC: 1)
+  - [ ] Define `CoverLetterGenerationRequest` (cv_text, job_description_text)
+  - [ ] Define `CoverLetterGenerationResponse` (cover_letter)
+  - [ ] Implement validation (Pydantic models)
+- [ ] **Backend: AI Service Implementation** (AC: 1)
+  - [ ] Implement `generate_cover_letter(cv_text, jd_text)` function
+  - [ ] Construct system prompt for Norwegian cover letter generation (Tone: Professional, tailored)
+  - [ ] Integrate with LLM Client (`pydantic-ai` or `google-generativeai`)
+  - [ ] Handle LLM API errors and timeouts
+- [ ] **Backend: API Endpoint** (AC: 1)
+  - [ ] Create `POST /api/v1/generation/cover-letter`
+  - [ ] Connect endpoint to `generate_cover_letter` service
+  - [ ] Ensure authentication (JWT) is required
+  - [ ] Test: Unit tests for endpoint and service logic
+- [ ] **Frontend: UI Implementation** (AC: 1)
+  - [ ] Create/Update "Generate Cover Letter" button component
+  - [ ] Implement API service call in frontend `api/` layer
+  - [ ] Connect button click to API call
+  - [ ] Implement loading state (spinner/progress bar) for &lt; 120s wait
+  - [ ] Handle and display error messages
+  - [ ] Test: Component test for button and state
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+1.  **Given** a CV and job description have been analyzed, **when** the user clicks "Generate Cover Letter", **then** a cover letter is generated in Norwegian (Bokmål/Nynorsk). [Source: docs/sprint-artifacts/tech-spec-epic-3.md#Acceptance Criteria (Authoritative)]
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>Functional Requirements</section>
+        <snippet>FR007: The system must generate a tailored cover letter in Norwegian (Bokmål/Nynorsk) based on the user's CV and the job description.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture Specification</title>
+        <section>3.3. AI Service</section>
+        <snippet>AI Analysis &amp; Generation: It will interface with a third-party Large Language Model (LLM) API... Generate a tailored cover letter.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-3.md</path>
+        <title>Epic Technical Specification: Epic 3</title>
+        <section>Detailed Design</section>
+        <snippet>Backend API will receive the request from the frontend and invoke the internal AI Service module... returning the generated cover letter (JSON).</snippet>
+      </doc>
+    </docs>
+    <code>
+      <code-artifact>
+        <path>backend/app/models/ats.py</path>
+        <kind>model</kind>
+        <symbol>ATSScoreResult</symbol>
+        <reason>Reference for Pydantic model structure.</reason>
+      </code-artifact>
+      <code-artifact>
+        <path>backend/app/services/ats_scorer.py</path>
+        <kind>service</kind>
+        <symbol>calculate_ats_score</symbol>
+        <reason>Reference pattern for AI service integration using pydantic-ai/google-generativeai.</reason>
+      </code-artifact>
+      <code-artifact>
+        <path>backend/app/routers/analysis.py</path>
+        <kind>router</kind>
+        <symbol>analyze_gap_endpoint</symbol>
+        <reason>Reference for API endpoint implementation and error handling.</reason>
+      </code-artifact>
+    </code>
+    <dependencies>
+      <dep ecosystem="python">fastapi</dep>
+      <dep ecosystem="python">pydantic</dep>
+      <dep ecosystem="python">pydantic-ai</dep>
+      <dep ecosystem="python">google-generativeai</dep>
+      <dep ecosystem="node">next</dep>
+      <dep ecosystem="node">react</dep>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>Output must be in Norwegian (Bokmål/Nynorsk).</constraint>
+    <constraint>Generation time must be under 120 seconds (NFR003).</constraint>
+    <constraint>AI logic must be encapsulated in the Service layer, not the Router.</constraint>
+    <constraint>Use JWT authentication for the endpoint.</constraint>
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>Generate Cover Letter API</name>
+      <kind>REST Endpoint</kind>
+      <signature>POST /api/v1/generation/cover-letter</signature>
+      <path>backend/app/routers/generation.py</path>
+      <definition>
+Request:
+{
+  "cv_text": "string",
+  "job_description_text": "string"
+}
+
+Response:
+{
+  "cover_letter": "string"
+}
+      </definition>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>
+      Backend tests use `pytest`. Frontend tests use `vitest` and `react-testing-library`.
+    </standards>
+    <locations>
+      <loc>backend/tests</loc>
+      <loc>frontend/__tests__</loc>
+    </locations>
+    <ideas>
+      <idea>Backend: Mock LLM response to verify `generate_cover_letter` service correctly handles API response.</idea>
+      <idea>Backend: Test API endpoint validation for missing `cv_text` or `job_description_text`.</idea>
+      <idea>Frontend: Test button loading state while request is pending.</idea>
+      <idea>Frontend: Test error message display if API returns 500 or timeout.</idea>
+    </ideas>
+  </tests>
+</story-context>
