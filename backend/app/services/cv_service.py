@@ -17,7 +17,8 @@ UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 url: str = os.environ.get("SUPABASE_URL")
-key: str = os.environ.get("SUPABASE_KEY")
+# Use Service Role Key to bypass RLS for backend operations
+key: str = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABASE_KEY")
 supabase: Client = create_client(url, key)
 
 def sanitize_filename(filename: str) -> str:
@@ -49,6 +50,7 @@ async def save_cv(file: UploadFile, user_id: str):
     data = {
         "id": file_id,
         "filename": safe_filename, # Store original (sanitized) name for display
+        "title": safe_filename,    # Use filename as default title to satisfy Not Null constraint
         "file_path": file_path,
         "uploaded_at": datetime.now().isoformat(),
         "user_id": user_id,
@@ -65,4 +67,23 @@ async def save_cv(file: UploadFile, user_id: str):
             os.remove(file_path)
         raise e
 
-    return {"id": file_id, "filename": safe_filename, "message": "File uploaded successfully"}
+async def get_latest_cv(user_id: str) -> dict:
+    try:
+        logger.info(f"Fetching latest CV for user_id: {user_id}")
+        response = supabase.table("cvs") \
+            .select("*") \
+            .eq("user_id", user_id) \
+            .order("uploaded_at", desc=True) \
+            .limit(1) \
+            .execute()
+            
+        logger.info(f"Supabase response: {response}")
+        
+        if not response.data:
+            logger.warning(f"No CV found for user_id: {user_id}")
+            return None
+            
+        return response.data[0]
+    except Exception as e:
+        logger.error(f"Error fetching latest CV: {e}", exc_info=True)
+        raise e

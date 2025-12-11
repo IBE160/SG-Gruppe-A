@@ -12,7 +12,8 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 
 url: str = os.environ.get("SUPABASE_URL")
-key: str = os.environ.get("SUPABASE_KEY")
+# Use Service Role Key to bypass RLS for backend operations
+key: str = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABASE_KEY")
 supabase: Client = create_client(url, key)
 
 async def save_job_description(content: str, user_id: str) -> dict:
@@ -45,4 +46,25 @@ async def save_job_description(content: str, user_id: str) -> dict:
         return {"id": job_description_id, "title": title}
     except Exception as e:
         logger.error(f"Error saving job description to DB: {e}", exc_info=True)
+        raise e
+
+async def get_latest_job_description(user_id: str) -> dict:
+    try:
+        logger.info(f"Fetching latest JD for user_id: {user_id}")
+        response = supabase.table("job_descriptions") \
+            .select("*") \
+            .eq("user_id", user_id) \
+            .order("created_at", desc=True) \
+            .limit(1) \
+            .execute()
+            
+        logger.info(f"Supabase response JD: {response}")
+
+        if not response.data:
+            logger.warning(f"No JD found for user_id: {user_id}")
+            return None
+            
+        return response.data[0]
+    except Exception as e:
+        logger.error(f"Error fetching latest job description: {e}", exc_info=True)
         raise e

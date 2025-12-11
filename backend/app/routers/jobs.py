@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from app.dependencies import get_current_user
 from app.models.job import JobDescriptionIn, JobDescriptionOut
 from app.models.jd import JobAnalysisResult
-from app.services.job_service import save_job_description
+from app.services.job_service import save_job_description, get_latest_job_description
 from app.services.jd_analyzer import analyze_job_description
 import logging
 
@@ -24,6 +24,18 @@ async def create_job_description(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to save job description"
         )
+
+@router.get("/latest")
+async def get_latest_job_description_endpoint(user = Depends(get_current_user)):
+    try:
+        jd = await get_latest_job_description(user.id)
+        if not jd:
+            raise HTTPException(status_code=404, detail="No job description found")
+        return jd
+    except Exception as e:
+        if isinstance(e, HTTPException):
+            raise e
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/analyze", response_model=JobAnalysisResult)
 async def analyze_jd(

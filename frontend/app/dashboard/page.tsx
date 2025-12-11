@@ -1,5 +1,6 @@
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 import { CVUpload } from '@/components/cv/CVUpload'
 import JobDescriptionInput from '@/components/job/JobDescriptionInput'
 
@@ -24,8 +25,17 @@ export default async function Dashboard() {
             <CVUpload />
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-sm">
+        <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
             <JobDescriptionInput />
+        </div>
+        
+        <div className="text-center">
+            <Link 
+              href="/analysis"
+              className="inline-block bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition shadow-md"
+            >
+              Proceed to Gap Analysis &rarr;
+            </Link>
         </div>
       </main>
     </div>

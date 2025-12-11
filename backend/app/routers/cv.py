@@ -1,5 +1,5 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException, status, Depends
-from app.services.cv_service import save_cv
+from app.services.cv_service import save_cv, get_latest_cv
 from app.dependencies import get_current_user
 
 router = APIRouter(prefix="/api/cv", tags=["cv"])
@@ -26,3 +26,15 @@ async def upload_cv(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(e)
         )
+
+@router.get("/latest")
+async def get_latest_cv_endpoint(user = Depends(get_current_user)):
+    try:
+        cv = await get_latest_cv(user.id)
+        if not cv:
+            raise HTTPException(status_code=404, detail="No CV found")
+        return cv
+    except Exception as e:
+        if isinstance(e, HTTPException):
+            raise e
+        raise HTTPException(status_code=500, detail=str(e))

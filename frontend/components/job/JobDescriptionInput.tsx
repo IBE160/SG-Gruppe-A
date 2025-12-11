@@ -7,6 +7,7 @@ import * as z from 'zod';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import { createClient } from '@/utils/supabase/client';
 
 // Define validation schema
 const formSchema = z.object({
@@ -30,17 +31,24 @@ export default function JobDescriptionInput() {
 
   const onSubmit = async (data: FormData) => {
     try {
-      // Get the token from local storage or wherever it's stored after login
-      // For now, assuming auth is handled by Next.js middleware or session management
-      // and the backend automatically validates it from cookies or auth header from frontend.
-      // Axios will automatically send cookies if they are httpOnly.
-      // If a Bearer token is needed, it would be added like:
-      // const token = localStorage.getItem('access_token');
-      // axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      const supabase = createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
 
-      const response = await axios.post('/api/job-description', {
+      if (!token) {
+        toast.error('You must be logged in to save a job description.');
+        return;
+      }
+      
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      };
+
+      const response = await axios.post('http://127.0.0.1:8000/api/job-description/', {
         content: data.jobDescription,
-      });
+      }, config);
       console.log('Job description saved:', response.data);
       toast.success('Job description saved successfully!');
       reset(); // Clear the form
@@ -63,7 +71,7 @@ export default function JobDescriptionInput() {
             id="jobDescription"
             {...register('jobDescription')}
             rows={10}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 placeholder-gray-600"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 text-gray-800 placeholder-gray-800"
             placeholder="Paste your job description here..."
             disabled={isSubmitting}
           />
