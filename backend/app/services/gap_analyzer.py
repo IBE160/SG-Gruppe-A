@@ -38,7 +38,7 @@ Be strict but fair. Synonyms should be considered matches (e.g., "React.js" matc
 """
 
 agent = Agent(
-    'google-gla:gemini-2.0-flash',
+    'google-gla:gemini-flash-latest',
     system_prompt="You are a helpful assistant that performs gap analysis between CVs and Job Descriptions.",
 )
 
@@ -46,14 +46,22 @@ async def analyze_gap(cv_text: str, job_description: str) -> GapAnalysisResult:
     logger.info("Starting AI Gap Analysis...")
     try:
         # Prompt explicitly asks for JSON
-        prompt = GAP_ANALYSIS_PROMPT.format(job_description=job_description, cv_text=cv_text) + "\n\nReturn ONLY raw JSON matching the GapAnalysisResult schema."
+        prompt = GAP_ANALYSIS_PROMPT.format(job_description=job_description, cv_text=cv_text) + """
+
+Return ONLY raw JSON matching this EXACT schema:
+{
+  "missing_skills": ["skill1", "skill2"],
+  "missing_qualifications": ["qual1", "qual2"],
+  "match_percentage": 50.0
+}
+"""
         
         # Run agent without result_type first, as it caused issues
         result = await agent.run(prompt)
         
         # Attempt to parse the result text as JSON into the model
         # We need to clean the response in case it has markdown code blocks
-        clean_text = result.data.strip()
+        clean_text = result.output.strip()
         if clean_text.startswith("```json"):
             clean_text = clean_text[7:]
         if clean_text.startswith("```"):

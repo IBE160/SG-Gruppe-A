@@ -24,10 +24,10 @@ Return the result as a structured JSON object.
 
 # Initialize the agent
 agent = Agent(
-    'google-gla:gemini-2.0-flash', # Or appropriate model
+    'google-gla:gemini-flash-latest', # Or appropriate model
     system_prompt="You are a helpful assistant that analyzes job descriptions.",
 )
 
 async def analyze_job_description(job_description: str) -> JobAnalysisResult:
-    result = await agent.run(JD_ANALYSIS_PROMPT.format(job_description=job_description), result_type=JobAnalysisResult)
-    return result.data
+    result = await agent.run(JD_ANALYSIS_PROMPT.format(job_description=job_description), output_type=JobAnalysisResult)
+    return result.output

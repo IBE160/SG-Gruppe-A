@@ -48,7 +48,7 @@ Schema:
 """
 
 agent = Agent(
-    'google-gla:gemini-2.0-flash',
+    'google-gla:gemini-flash-latest',
     system_prompt="You are a strict ATS scoring engine. Return valid JSON only.",
 )
 
@@ -62,7 +62,7 @@ async def calculate_ats_score(cv_text: str, job_description: str) -> ATSScoreRes
         result = await agent.run(prompt)
         
         # Attempt to parse the result text as JSON into the model
-        clean_text = result.data.strip()
+        clean_text = result.output.strip()
         if clean_text.startswith("```json"):
             clean_text = clean_text[7:]
         if clean_text.startswith("```"):

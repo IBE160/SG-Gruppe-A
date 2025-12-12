@@ -1,0 +1,43 @@
+2025-12-13 00:19:20,994 - INFO - Starting Debug Flow
+2025-12-13 00:19:21,022 - INFO - Starting AI Gap Analysis...
+2025-12-13 00:19:21,032 - INFO - AFC is enabled with max remote calls: 10.
+2025-12-13 00:19:26,028 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent "HTTP/1.1 200 OK"
+2025-12-13 00:19:26,050 - INFO - AI Gap Analysis completed successfully.
+2025-12-13 00:19:26,050 - INFO - Starting ATS Score Calculation...
+2025-12-13 00:19:26,052 - INFO - AFC is enabled with max remote calls: 10.
+2025-12-13 00:19:32,029 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent "HTTP/1.1 200 OK"
+2025-12-13 00:19:32,031 - INFO - ATS Score Calculation completed: 74
+2025-12-13 00:19:32,032 - ERROR - DB Insert failed: 1 validation error for AnalysisResultDB
+user_id
+  Input should be a valid string [type=string_type, input_value=UUID('00000000-0000-0000-0000-000000000000'), input_type=UUID]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+Traceback (most recent call last):
+  File "/Users/astridgrepstad/Desktop/logistikk studie/År 3/1. semester/IBE160/oppgave nettside/SG-Gruppe-A/backend/debug_full_flow.py", line 92, in main
+    result_db = AnalysisResultDB(
+        id=uuid.uuid4(),
+    ...<4 lines>...
+        created_at=datetime.now(timezone.utc)
+    )
+  File "/Users/astridgrepstad/Desktop/logistikk studie/År 3/1. semester/IBE160/oppgave nettside/SG-Gruppe-A/backend/.venv/lib/python3.13/site-packages/pydantic/main.py", line 250, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+pydantic_core._pydantic_core.ValidationError: 1 validation error for AnalysisResultDB
+user_id
+  Input should be a valid string [type=string_type, input_value=UUID('00000000-0000-0000-0000-000000000000'), input_type=UUID]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+2025-12-13 00:19:45,207 - INFO - Starting Debug Flow
+2025-12-13 00:19:45,235 - INFO - Starting AI Gap Analysis...
+2025-12-13 00:19:45,245 - INFO - AFC is enabled with max remote calls: 10.
+2025-12-13 00:19:48,696 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent "HTTP/1.1 200 OK"
+2025-12-13 00:19:48,725 - INFO - AI Gap Analysis completed successfully.
+2025-12-13 00:19:48,726 - INFO - Starting ATS Score Calculation...
+2025-12-13 00:19:48,727 - INFO - AFC is enabled with max remote calls: 10.
+2025-12-13 00:19:54,047 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent "HTTP/1.1 200 OK"
+2025-12-13 00:19:54,050 - INFO - ATS Score Calculation completed: 71
+2025-12-13 00:19:54,521 - INFO - HTTP Request: POST https://xdibifflnsykxrcszjhu.supabase.co/rest/v1/results "HTTP/2 404 Not Found"
+2025-12-13 00:19:54,521 - ERROR - DB Insert failed: {'message': "Could not find the table 'public.results' in the schema cache", 'code': 'PGRST205', 'hint': "Perhaps you meant the table 'public.profiles'", 'details': None}
+Traceback (most recent call last):
+  File "/Users/astridgrepstad/Desktop/logistikk studie/År 3/1. semester/IBE160/oppgave nettside/SG-Gruppe-A/backend/debug_full_flow.py", line 109, in main
+    response = supabase.table("results").insert(data_to_insert).execute()
+  File "/Users/astridgrepstad/Desktop/logistikk studie/År 3/1. semester/IBE160/oppgave nettside/SG-Gruppe-A/backend/.venv/lib/python3.13/site-packages/postgrest/_sync/request_builder.py", line 53, in execute
+    raise APIError(dict(json_obj))
+postgrest.exceptions.APIError: {'message': "Could not find the table 'public.results' in the schema cache", 'code': 'PGRST205', 'hint': "Perhaps you meant the table 'public.profiles'", 'details': None}
