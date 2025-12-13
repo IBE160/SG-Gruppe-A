@@ -175,3 +175,5 @@ The data contracts for this epic are straightforward, focusing on the text being
 *   **Manual & Qualitative Testing:**
     *   Crucial for this epic. A human must review a wide variety of generated cover letters to assess their quality, tone, and relevance. This should be done with sample CVs and real-world job ads.
 
+### Post-Review Follow-ups
+*   Create component tests for CoverLetterGenerator.tsx (Story 3.1)

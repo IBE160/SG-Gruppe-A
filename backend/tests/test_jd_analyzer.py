@@ -8,7 +8,7 @@ import pytest
 async def test_analyze_job_description_success(mock_agent):
     # Mock the agent's run method
     mock_result = MagicMock()
-    mock_result.data = JobAnalysisResult(
+    mock_result.output = JobAnalysisResult(
         skills=["Python", "FastAPI"],
         qualifications=["Bachelor's Degree"],
         keywords=["Agile", "Scrum"]

@@ -8,7 +8,7 @@ import pytest
 async def test_calculate_ats_score_perfect_match(mock_agent):
     # Mock for perfect match
     mock_result = MagicMock()
-    mock_result.data = '''
+    mock_result.output = '''
     {
         "score": 100,
         "summary": "Perfect match.",
@@ -31,7 +31,7 @@ async def test_calculate_ats_score_perfect_match(mock_agent):
 async def test_calculate_ats_score_zero_match(mock_agent):
     # Mock for zero match
     mock_result = MagicMock()
-    mock_result.data = '''
+    mock_result.output = '''
     {
         "score": 0,
         "summary": "No match found.",
@@ -53,7 +53,7 @@ async def test_calculate_ats_score_zero_match(mock_agent):
 async def test_calculate_ats_score_json_parsing(mock_agent):
     # Mock with markdown code block
     mock_result = MagicMock()
-    mock_result.data = '''
+    mock_result.output = '''
     ```json
     {
         "score": 85,

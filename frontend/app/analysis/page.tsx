@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import GapAnalysisDisplay from '../../components/analysis/GapAnalysisDisplay';
+import CoverLetterGenerator from '../../components/analysis/CoverLetterGenerator';
 import { createClient } from '@/utils/supabase/client';
 import toast from 'react-hot-toast';
 
@@ -125,6 +126,10 @@ export default function AnalysisPage() {
       </div>
 
       <GapAnalysisDisplay result={result} isLoading={loading} error={error} />
+      
+      {(cvText && jdText) && (
+        <CoverLetterGenerator cvText={cvText} jdText={jdText} />
+      )}
     </div>
   );
 }

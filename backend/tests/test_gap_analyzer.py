@@ -9,7 +9,7 @@ async def test_analyze_gap_success(mock_agent):
     # Mock the agent's run method
     mock_result = MagicMock()
     # Return JSON string as the service parses it manually
-    mock_result.data = '''
+    mock_result.output = '''
     {
         "missing_skills": ["Java"],
         "missing_qualifications": ["Master's Degree"],

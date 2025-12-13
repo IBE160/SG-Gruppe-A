@@ -38,7 +38,7 @@ async def test_ats_scorer_integration_mock(monkeypatch):
     # Mock the Agent.run method to return a predefined response
     
     class MockResult:
-        data = """
+        output = """
         {
             "score": 75,
             "summary": "Decent match.",

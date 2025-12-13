@@ -299,3 +299,158 @@ def auth_client():
 **Review ID**: test-review-test_analysis_integration.py-20251206
 **Timestamp**: 2025-12-06
 **Version**: 1.0
+
+---
+
+# Test Quality Review: Story 3.1 Tests
+
+**Quality Score**: 80/100 (A - Good)
+**Review Date**: 2025-12-13
+**Review Scope**: multi (backend/tests/test_generation.py, frontend/__tests__/CoverLetterGenerator.test.tsx)
+**Reviewer**: TEA Agent (Test Architect)
+
+---
+
+## Executive Summary
+
+**Overall Assessment**: Good
+
+**Recommendation**: Approve with Recommendations
+
+### Key Strengths
+
+✅ **Fast & Deterministic**: Both backend and frontend tests are fast execution (<1s) and use mocks effectively to ensure determinism.
+✅ **Good Isolation**: Backend uses a fixture to clean up overrides; frontend uses `vi.clearAllMocks` in `beforeEach`.
+✅ **Effective Mocking**: Frontend test demonstrates a sophisticated pattern (`resolveMock`) to verify loading states before API completion.
+
+### Key Weaknesses
+
+❌ **Traceability**: Both files lack Test IDs (e.g., `3.1-API-001`, `3.1-UI-001`) and Priority markers. This makes it impossible to trace tests back to ACs programmatically.
+❌ **Hardcoded Data**: Test data ("CV", "JD") is hardcoded string literals. This is acceptable for simple tests but less maintainable for complex scenarios.
+❌ **BDD Structure**: Tests lack explicit "Given/When/Then" comments or steps, which would improve readability.
+
+### Summary
+
+The tests for Story 3.1 are technically sound, ensuring the new features work as expected without flakiness. The backend unit tests correctly cover success and edge cases (JSON parsing). The frontend component test is particularly strong in how it verifies the async loading state. The main area for improvement is adding metadata (IDs, Priorities) to align with the project's quality standards.
+
+---
+
+## Quality Criteria Assessment
+
+| Criterion                            | Status                          | Violations | Notes        |
+| ------------------------------------ | ------------------------------- | ---------- | ------------ |
+| BDD Format (Given-When-Then)         | ⚠️ WARN | 2    | Missing in both files |
+| Test IDs                             | ❌ FAIL | 2    | No test IDs found |
+| Priority Markers (P0/P1/P2/P3)       | ❌ FAIL | 2    | No priority markers found |
+| Hard Waits (sleep, waitForTimeout)   | ✅ PASS | 0    | Correct use of waitFor/await |
+| Determinism (no conditionals)        | ✅ PASS | 0    | Deterministic mocks |
+| Isolation (cleanup, no shared state) | ✅ PASS | 0    | Fixtures and beforeEach used |
+| Fixture Patterns                     | ✅ PASS | 0    | Good use of fixtures |
+| Data Factories                       | ⚠️ WARN | 2    | Hardcoded test data |
+| Network-First Pattern                | ✅ PASS | 0    | N/A |
+| Explicit Assertions                  | ✅ PASS | 0    | Strong assertions |
+| Test Length (≤300 lines)             | ✅ PASS | 0    | Very concise |
+| Test Duration (≤1.5 min)             | ✅ PASS | <1s | Fast |
+| Flakiness Patterns                   | ✅ PASS | 0    | None detected |
+
+**Total Violations**: 0 Critical, 4 High, 0 Medium, 4 Low
+
+---
+
+## Quality Score Breakdown
+
+```
+Starting Score:          100
+Critical Violations:     -0
+High Violations:         -4 × 5 = -20 (Test IDs, Priorities x2 files)
+Medium Violations:       -0
+Low Violations:          -4 × 1 = -4 (BDD x2, Data x2)
+
+Bonus Points:
+  Excellent BDD:         +0
+  Comprehensive Fixtures: +0
+  Data Factories:        +0
+  Network-First:         +0
+  Perfect Isolation:     +5 (Good state management)
+  All Test IDs:          +0
+                         --------
+Total Bonus:             +5
+
+Final Score:             81/100
+Grade:                   A
+```
+
+---
+
+## Critical Issues (Must Fix)
+
+No critical issues detected. ✅
+
+---
+
+## Recommendations (Should Fix)
+
+### 1. Add Test IDs and Priorities
+
+**Severity**: P1 (High)
+**Location**: `backend/tests/test_generation.py` & `frontend/__tests__/CoverLetterGenerator.test.tsx`
+**Criterion**: Test IDs / Priority Markers
+**Knowledge Base**: [traceability.md](../../../testarch/knowledge/traceability.md)
+
+**Issue Description**:
+Missing metadata to trace tests back to Story 3.1.
+
+**Recommended Improvement (Python)**:
+```python
+async def test_generate_cover_letter_success(mock_agent):
+    """
+    Test ID: 3.1-UNIT-001
+    Priority: P1
+    """
+    # ...
+```
+
+**Recommended Improvement (TS)**:
+```typescript
+  // Test ID: 3.1-UI-001
+  // Priority: P1
+  it('renders the initial state correctly', () => {
+    // ...
+  })
+```
+
+---
+
+## Best Practices Found
+
+### 1. Controlled Async Testing
+
+**Location**: `frontend/__tests__/CoverLetterGenerator.test.tsx:44`
+**Pattern**: Promise-based Mock Resolution
+**Knowledge Base**: [timing-debugging.md](../../../testarch/knowledge/timing-debugging.md)
+
+**Why This Is Good**:
+The test explicitly controls *when* the API mock resolves using a controlled promise (`resolveMock`). This allows the test to verify the "loading" state deterministically before the "success" state, preventing race conditions common in UI testing.
+
+**Code Example**:
+```typescript
+    let resolveMock: (value: any) => void = () => {}
+    const mockPromise = new Promise((resolve) => {
+        resolveMock = resolve
+    })
+    mockPost.mockReturnValue(mockPromise)
+    
+    // ... assert loading state ...
+    
+    resolveMock({ ... }) // Trigger completion
+```
+
+---
+
+## Review Metadata
+
+**Generated By**: BMad TEA Agent (Test Architect)
+**Workflow**: testarch-test-review v4.0
+**Review ID**: test-review-story-3.1-20251213
+**Timestamp**: 2025-12-13
+**Version**: 1.0
