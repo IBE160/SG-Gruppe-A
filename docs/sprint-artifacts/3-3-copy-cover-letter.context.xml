@@ -1,0 +1,75 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>epic-3</epicId>
+    <storyId>3-3</storyId>
+    <title>Copy Cover Letter</title>
+    <status>ready-for-dev</status>
+    <generatedAt>2025-12-13</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/3-3-copy-cover-letter.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>user</asA>
+    <iWant>be able to copy the generated cover letter text to my clipboard</iWant>
+    <soThat>I can easily paste it into an email or another application</soThat>
+    <tasks>
+- [ ] **Frontend: UI Implementation** (AC: 1)
+  - [ ] Add "Copy to Clipboard" button to `CoverLetterGenerator.tsx` (next to or below textarea).
+  - [ ] Implement `onClick` handler using `navigator.clipboard.writeText(generatedLetter)`.
+  - [ ] Add visual feedback (e.g., toast notification "Copied!" or button text change) to confirm action.
+  - [ ] Handle potential error cases (e.g., clipboard API not supported or denied).
+- [ ] **Frontend: Testing** (AC: 1)
+  - [ ] Update `frontend/__tests__/CoverLetterGenerator.test.tsx`.
+  - [ ] Mock `navigator.clipboard.writeText` in the test environment.
+  - [ ] Test: Verify "Copy" button renders only when content exists.
+  - [ ] Test: Verify clicking button calls clipboard API with the correct text.
+  - [ ] Test: Verify visual feedback is displayed after clicking.
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+1.  **Given** a cover letter is displayed, **when** the user clicks the "Copy" button, **then** the text of the cover letter is copied to their clipboard. [Source: docs/sprint-artifacts/tech-spec-epic-3.md#Acceptance Criteria (Authoritative)]
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc path="docs/sprint-artifacts/tech-spec-epic-3.md" title="Epic Technical Specification: Epic 3" section="Acceptance Criteria (Authoritative)">
+3.  **Given** a cover letter is displayed, **when** the user clicks the "Copy" button, **then** the text of the cover letter is copied to their clipboard. (from Story 3.3)
+      </doc>
+      <doc path="docs/PRD.md" title="Product Requirements Document" section="Functional Requirements">
+FR012: The system must allow users to copy the generated cover letter text to their clipboard.
+      </doc>
+    </docs>
+    <code>
+      <item path="frontend/components/analysis/CoverLetterGenerator.tsx" kind="component" symbol="CoverLetterGenerator" lines="80-90" reason="Existing component where the copy button and logic should be implemented (or verified if already present)."/>
+      <item path="frontend/__tests__/CoverLetterGenerator.test.tsx" kind="test" symbol="CoverLetterGenerator" reason="Test file to be updated with clipboard mocking and verification."/>
+    </code>
+    <dependencies>
+      <item key="lucide-react" version="^0.556.0" reason="Icons for Copy button"/>
+      <item key="react-hot-toast" version="^2.6.0" reason="For toast notifications"/>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+- **Browser API**: Use `navigator.clipboard.writeText()` for the copy functionality.
+- **UX/Feedback**: It is critical to provide immediate visual feedback (e.g., a checkmark icon or toast) so the user knows the copy was successful.
+- **Security**: Clipboard API interactions often require a secure context (HTTPS) or localhost.
+  </constraints>
+  <interfaces>
+    <interface name="navigator.clipboard.writeText" kind="Browser API" signature="writeText(newClipText: string): Promise<void>" path="N/A (Browser Native)"/>
+  </interfaces>
+  <tests>
+    <standards>
+      Test individual React components for the generation view (buttons, textarea) in isolation.
+    </standards>
+    <locations>
+      frontend/__tests__/CoverLetterGenerator.test.tsx
+    </locations>
+    <ideas>
+      - Mock navigator.clipboard.writeText using `Object.assign(navigator, { clipboard: { writeText: vi.fn() } })` or similar in setup.
+      - Check that the mock is called with the specific text from the textarea state.
+      - Check that `toast.success` is called after the promise resolves.
+    </ideas>
+  </tests>
+</story-context>

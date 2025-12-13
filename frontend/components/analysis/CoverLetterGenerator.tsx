@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { createClient } from '@/utils/supabase/client';
 import toast from 'react-hot-toast';
+import { Copy, Check } from 'lucide-react';
 
 interface CoverLetterGeneratorProps {
   cvText: string;
@@ -14,6 +15,7 @@ const CoverLetterGenerator: React.FC<CoverLetterGeneratorProps> = ({ cvText, jdT
   const [generatedLetter, setGeneratedLetter] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isCopied, setIsCopied] = useState(false);
 
   const handleGenerate = async () => {
     setLoading(true);
@@ -44,6 +46,19 @@ const CoverLetterGenerator: React.FC<CoverLetterGeneratorProps> = ({ cvText, jdT
       toast.error('Generation failed');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCopy = async () => {
+    if (!generatedLetter) return;
+    try {
+      await navigator.clipboard.writeText(generatedLetter);
+      toast.success('Copied to clipboard!');
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+      toast.error('Failed to copy to clipboard');
     }
   };
 
@@ -88,13 +103,11 @@ const CoverLetterGenerator: React.FC<CoverLetterGeneratorProps> = ({ cvText, jdT
           />
           <div className="mt-4 flex justify-end space-x-4">
              <button
-              onClick={() => {
-                navigator.clipboard.writeText(generatedLetter);
-                toast.success('Copied to clipboard!');
-              }}
-              className="px-4 py-2 text-gray-600 hover:text-gray-900 border border-gray-300 rounded-md hover:bg-gray-50"
+              onClick={handleCopy}
+              className="px-4 py-2 text-gray-600 hover:text-gray-900 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center space-x-2"
             >
-              Copy to Clipboard
+              {isCopied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
+              <span>{isCopied ? 'Copied!' : 'Copy to Clipboard'}</span>
             </button>
              <button
               onClick={() => setGeneratedLetter('')}

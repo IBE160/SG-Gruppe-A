@@ -34,9 +34,18 @@ vi.mock('react-hot-toast', () => ({
 describe('CoverLetterGenerator', () => {
   const mockCvText = 'My CV content';
   const mockJdText = 'Job Description content';
+  const mockWriteText = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
+    // Mock navigator.clipboard
+    Object.defineProperty(navigator, 'clipboard', {
+      value: {
+        writeText: mockWriteText,
+      },
+      writable: true,
+      configurable: true,
+    });
   });
 
   it('renders generation button initially', () => {
@@ -87,5 +96,57 @@ describe('CoverLetterGenerator', () => {
   it('button is disabled when texts are missing', () => {
     render(<CoverLetterGenerator cvText="" jdText="" />);
     expect(screen.getByRole('button', { name: /generate cover letter/i })).toBeDisabled();
+  });
+
+  it('copies generated letter to clipboard and shows feedback', async () => {
+    const mockCoverLetter = 'Letter to copy.';
+    mockedAxios.post.mockResolvedValueOnce({
+      data: { cover_letter: mockCoverLetter },
+    });
+    mockWriteText.mockResolvedValue(undefined);
+
+    render(<CoverLetterGenerator cvText={mockCvText} jdText={mockJdText} />);
+
+    // Generate
+    fireEvent.click(screen.getByRole('button', { name: /generate cover letter/i }));
+    await waitFor(() => screen.getByRole('textbox'));
+
+    // Click copy
+    const copyBtn = screen.getByRole('button', { name: /copy to clipboard/i });
+    expect(copyBtn).toBeInTheDocument();
+    
+    fireEvent.click(copyBtn);
+
+    expect(mockWriteText).toHaveBeenCalledWith(mockCoverLetter);
+    
+    // Wait for "Copied!" text (button changes text)
+    await waitFor(() => {
+      expect(screen.getByText(/Copied!/i)).toBeInTheDocument();
+    });
+  });
+
+  it('handles copy error gracefully', async () => {
+    const mockCoverLetter = 'Letter to copy.';
+    mockedAxios.post.mockResolvedValueOnce({
+      data: { cover_letter: mockCoverLetter },
+    });
+    mockWriteText.mockRejectedValue(new Error('Copy failed'));
+
+    render(<CoverLetterGenerator cvText={mockCvText} jdText={mockJdText} />);
+
+    // Generate
+    fireEvent.click(screen.getByRole('button', { name: /generate cover letter/i }));
+    await waitFor(() => screen.getByRole('textbox'));
+
+    // Click copy
+    const copyBtn = screen.getByRole('button', { name: /copy to clipboard/i });
+    fireEvent.click(copyBtn);
+
+    expect(mockWriteText).toHaveBeenCalledWith(mockCoverLetter);
+    // We expect a toast error, but since we mocked toast, we might check if toast.error was called?
+    // But verify it doesn't crash is good enough for now, or check that "Copied!" does NOT appear.
+    // Wait a bit to ensure no crash
+    await new Promise(r => setTimeout(r, 100));
+    expect(screen.queryByText(/Copied!/i)).not.toBeInTheDocument();
   });
 });
