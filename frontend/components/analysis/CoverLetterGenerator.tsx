@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { createClient } from '@/utils/supabase/client';
 import toast from 'react-hot-toast';
-import { Copy, Check } from 'lucide-react';
+import { Copy, Check, Download } from 'lucide-react';
 
 interface CoverLetterGeneratorProps {
   cvText: string;
@@ -62,6 +62,26 @@ const CoverLetterGenerator: React.FC<CoverLetterGeneratorProps> = ({ cvText, jdT
     }
   };
 
+  const handleDownload = () => {
+    if (!generatedLetter) return;
+    
+    try {
+      const blob = new Blob([generatedLetter], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'cover-letter.txt';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast.success('Downloaded!');
+    } catch (err) {
+      console.error('Failed to download:', err);
+      toast.error('Failed to download file');
+    }
+  };
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-md mt-6">
       <h2 className="text-2xl font-bold mb-4 text-gray-800">Cover Letter Assistant</h2>
@@ -108,6 +128,13 @@ const CoverLetterGenerator: React.FC<CoverLetterGeneratorProps> = ({ cvText, jdT
             >
               {isCopied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
               <span>{isCopied ? 'Copied!' : 'Copy to Clipboard'}</span>
+            </button>
+            <button
+              onClick={handleDownload}
+              className="px-4 py-2 text-gray-600 hover:text-gray-900 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center space-x-2"
+            >
+              <Download className="h-4 w-4" />
+              <span>Download .txt</span>
             </button>
              <button
               onClick={() => setGeneratedLetter('')}

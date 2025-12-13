@@ -1,0 +1,117 @@
+<story-context id="docs/sprint-artifacts/3-4-download-cover-letter.context.xml" v="1.0">
+  <metadata>
+    <epicId>3</epicId>
+    <storyId>4</storyId>
+    <title>Download Cover Letter</title>
+    <status>ready-for-dev</status>
+    <generatedAt>2025-12-13</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/3-4-download-cover-letter.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>user</asA>
+    <iWant>be able to download the generated cover letter as a text file</iWant>
+    <soThat>I can save it for my records</soThat>
+    <tasks>
+- [ ] **Frontend: UI Implementation** (AC: 1)
+  - [ ] Add "Download" button to `CoverLetterGenerator.tsx` (using `Download` icon from `lucide-react`).
+  - [ ] Implement `handleDownload` function:
+    - [ ] Create a `Blob` with the generated letter content (type: `text/plain`).
+    - [ ] Create a temporary `<a>` element.
+    - [ ] Set `href` using `URL.createObjectURL(blob)`.
+    - [ ] Set `download` attribute to a default filename (e.g., "cover-letter.txt").
+    - [ ] Programmatically click the anchor tag.
+    - [ ] Clean up using `URL.revokeObjectURL` and removing the element.
+- [ ] **Frontend: Testing** (AC: 1)
+  - [ ] Update `frontend/__tests__/CoverLetterGenerator.test.tsx`.
+  - [ ] Mock `URL.createObjectURL` and `URL.revokeObjectURL` in the test setup (JSDOM does not implement these).
+  - [ ] Test: Verify "Download" button renders only when content exists.
+  - [ ] Test: Verify clicking the button creates a Blob and triggers the download logic.
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <criterion id="1">Given a cover letter is displayed, when the user clicks the "Download" button, then a .txt file containing the cover letter is downloaded to their device.</criterion>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>Functional Requirements</section>
+        <snippet>FR013: The system must allow users to download the generated cover letter as a text file.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epics Breakdown</title>
+        <section>Epic 3: AI-Powered Content Generation</section>
+        <snippet>Epic 3: AI-Powered Content Generation... Scope: Cover letter generation, displaying the letter, allowing users to copy and download it.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture Specification</title>
+        <section>Frontend Application</section>
+        <snippet>Frontend Application: A responsive web interface built with Next.js... Styling: Tailwind CSS.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-3.md</path>
+        <title>Epic Technical Specification: Epic 3</title>
+        <section>Acceptance Criteria</section>
+        <snippet>AC 4: Given a cover letter is displayed, when the user clicks the "Download" button, then a .txt file containing the cover letter is downloaded to their device.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <file>
+        <path>frontend/components/analysis/CoverLetterGenerator.tsx</path>
+        <kind>component</kind>
+        <symbol>CoverLetterGenerator</symbol>
+        <lines>1-100</lines>
+        <reason>Main component where the Download button and logic will be added.</reason>
+      </file>
+      <file>
+        <path>frontend/__tests__/CoverLetterGenerator.test.tsx</path>
+        <kind>test</kind>
+        <symbol>CoverLetterGenerator tests</symbol>
+        <lines>1-100</lines>
+        <reason>Existing tests to be updated with new test cases for download functionality.</reason>
+      </file>
+    </code>
+    <dependencies>
+      <dep>lucide-react (Download icon)</dep>
+      <dep>react (state, event handling)</dep>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>Use client-side file generation via `Blob` and `URL.createObjectURL`.</constraint>
+    <constraint>Mock `URL.createObjectURL` and `URL.revokeObjectURL` in Vitest setup as JSDOM does not implement them.</constraint>
+    <constraint>Maintain consistent styling with the "Copy" button (using shadcn/ui variants).</constraint>
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>Blob</name>
+      <kind>Browser API</kind>
+      <signature>new Blob(blobParts, options)</signature>
+      <path>MDN Web Docs</path>
+    </interface>
+    <interface>
+      <name>URL.createObjectURL</name>
+      <kind>Browser API</kind>
+      <signature>URL.createObjectURL(object)</signature>
+      <path>MDN Web Docs</path>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>Use Vitest and React Testing Library. Mock browser APIs that are not present in JSDOM.</standards>
+    <locations>frontend/__tests__</locations>
+    <ideas>
+      <idea>Verify "Download" button renders only when content is generated.</idea>
+      <idea>Mock URL.createObjectURL to return a fake URL.</idea>
+      <idea>Verify clicking "Download" creates a Blob with correct type and triggers anchor click.</idea>
+    </ideas>
+  </tests>
+</story-context>

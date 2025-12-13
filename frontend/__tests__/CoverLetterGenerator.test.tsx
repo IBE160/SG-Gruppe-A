@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import CoverLetterGenerator from '../components/analysis/CoverLetterGenerator';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import axios from 'axios';
 
 // Mock axios
@@ -35,6 +35,8 @@ describe('CoverLetterGenerator', () => {
   const mockCvText = 'My CV content';
   const mockJdText = 'Job Description content';
   const mockWriteText = vi.fn();
+  const mockCreateObjectURL = vi.fn();
+  const mockRevokeObjectURL = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -46,6 +48,14 @@ describe('CoverLetterGenerator', () => {
       writable: true,
       configurable: true,
     });
+
+    // Mock URL.createObjectURL and URL.revokeObjectURL
+    global.URL.createObjectURL = mockCreateObjectURL;
+    global.URL.revokeObjectURL = mockRevokeObjectURL;
+  });
+
+  afterEach(() => {
+     // Clean up overrides if necessary, though beforeEach handles reset
   });
 
   it('renders generation button initially', () => {
@@ -143,10 +153,42 @@ describe('CoverLetterGenerator', () => {
     fireEvent.click(copyBtn);
 
     expect(mockWriteText).toHaveBeenCalledWith(mockCoverLetter);
-    // We expect a toast error, but since we mocked toast, we might check if toast.error was called?
-    // But verify it doesn't crash is good enough for now, or check that "Copied!" does NOT appear.
     // Wait a bit to ensure no crash
     await new Promise(r => setTimeout(r, 100));
     expect(screen.queryByText(/Copied!/i)).not.toBeInTheDocument();
+  });
+
+  it('downloads generated letter as .txt file', async () => {
+    const mockCoverLetter = 'Letter to download.';
+    mockedAxios.post.mockResolvedValueOnce({
+      data: { cover_letter: mockCoverLetter },
+    });
+    mockCreateObjectURL.mockReturnValue('blob:http://localhost:3000/fake-blob-url');
+
+    render(<CoverLetterGenerator cvText={mockCvText} jdText={mockJdText} />);
+
+    // Generate
+    fireEvent.click(screen.getByRole('button', { name: /generate cover letter/i }));
+    await waitFor(() => screen.getByRole('textbox'));
+
+    // Check download button exists
+    const downloadBtn = screen.getByRole('button', { name: /download \.txt/i });
+    expect(downloadBtn).toBeInTheDocument();
+
+    // Mock anchor click
+    const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, 'click');
+
+    // Click download
+    fireEvent.click(downloadBtn);
+
+    expect(mockCreateObjectURL).toHaveBeenCalled();
+    const blob = mockCreateObjectURL.mock.calls[0][0];
+    expect(blob).toBeInstanceOf(Blob);
+    expect(blob.type).toBe('text/plain');
+    
+    expect(clickSpy).toHaveBeenCalled();
+    expect(mockRevokeObjectURL).toHaveBeenCalledWith('blob:http://localhost:3000/fake-blob-url');
+    
+    clickSpy.mockRestore();
   });
 });
