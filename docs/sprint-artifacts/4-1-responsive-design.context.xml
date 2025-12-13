@@ -1,0 +1,136 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>4</epicId>
+    <storyId>1</storyId>
+    <title>Responsive Design</title>
+    <status>drafted</status>
+    <generatedAt>2025-12-13</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/4-1-responsive-design.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>user</asA>
+    <iWant>be able to use the application on my mobile phone, tablet, or desktop computer</iWant>
+    <soThat>I can work on my job applications from anywhere</soThat>
+    <tasks>
+- [ ] **Frontend: Global Layout &amp; Navigation** (AC: 1)
+  - [ ] Review `frontend/app/layout.tsx` (or equivalent) for responsive container behaviors.
+  - [ ] Implement responsive navigation bar:
+    - [ ] Desktop: Horizontal links.
+    - [ ] Mobile: Hamburger menu or simplified interactions (e.g., Lucide `Menu` icon).
+- [ ] **Frontend: Core Pages Responsiveness** (AC: 1)
+  - [ ] **Landing Page**: Ensure hero section and value props stack correctly on mobile (`flex-col` on mobile, `flex-row` on desktop).
+  - [ ] **Auth Pages**: Ensure forms are centered and readable on small screens; check padding.
+  - [ ] **Dashboard**: Grid layout should adapt (1 column on mobile, 2-3 on desktop).
+- [ ] **Frontend: Analysis &amp; Generator View** (AC: 1)
+  - [ ] Refactor the dual-pane view (Inputs/Analysis vs. Generated Letter).
+  - [ ] **Desktop**: Keep split-screen / side-by-side (`grid-cols-2`).
+  - [ ] **Mobile**: Implement Stacking.
+    - [ ] Inputs top, Result/Letter bottom.
+    - [ ] Ensure adequate spacing between sections.
+  - [ ] Ensure `CoverLetterGenerator.tsx` controls (Copy, Download) are accessible on touch targets (min 44px).
+- [ ] **Frontend: Testing** (AC: 1)
+  - [ ] **Setup Playwright**: Install and configure Playwright for E2E testing as per Tech Spec.
+  - [ ] **Automated E2E Tests**: Create basic tests to verify visibility of key elements at mobile (375px), tablet (768px), and desktop (1280px) widths.
+  - [ ] **Manual Verification**: Verify using browser DevTools device toolbar and real devices if possible.
+  - [ ] Verify no horizontal scrolling on any page.
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+1.  **Given** a user is accessing the application on a mobile, tablet, or desktop device, **when** they view any page, **then** the layout adapts to the screen size and all content is readable and accessible. [Source: docs/sprint-artifacts/tech-spec-epic-4.md#Acceptance Criteria]
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-4.md</path>
+        <title>Epic Technical Specification: Responsive &amp; Accessible UI</title>
+        <section>Detailed Design</section>
+        <snippet>Responsive Design Workflow: Use tailwindcss responsive modifiers (sm:, md:, lg:). Default styles target mobile viewports (mobile-first).</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture Specification</title>
+        <section>3.1. Frontend Application</section>
+        <snippet>Frontend built with Next.js and Tailwind CSS. Tailwind chosen for utility-first CSS allowing rapid UI development while maintaining consistent design.</snippet>
+      </doc>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>Technical Constraints</section>
+        <snippet>Web app must be mobile-responsive and accessible on all devices.</snippet>
+      </doc>
+      <doc>
+        <path>docs/ux-design-specification.md</path>
+        <title>UX Design Specification</title>
+        <section>8.1 Responsive Strategy</section>
+        <snippet>Mobile (up to 767px): Single-column, stacked layout. Dual-pane view becomes a tabbed or segmented control at the top. Touch Targets: Enlarged for easy interaction.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <file>
+        <path>frontend/app/layout.tsx</path>
+        <kind>layout</kind>
+        <symbol>RootLayout</symbol>
+        <lines>15-32</lines>
+        <reason>Main layout container. Needs review to ensure it supports responsive structure (e.g. max-widths, safe areas).</reason>
+      </file>
+      <file>
+        <path>frontend/components/analysis/CoverLetterGenerator.tsx</path>
+        <kind>component</kind>
+        <symbol>CoverLetterGenerator</symbol>
+        <reason>Target for refactoring to support stacked mobile view vs split desktop view.</reason>
+      </file>
+      <file>
+        <path>frontend/app/page.tsx</path>
+        <kind>page</kind>
+        <reason>Landing page requires responsive updates (Hero section stacking).</reason>
+      </file>
+      <file>
+        <path>frontend/app/dashboard/page.tsx</path>
+        <kind>page</kind>
+        <reason>Dashboard grid layout needs to adapt from 1 column (mobile) to multi-column (desktop).</reason>
+      </file>
+    </code>
+    <dependencies>
+      <dep name="tailwindcss" version="^4">Primary styling framework for responsive design</dep>
+      <dep name="lucide-react" version="^0.556.0">Icons for mobile navigation (Menu, X)</dep>
+      <dep name="next" version="16.0.7">Frontend framework</dep>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint>Mobile-First: Define base styles for mobile viewports first, then use md: and lg: prefixes for larger screens.</constraint>
+    <constraint>Breakpoints: Follow Tailwind defaults (sm: 640px, md: 768px, lg: 1024px, xl: 1280px).</constraint>
+    <constraint>Touch Targets: Interactive elements must be at least 44x44px on mobile.</constraint>
+    <constraint>No Horizontal Scroll: Ensure no elements overflow the viewport width on mobile.</constraint>
+    <constraint>Accessibility: WCAG 2.1 AA compliance (contrast, focus states, alt text).</constraint>
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>Tailwind Responsive Modifiers</name>
+      <kind>CSS Utility</kind>
+      <signature>class="base-style md:tablet-style lg:desktop-style"</signature>
+      <path>https://tailwindcss.com/docs/responsive-design</path>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>
+      E2E Testing: Use Playwright to verify layout at specific viewport sizes (375px, 768px, 1280px).
+      Accessibility: Use axe-core (via jest-axe or Playwright integration) to check for violations.
+    </standards>
+    <locations>
+      <location>frontend/__tests__</location>
+    </locations>
+    <ideas>
+      <idea>Test landing page hero text visibility and alignment at 375px width.</idea>
+      <idea>Verify hamburger menu is visible on mobile and hidden on desktop.</idea>
+      <idea>Check that 'Generate' and 'Download' buttons in CoverLetterGenerator are easily clickable (no overlapping) on mobile.</idea>
+      <idea>Verify Dashboard grid collapses to single column on mobile.</idea>
+    </ideas>
+  </tests>
+</story-context>

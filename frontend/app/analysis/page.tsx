@@ -91,45 +91,58 @@ export default function AnalysisPage() {
   };
 
   return (
-    <div className="container mx-auto p-8">
-      <h1 className="text-3xl font-bold mb-6">CV Gap Analysis</h1>
+    <div className="container mx-auto p-4 md:p-8 max-w-7xl">
+      <h1 className="text-3xl font-bold mb-6 text-white">Application Analysis</h1>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <div>
-          <label className="block text-sm font-medium text-white mb-2">Your CV Text</label>
-          <textarea
-            className="w-full h-64 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 text-white bg-gray-900 placeholder-gray-400"
-            value={cvText}
-            onChange={(e) => setCvText(e.target.value)}
-            placeholder="Paste your CV content here..."
-          />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Left Column: Inputs and Analysis */}
+        <div className="space-y-6">
+          <div className="bg-white p-6 rounded-lg shadow-sm">
+            <h2 className="text-xl font-semibold mb-4 text-gray-700">1. Inputs</h2>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Your CV Text</label>
+                <textarea
+                  className="w-full h-48 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-800 bg-white placeholder-gray-400"
+                  value={cvText}
+                  onChange={(e) => setCvText(e.target.value)}
+                  placeholder="Paste your CV content here..."
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Job Description</label>
+                <textarea
+                  className="w-full h-48 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-800 bg-white placeholder-gray-400"
+                  value={jdText}
+                  onChange={(e) => setJdText(e.target.value)}
+                  placeholder="Paste the job description here..."
+                />
+              </div>
+              
+              <button
+                onClick={handleAnalyze}
+                disabled={loading || !cvText || !jdText}
+                className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-400 transition"
+              >
+                {loading ? 'Analyzing...' : 'Analyze Gap'}
+              </button>
+            </div>
+          </div>
+
+          <GapAnalysisDisplay result={result} isLoading={loading} error={error} />
         </div>
-        <div>
-          <label className="block text-sm font-medium text-white mb-2">Job Description</label>
-          <textarea
-            className="w-full h-64 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 text-white bg-gray-900 placeholder-gray-400"
-            value={jdText}
-            onChange={(e) => setJdText(e.target.value)}
-            placeholder="Paste the job description here..."
-          />
+
+        {/* Right Column: Generated Letter */}
+        <div className="lg:border-l lg:pl-8 lg:border-gray-200">
+           {(cvText && jdText) ? (
+             <CoverLetterGenerator cvText={cvText} jdText={jdText} />
+           ) : (
+             <div className="bg-gray-50 p-6 rounded-lg border-2 border-dashed border-gray-300 text-center text-gray-500 h-full flex items-center justify-center">
+                <p>Enter your CV and a Job Description to generate a cover letter.</p>
+             </div>
+           )}
         </div>
       </div>
-
-      <div className="text-center">
-        <button
-          onClick={handleAnalyze}
-          disabled={loading || !cvText || !jdText}
-          className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-400 transition"
-        >
-          {loading ? 'Analyzing...' : 'Analyze Gap'}
-        </button>
-      </div>
-
-      <GapAnalysisDisplay result={result} isLoading={loading} error={error} />
-      
-      {(cvText && jdText) && (
-        <CoverLetterGenerator cvText={cvText} jdText={jdText} />
-      )}
     </div>
   );
 }

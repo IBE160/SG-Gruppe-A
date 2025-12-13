@@ -83,7 +83,7 @@ const CoverLetterGenerator: React.FC<CoverLetterGeneratorProps> = ({ cvText, jdT
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md mt-6">
+    <div className="bg-white p-6 rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-4 text-gray-800">Cover Letter Assistant</h2>
       
       {!generatedLetter && (
@@ -92,7 +92,7 @@ const CoverLetterGenerator: React.FC<CoverLetterGeneratorProps> = ({ cvText, jdT
           <button
             onClick={handleGenerate}
             disabled={loading || !cvText || !jdText}
-            className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 disabled:bg-gray-400 transition flex items-center justify-center mx-auto"
+            className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 disabled:bg-gray-400 transition flex items-center justify-center mx-auto min-h-[44px]"
           >
             {loading ? (
               <>
@@ -121,24 +121,24 @@ const CoverLetterGenerator: React.FC<CoverLetterGeneratorProps> = ({ cvText, jdT
             value={generatedLetter}
             onChange={(e) => setGeneratedLetter(e.target.value)}
           />
-          <div className="mt-4 flex justify-end space-x-4">
+          <div className="mt-4 flex flex-wrap gap-4 justify-end">
              <button
               onClick={handleCopy}
-              className="px-4 py-2 text-gray-600 hover:text-gray-900 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center space-x-2"
+              className="px-4 py-3 text-gray-600 hover:text-gray-900 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center space-x-2 min-h-[44px]"
             >
               {isCopied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
               <span>{isCopied ? 'Copied!' : 'Copy to Clipboard'}</span>
             </button>
             <button
               onClick={handleDownload}
-              className="px-4 py-2 text-gray-600 hover:text-gray-900 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center space-x-2"
+              className="px-4 py-3 text-gray-600 hover:text-gray-900 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center space-x-2 min-h-[44px]"
             >
               <Download className="h-4 w-4" />
               <span>Download .txt</span>
             </button>
              <button
               onClick={() => setGeneratedLetter('')}
-              className="px-4 py-2 text-gray-500 hover:text-gray-700"
+              className="px-4 py-3 text-gray-500 hover:text-gray-700 min-h-[44px]"
             >
               Start Over
             </button>
