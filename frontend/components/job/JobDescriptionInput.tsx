@@ -46,7 +46,8 @@ export default function JobDescriptionInput() {
         }
       };
 
-      const response = await axios.post('http://127.0.0.1:8000/api/job-description/', {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
+      const response = await axios.post(`${API_URL}/api/job-description/`, {
         content: data.jobDescription,
       }, config);
       console.log('Job description saved:', response.data);

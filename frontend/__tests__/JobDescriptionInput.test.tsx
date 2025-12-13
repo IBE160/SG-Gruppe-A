@@ -26,6 +26,21 @@ vi.mock('react-hot-toast', () => ({
   },
 }));
 
+// Mock Supabase client
+vi.mock('@/utils/supabase/client', () => ({
+  createClient: () => ({
+    auth: {
+      getSession: vi.fn().mockResolvedValue({
+        data: {
+          session: {
+            access_token: 'fake-token',
+          },
+        },
+      }),
+    },
+  }),
+}));
+
 describe('JobDescriptionInput', () => {
   const mockRouter = {
     refresh: vi.fn(),
@@ -80,9 +95,13 @@ describe('JobDescriptionInput', () => {
 
     await waitFor(() => {
       expect(mockedAxios.post).toHaveBeenCalledTimes(1);
-      expect(mockedAxios.post).toHaveBeenCalledWith('/api/job-description', {
-        content: 'This is a valid job description with enough characters.',
-      });
+      expect(mockedAxios.post).toHaveBeenCalledWith(
+        expect.stringContaining('/api/job-description'), 
+        expect.objectContaining({
+          content: 'This is a valid job description with enough characters.',
+        }),
+        expect.any(Object)
+      );
       expect(toast.success).toHaveBeenCalledWith('Job description saved successfully!');
       expect(textArea).toHaveValue(''); // Check if form is cleared
       expect(mockRouter.refresh).toHaveBeenCalledTimes(1); // Check if router.refresh was called

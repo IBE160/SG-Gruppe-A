@@ -35,7 +35,7 @@ export default async function RootLayout({
       >
         <Navbar user={user} />
         <Toaster position="top-right" />
-        {children}
+        <main>{children}</main>
       </body>
     </html>
   );

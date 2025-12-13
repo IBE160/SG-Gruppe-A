@@ -17,6 +17,8 @@ const CoverLetterGenerator: React.FC<CoverLetterGeneratorProps> = ({ cvText, jdT
   const [error, setError] = useState<string | null>(null);
   const [isCopied, setIsCopied] = useState(false);
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
+
   const handleGenerate = async () => {
     setLoading(true);
     setError(null);
@@ -29,7 +31,7 @@ const CoverLetterGenerator: React.FC<CoverLetterGeneratorProps> = ({ cvText, jdT
       
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
-      const response = await axios.post('http://127.0.0.1:8000/api/v1/generation/cover-letter', {
+      const response = await axios.post(`${API_URL}/api/v1/generation/cover-letter`, {
         cv_text: cvText,
         job_description_text: jdText
       }, { headers });
@@ -92,7 +94,7 @@ const CoverLetterGenerator: React.FC<CoverLetterGeneratorProps> = ({ cvText, jdT
           <button
             onClick={handleGenerate}
             disabled={loading || !cvText || !jdText}
-            className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 disabled:bg-gray-400 transition flex items-center justify-center mx-auto min-h-[44px]"
+            className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 disabled:bg-gray-400 transition flex items-center justify-center mx-auto min-h-[44px] focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
           >
             {loading ? (
               <>
@@ -108,7 +110,7 @@ const CoverLetterGenerator: React.FC<CoverLetterGeneratorProps> = ({ cvText, jdT
       )}
 
       {error && (
-        <div className="mt-4 p-4 bg-red-100 text-red-700 rounded-lg">
+        <div role="alert" className="mt-4 p-4 bg-red-100 text-red-700 rounded-lg">
           {error}
         </div>
       )}
@@ -117,6 +119,7 @@ const CoverLetterGenerator: React.FC<CoverLetterGeneratorProps> = ({ cvText, jdT
         <div className="mt-6 animate-fade-in">
           <h3 className="text-lg font-semibold mb-2 text-gray-700">Generated Cover Letter</h3>
           <textarea
+            aria-label="Generated cover letter"
             className="w-full h-96 p-4 border rounded-lg focus:ring-2 focus:ring-green-500 text-gray-800 font-serif leading-relaxed"
             value={generatedLetter}
             onChange={(e) => setGeneratedLetter(e.target.value)}
@@ -124,21 +127,23 @@ const CoverLetterGenerator: React.FC<CoverLetterGeneratorProps> = ({ cvText, jdT
           <div className="mt-4 flex flex-wrap gap-4 justify-end">
              <button
               onClick={handleCopy}
-              className="px-4 py-3 text-gray-600 hover:text-gray-900 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center space-x-2 min-h-[44px]"
+              aria-label="Copy cover letter to clipboard"
+              className="px-4 py-3 text-gray-600 hover:text-gray-900 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center space-x-2 min-h-[44px] focus:outline-none focus:ring-2 focus:ring-green-500"
             >
               {isCopied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
               <span>{isCopied ? 'Copied!' : 'Copy to Clipboard'}</span>
             </button>
             <button
               onClick={handleDownload}
-              className="px-4 py-3 text-gray-600 hover:text-gray-900 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center space-x-2 min-h-[44px]"
+              aria-label="Download cover letter as text file"
+              className="px-4 py-3 text-gray-600 hover:text-gray-900 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center space-x-2 min-h-[44px] focus:outline-none focus:ring-2 focus:ring-green-500"
             >
               <Download className="h-4 w-4" />
               <span>Download .txt</span>
             </button>
              <button
               onClick={() => setGeneratedLetter('')}
-              className="px-4 py-3 text-gray-500 hover:text-gray-700 min-h-[44px]"
+              className="px-4 py-3 text-gray-500 hover:text-gray-700 min-h-[44px] focus:outline-none focus:ring-2 focus:ring-gray-500"
             >
               Start Over
             </button>

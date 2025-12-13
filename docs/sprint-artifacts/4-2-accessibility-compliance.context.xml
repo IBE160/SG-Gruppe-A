@@ -1,0 +1,129 @@
+<story-context id="4-2-accessibility-compliance" v="1.0">
+  <metadata>
+    <epicId>epic-4</epicId>
+    <storyId>4-2</storyId>
+    <title>Accessibility Compliance</title>
+    <status>drafted</status>
+    <generatedAt>2025-12-13</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/4-2-accessibility-compliance.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>user with disabilities</asA>
+    <iWant>be able to use the application with assistive technologies like screen readers</iWant>
+    <soThat>I can have the same opportunities as other users</soThat>
+    <tasks>
+- [ ] **Frontend: Automated Accessibility Testing** (AC: 3)
+  - [ ] Install `@axe-core/playwright`.
+  - [ ] Create `frontend/__tests__/e2e/accessibility.spec.ts`.
+  - [ ] Implement tests to scan Landing Page, Login Page, Dashboard, and Analysis Page for violations.
+- [ ] **Frontend: Semantic HTML & ARIA Attributes** (AC: 2)
+  - [ ] **Navbar**: Ensure hamburger menu button has `aria-label` and correct `aria-expanded` state.
+  - [ ] **Analysis Page**: Ensure file upload input and job description textarea have associated labels (visual or `aria-label`).
+  - [ ] **Cover Letter Generator**: Ensure "Copy" and "Download" buttons have `aria-label` (especially if icon-only) and status messages are announced (e.g., using a toast or live region).
+- [ ] **Frontend: Keyboard Navigation & Focus Management** (AC: 1)
+  - [ ] **Global**: Verify `focus-visible` styles are applied to all interactive elements (buttons, links, inputs). Use Tailwind's `focus:ring` utilities.
+  - [ ] **Navigation**: Ensure tab order is logical (left-to-right, top-to-bottom).
+  - [ ] **Modals/Dialogs**: If used, ensure focus is trapped within the dialog when open (e.g., mobile menu).
+- [ ] **Tech Debt & Cleanup** (From Story 4.1 Learnings)
+  - [ ] **Refactor**: Replace hardcoded API URLs in `frontend/app/analysis/page.tsx` and `frontend/components/analysis/CoverLetterGenerator.tsx` with `process.env.NEXT_PUBLIC_API_URL`.
+  - [ ] **Refactor**: Fix `user` prop type in `frontend/components/Navbar.tsx` (remove `any`).
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+1.  **Given** a user is navigating the application with a keyboard, **when** they move between interactive elements, **then** all elements are focusable and have clear focus indicators. [Source: docs/epics.md]
+2.  **Given** a user is using a screen reader, **when** they navigate the application, **then** all images have alt text, and all form elements have labels. [Source: docs/epics.md]
+3.  **Given** an automated accessibility scan is run, **when** it analyzes the core pages (Landing, Login, Dashboard, Analysis), **then** no critical WCAG 2.1 AA violations are reported.
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-4.md</path>
+        <title>Epic Technical Specification: Responsive & Accessible UI</title>
+        <section>Detailed Design</section>
+        <snippet>This epic focuses on ensuring the application provides an excellent user experience for everyone... adhering to web accessibility standards (WCAG 2.1 AA). Includes full keyboard navigability and screen reader compatibility.</snippet>
+      </doc>
+      <doc>
+        <path>docs/ux-design-specification.md</path>
+        <title>UX Design Specification</title>
+        <section>8. Responsive Design & Accessibility</section>
+        <snippet>Compliance Target: WCAG 2.1 Level AA. Key Requirements: Color Contrast, Keyboard Navigation, Screen Reader Support, Alt Text, Clear Focus Indicators.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epic Breakdown</title>
+        <section>Epic 4: Responsive & Accessible UI</section>
+        <snippet>Given a user is navigating the application with a keyboard... all elements are focusable... Given a user is using a screen reader... all images have alt text...</snippet>
+      </doc>
+    </docs>
+    <code>
+      <item>
+        <path>frontend/components/Navbar.tsx</path>
+        <kind>component</kind>
+        <symbol>Navbar</symbol>
+        <reason>Needs ARIA labels for hamburger menu (lines 57-62) and prop type refactoring (line 8).</reason>
+      </item>
+      <item>
+        <path>frontend/app/analysis/page.tsx</path>
+        <kind>page</kind>
+        <symbol>AnalysisPage</symbol>
+        <reason>Needs labels for inputs (lines 104, 112) and URL refactoring (lines 38, 50, 78).</reason>
+      </item>
+      <item>
+        <path>frontend/components/analysis/CoverLetterGenerator.tsx</path>
+        <kind>component</kind>
+        <symbol>CoverLetterGenerator</symbol>
+        <reason>Needs ARIA labels for actions (lines 115, 122) and URL refactoring (line 32).</reason>
+      </item>
+      <item>
+        <path>frontend/__tests__/e2e/accessibility.spec.ts</path>
+        <kind>test</kind>
+        <symbol>new</symbol>
+        <reason>New test file for automated accessibility checks.</reason>
+      </item>
+    </code>
+    <dependencies>
+      <dep ecosystem="npm">@axe-core/playwright (to be added)</dep>
+      <dep ecosystem="npm">playwright</dep>
+      <dep ecosystem="npm">tailwindcss</dep>
+      <dep ecosystem="npm">lucide-react</dep>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    - **WCAG 2.1 AA**: Target compliance level.
+    - **Tailwind CSS**: Use `focus:` and `sr-only` (screen reader only) utilities.
+    - **No Backend Changes**: This story is strictly frontend.
+    - **Tech Debt**: Must address hardcoded URLs and any types.
+  </constraints>
+
+  <interfaces>
+    <!-- No new interfaces, but refactoring hardcoded URLs to use env vars -->
+    <interface>
+      <name>process.env.NEXT_PUBLIC_API_URL</name>
+      <kind>Environment Variable</kind>
+      <signature>string</signature>
+      <path>.env.local</path>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>
+      Use `axe-core` via Playwright for automated accessibility checks.
+      Manual testing with keyboard (Tab navigation) and screen reader simulation (VoiceOver/NVDA) is required.
+    </standards>
+    <locations>
+      frontend/__tests__/e2e/accessibility.spec.ts
+    </locations>
+    <ideas>
+      - Scan Landing Page for WCAG violations.
+      - Scan Login Page for WCAG violations.
+      - Verify all form inputs in Analysis Page have accessible names.
+      - Verify "Copy" and "Download" buttons are focusable and have accessible names.
+      - Verify hamburger menu announces "Expanded" state when open.
+    </ideas>
+  </tests>
+</story-context>

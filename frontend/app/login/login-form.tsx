@@ -52,22 +52,42 @@ export function LoginForm() {
         </div>
       )}
 
-      <div className="flex flex-col gap-4 mt-4">
-        <button 
-          type="submit"
-          disabled={isPending}
-          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50 transition-colors"
-        >
-          {isPending ? 'Logging in...' : 'Log in'}
-        </button>
-        
-        <div className="text-center text-sm text-black">
-          Don't have an account?{' '}
-          <Link href="/register" className="text-blue-500 hover:underline">
-            Sign up
-          </Link>
-        </div>
-      </div>
-    </form>
-  )
-}
+            <div className="flex flex-col gap-4 mt-4">
+
+              <button 
+
+                type="submit"
+
+                disabled={isPending}
+
+                className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700 disabled:opacity-50 transition-colors"
+
+              >
+
+                {isPending ? 'Logging in...' : 'Log in'}
+
+              </button>
+
+              
+
+              <div className="text-center text-sm text-black">
+
+                Don't have an account?{' '}
+
+                <Link href="/register" className="text-blue-600 hover:underline">
+
+                  Sign up
+
+                </Link>
+
+              </div>
+
+            </div>
+
+          </form>
+
+        )
+
+      }
+
+      

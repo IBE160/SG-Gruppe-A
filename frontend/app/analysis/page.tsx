@@ -14,6 +14,8 @@ export default function AnalysisPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
+
   useEffect(() => {
     // Fetch latest CV and JD on mount
     const fetchData = async () => {
@@ -34,7 +36,7 @@ export default function AnalysisPage() {
         // Fetch CV
         try {
           console.log("Fetching latest CV...");
-          const cvRes = await axios.get('http://127.0.0.1:8000/api/cv/latest', config);
+          const cvRes = await axios.get(`${API_URL}/api/cv/latest`, config);
           console.log("CV Response:", cvRes.data);
           if (cvRes.data && cvRes.data.extracted_text) {
             setCvText(cvRes.data.extracted_text);
@@ -49,7 +51,7 @@ export default function AnalysisPage() {
         // Fetch JD
         try {
           console.log("Fetching latest JD...");
-          const jdRes = await axios.get('http://127.0.0.1:8000/api/job-description/latest', config);
+          const jdRes = await axios.get(`${API_URL}/api/job-description/latest`, config);
           console.log("JD Response:", jdRes.data);
           if (jdRes.data && jdRes.data.content) {
             setJdText(jdRes.data.content);
@@ -76,7 +78,7 @@ export default function AnalysisPage() {
       
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
-      const response = await axios.post('http://127.0.0.1:8000/ai/analyze-gap/', {
+      const response = await axios.post(`${API_URL}/ai/analyze-gap/`, {
         cv_text: cvText,
         job_description: jdText
       }, { headers });
@@ -101,8 +103,9 @@ export default function AnalysisPage() {
             <h2 className="text-xl font-semibold mb-4 text-gray-700">1. Inputs</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Your CV Text</label>
+                <label htmlFor="cv-text" className="block text-sm font-medium text-gray-700 mb-2">Your CV Text</label>
                 <textarea
+                  id="cv-text"
                   className="w-full h-48 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-800 bg-white placeholder-gray-400"
                   value={cvText}
                   onChange={(e) => setCvText(e.target.value)}
@@ -110,8 +113,9 @@ export default function AnalysisPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Job Description</label>
+                <label htmlFor="jd-text" className="block text-sm font-medium text-gray-700 mb-2">Job Description</label>
                 <textarea
+                  id="jd-text"
                   className="w-full h-48 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-800 bg-white placeholder-gray-400"
                   value={jdText}
                   onChange={(e) => setJdText(e.target.value)}
@@ -122,7 +126,7 @@ export default function AnalysisPage() {
               <button
                 onClick={handleAnalyze}
                 disabled={loading || !cvText || !jdText}
-                className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-400 transition"
+                className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-400 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               >
                 {loading ? 'Analyzing...' : 'Analyze Gap'}
               </button>

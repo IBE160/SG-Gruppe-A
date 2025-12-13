@@ -122,7 +122,7 @@ describe('CoverLetterGenerator', () => {
     await waitFor(() => screen.getByRole('textbox'));
 
     // Click copy
-    const copyBtn = screen.getByRole('button', { name: /copy to clipboard/i });
+    const copyBtn = screen.getByRole('button', { name: /Copy cover letter to clipboard/i });
     expect(copyBtn).toBeInTheDocument();
     
     fireEvent.click(copyBtn);
@@ -149,7 +149,7 @@ describe('CoverLetterGenerator', () => {
     await waitFor(() => screen.getByRole('textbox'));
 
     // Click copy
-    const copyBtn = screen.getByRole('button', { name: /copy to clipboard/i });
+    const copyBtn = screen.getByRole('button', { name: /Copy cover letter to clipboard/i });
     fireEvent.click(copyBtn);
 
     expect(mockWriteText).toHaveBeenCalledWith(mockCoverLetter);
@@ -172,7 +172,7 @@ describe('CoverLetterGenerator', () => {
     await waitFor(() => screen.getByRole('textbox'));
 
     // Check download button exists
-    const downloadBtn = screen.getByRole('button', { name: /download \.txt/i });
+    const downloadBtn = screen.getByRole('button', { name: /Download cover letter as text file/i });
     expect(downloadBtn).toBeInTheDocument();
 
     // Mock anchor click

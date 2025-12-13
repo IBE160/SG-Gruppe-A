@@ -143,3 +143,7 @@ There are no new APIs or interfaces introduced in this epic.
 *   **Manual Testing:**
     *   **Required.** Perform thorough testing on real mobile devices (iOS, Android).
     *   **Required.** Conduct a full application walkthrough using at least two different screen readers (e.g., VoiceOver on macOS/iOS, NVDA on Windows) to ensure a high-quality experience for users of assistive technologies.
+
+## Post-Review Follow-ups
+
+*   [ ] [High] Implement authenticated accessibility tests for Dashboard and Analysis pages (Story 4.2)
