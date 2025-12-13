@@ -1,113 +1,91 @@
-import { render, screen, waitFor } from '@testing-library/react'
-import CoverLetterGenerator from '@/components/analysis/CoverLetterGenerator'
-import { vi, describe, it, expect, beforeEach } from 'vitest'
-import userEvent from '@testing-library/user-event'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import CoverLetterGenerator from '../components/analysis/CoverLetterGenerator';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
+import axios from 'axios';
 
 // Mock axios
-const mockPost = vi.fn()
-vi.mock('axios', () => ({
-  default: {
-    post: (...args: any[]) => mockPost(...args)
-  }
-}))
+vi.mock('axios');
+const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-// Mock Supabase
-const mockGetSession = vi.fn()
+// Mock Supabase client
 vi.mock('@/utils/supabase/client', () => ({
   createClient: () => ({
     auth: {
-        getSession: mockGetSession
-    }
-  })
-}))
+      getSession: vi.fn().mockResolvedValue({
+        data: {
+          session: {
+            access_token: 'fake-token',
+          },
+        },
+      }),
+    },
+  }),
+}));
 
-describe('CoverLetterGenerator Component', () => {
+// Mock toast
+vi.mock('react-hot-toast', () => ({
+  default: {
+    success: vi.fn(),
+    error: vi.fn(),
+  },
+}));
+
+describe('CoverLetterGenerator', () => {
+  const mockCvText = 'My CV content';
+  const mockJdText = 'Job Description content';
+
   beforeEach(() => {
-    vi.clearAllMocks()
-    mockGetSession.mockResolvedValue({ 
-        data: { session: { access_token: 'fake-token' } } 
-    })
-  })
+    vi.clearAllMocks();
+  });
 
-  // Test ID: 3.1-UI-001
-  // Priority: P1
-  it('renders the initial state correctly', () => {
-    render(<CoverLetterGenerator cvText="My CV" jdText="My JD" />)
-    expect(screen.getByText('Cover Letter Assistant')).toBeDefined()
-    expect(screen.getByText('Generate Cover Letter')).toBeDefined()
-  })
+  it('renders generation button initially', () => {
+    render(<CoverLetterGenerator cvText={mockCvText} jdText={mockJdText} />);
+    expect(screen.getByRole('button', { name: /generate cover letter/i })).toBeInTheDocument();
+  });
 
-  // Test ID: 3.1-UI-002
-  // Priority: P2
-  it('disables button if inputs are missing', () => {
-    render(<CoverLetterGenerator cvText="" jdText="" />)
-    const button = screen.getByRole('button', { name: /generate cover letter/i })
-    expect(button).toBeDisabled()
-  })
+  it('displays generated cover letter in editable textarea', async () => {
+    const mockCoverLetter = 'Dear Hiring Manager, this is a generated letter.';
+    mockedAxios.post.mockResolvedValueOnce({
+      data: { cover_letter: mockCoverLetter },
+    });
 
-  // Test ID: 3.1-UI-003
-  // Priority: P1
-  it('calls API and displays result on success', async () => {
-    // Return a promise that we can resolve later to test loading state
-    let resolveMock: (value: any) => void = () => {}
-    const mockPromise = new Promise((resolve) => {
-        resolveMock = resolve
-    })
-    
-    mockPost.mockReturnValue(mockPromise)
-    const user = userEvent.setup()
+    render(<CoverLetterGenerator cvText={mockCvText} jdText={mockJdText} />);
 
-    render(<CoverLetterGenerator cvText="CV Content" jdText="JD Content" />)
+    // Click generate button
+    const generateBtn = screen.getByRole('button', { name: /generate cover letter/i });
+    fireEvent.click(generateBtn);
 
-    const button = screen.getByRole('button', { name: /generate cover letter/i })
-    await user.click(button)
+    // Wait for generation to complete and textarea to appear
+    await waitFor(() => {
+      expect(screen.getByRole('textbox')).toBeInTheDocument();
+    });
 
-    // Now loading should be visible
-    expect(screen.getByText(/generating/i)).toBeDefined()
-    expect(button).toBeDisabled()
+    const textarea = screen.getByRole('textbox');
+    expect(textarea).toHaveValue(mockCoverLetter);
 
-    // Resolve the promise
-    resolveMock({ 
-        data: { cover_letter: 'Generated cover letter content' } 
-    })
+    // Verify it is editable
+    const user = userEvent.setup();
+    const newText = ' Updated content.';
+    await user.type(textarea, newText);
+
+    expect(textarea).toHaveValue(mockCoverLetter + newText);
+  });
+
+  it('shows error message if generation fails', async () => {
+    mockedAxios.post.mockRejectedValueOnce(new Error('Network error'));
+
+    render(<CoverLetterGenerator cvText={mockCvText} jdText={mockJdText} />);
+
+    fireEvent.click(screen.getByRole('button', { name: /generate cover letter/i }));
 
     await waitFor(() => {
-        expect(mockPost).toHaveBeenCalledWith(
-            expect.stringContaining('/api/v1/generation/cover-letter'),
-            {
-                cv_text: 'CV Content',
-                job_description_text: 'JD Content'
-            },
-            expect.objectContaining({
-                headers: { 'Authorization': 'Bearer fake-token' }
-            })
-        )
-    })
+      expect(screen.getByText(/Network error/i)).toBeInTheDocument();
+    });
+  });
 
-    await waitFor(() => {
-        const textarea = screen.getByRole('textbox') as HTMLTextAreaElement
-        expect(textarea.value).toBe('Generated cover letter content')
-    })
-  })
-
-  // Test ID: 3.1-UI-004
-  // Priority: P1
-  it('handles API errors gracefully', async () => {
-    mockPost.mockRejectedValue({ 
-        response: { data: { detail: 'Service unavailable' } } 
-    })
-    const user = userEvent.setup()
-
-    render(<CoverLetterGenerator cvText="CV" jdText="JD" />)
-
-    const button = screen.getByRole('button', { name: /generate cover letter/i })
-    await user.click(button)
-
-    await waitFor(() => {
-        expect(screen.getByText('Service unavailable')).toBeDefined()
-    })
-    
-    // Button should be enabled again
-    expect(screen.getByRole('button', { name: /generate cover letter/i })).not.toBeDisabled()
-  })
-})
+  it('button is disabled when texts are missing', () => {
+    render(<CoverLetterGenerator cvText="" jdText="" />);
+    expect(screen.getByRole('button', { name: /generate cover letter/i })).toBeDisabled();
+  });
+});

@@ -1,0 +1,120 @@
+<story-context id="3-2-display-generated-cover-letter" v="1.0">
+  <metadata>
+    <epicId>3</epicId>
+    <storyId>2</storyId>
+    <title>Display Generated Cover Letter</title>
+    <status>drafted</status>
+    <generatedAt>2025-12-13</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/3-2-display-generated-cover-letter.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>user</asA>
+    <iWant>see the generated cover letter in an editable text area</iWant>
+    <soThat>I can review and modify it</soThat>
+    <tasks>
+      - [ ] **Frontend: UI Implementation** (AC: 1)
+        - [ ] Update `CoverLetterGenerator.tsx` (or parent component) to ensure the textarea is fully editable.
+        - [ ] Ensure state management allows updates to the cover letter text (controlled component pattern).
+        - [ ] Verify styling matches the design system (Tailwind/shadcn).
+      - [ ] **Frontend: Testing** (AC: 1)
+        - [ ] **[CRITICAL]** Implement component tests for `CoverLetterGenerator.tsx` (Addressing 3.1 debt).
+        - [ ] Test: Verify textarea renders with generated content.
+        - [ ] Test: Verify user can type/edit the content.
+        - [ ] Test: Verify state updates on change events.
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    1.  **Given** a cover letter has been generated, **when** it is displayed to the user, **then** the user sees the full text of the cover letter in a text area where they can make changes. [Source: docs/sprint-artifacts/tech-spec-epic-3.md#Acceptance Criteria (Authoritative)]
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/PRD.md</path>
+        <title>Product Requirements Document</title>
+        <section>Functional Requirements</section>
+        <snippet>FR008: The system must present the generated cover letter to the user in an editable text area.</snippet>
+      </doc>
+      <doc>
+        <path>docs/epics.md</path>
+        <title>Epics Breakdown</title>
+        <section>Story 3.2: Display Generated Cover Letter</section>
+        <snippet>As a user, I want to see the generated cover letter in an editable text area, so that I can review and modify it.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-3.md</path>
+        <title>Epic Technical Specification: Epic 3</title>
+        <section>Detailed Design / Acceptance Criteria</section>
+        <snippet>
+          AC 2: Given a cover letter has been generated, when it is displayed to the user, then the user sees the full text of the cover letter in a text area where they can make changes.
+          Traceability Mapping: UI Test: After generation, assert that the textarea component is populated with the expected text and is editable.
+        </snippet>
+      </doc>
+      <doc>
+        <path>docs/ux-design-specification.md</path>
+        <title>UX Design Specification</title>
+        <section>2.3 Core Experience Principles / 5.1 Critical User Paths</section>
+        <snippet>Flexibility: The system should offer a balance of control (editing generated content). Users should feel empowered to refine the AI's output. Journey: Review and Success -> User can edit the generated text.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Architecture Specification</title>
+        <section>3. System Components</section>
+        <snippet>Frontend Application: Next.js with React. Backend API: Python with FastAPI. AI Service: Python with FastAPI.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <artifact>
+        <path>frontend/components/analysis/CoverLetterGenerator.tsx</path>
+        <kind>component</kind>
+        <symbol>CoverLetterGenerator</symbol>
+        <lines>11-90</lines>
+        <reason>Existing component that needs to be verified/updated for editability.</reason>
+      </artifact>
+      <artifact>
+        <path>frontend/__tests__/CoverLetterGenerator.test.tsx</path>
+        <kind>test</kind>
+        <symbol>CoverLetterGenerator Component Tests</symbol>
+        <lines>1-80</lines>
+        <reason>Existing tests need to be expanded to cover editability interactions.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <dep>react</dep>
+      <dep>react-hot-toast</dep>
+      <dep>axios</dep>
+      <dep>lucide-react</dep>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    - Frontend State: The cover letter text should be managed in the component's state (or a parent context) to support editing.
+    - Accessibility: The textarea must have a clear label (FR014/Story 4.2 prep).
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>CoverLetterGenerationResponse</name>
+      <kind>JSON Response</kind>
+      <signature>{ "cover_letter": "string" }</signature>
+      <path>docs/sprint-artifacts/tech-spec-epic-3.md</path>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>
+      Use Vitest and React Testing Library. Mock API calls using vi.mock. Ensure accessibility compliance in tests (future).
+    </standards>
+    <locations>
+      frontend/__tests__/*.test.tsx
+    </locations>
+    <ideas>
+      - Test: User types in textarea -> value changes.
+      - Test: Initial value from API is displayed.
+      - Test: Copy button copies current textarea value (not just original API value).
+    </ideas>
+  </tests>
+</story-context>
